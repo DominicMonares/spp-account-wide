@@ -28,7 +28,7 @@ wotlkcharacters.connect(err => {
 // const charAchieves = 'SELECT * FROM character_achievement WHERE guid=10001;';
 const charAchieves = `
   INSERT INTO character_achievement (guid, achievement, date)
-  VALUES (10001, 10, 1660987033); 
+  VALUES (4501, 9, 1660987033); 
 `;
 wotlkcharacters.query(charAchieves, (err, data, fields) => {
   if (err) console.error(err);
