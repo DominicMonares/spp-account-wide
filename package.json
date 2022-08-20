@@ -1,0 +1,26 @@
+{
+  "name": "spp-achievements",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akaClay/spp-achievements.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/akaClay/spp-achievements/issues"
+  },
+  "homepage": "https://github.com/akaClay/spp-achievements#readme",
+  "dependencies": {
+    "express": "^4.18.1",
+    "mysql": "^2.18.1"
+  },
+  "devDependencies": {
+  }
+}
