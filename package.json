@@ -19,6 +19,6 @@
   },
   "homepage": "https://github.com/akaClay/spp-achievements#readme",
   "dependencies": {
-    "mysql": "^2.18.1"
+    "mysql2": "^2.3.3"
   }
 }
