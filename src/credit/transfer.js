@@ -12,8 +12,15 @@ go through each account and:
 NEED TO ACCOUNT FOR FACTION SPECIFIC ACHIEVEMENTS
 */
 
-const transfer_credit = () => {
-  console.log('Credit transfer called!')
+const { getAccounts } = require('../queries/wotlkrealmd');
+const { getCharacter } = require('../queries/wotlkcharacters');
+
+const accounts = {};
+const achievements = {};
+
+const transfer_credit = async () => {
+  
+  console.log('Credit transfer called! ', await getAccounts())
 }
 
 module.exports = { transfer_credit: transfer_credit };
