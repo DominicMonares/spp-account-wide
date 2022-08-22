@@ -1,4 +1,4 @@
-const mysql = require('mysql');
+const mysql = require('mysql2');
 
 const wotlkcharacters = mysql.createConnection({
   host: "127.0.0.1",
