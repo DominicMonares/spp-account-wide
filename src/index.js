@@ -36,3 +36,6 @@ const transfer_achievements = async () => {
 }
 
 transfer_achievements();
+
+// REMOVE EXPORTS FOR PRODUCTION
+module.exports = { transfer_achievements: transfer_achievements };
