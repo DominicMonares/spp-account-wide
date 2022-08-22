@@ -23,7 +23,7 @@ const transfer_achievements = async () => {
     'Successfully transferred achievement credit and progress between all of your characters!'
   );
 
-  let count = 11;
+  let count = 1; // CHANGE TO 11 BEFORE PRODUCTION
   setInterval(() => {
     // console.log(`This window will close in ${count} seconds...`);
     process.stdout.clearLine();
