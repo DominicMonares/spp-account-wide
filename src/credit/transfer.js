@@ -11,3 +11,9 @@ go through each account and:
   
 NEED TO ACCOUNT FOR FACTION SPECIFIC ACHIEVEMENTS
 */
+
+const transfer_credit = () => {
+  console.log('Credit transfer called!')
+}
+
+module.exports = { transfer_credit: transfer_credit };

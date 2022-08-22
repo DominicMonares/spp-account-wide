@@ -6,3 +6,9 @@
 
   Loremaster? Will be complicated
 */
+
+const transfer_progress = () => {
+  console.log('Transfer progress called!')
+}
+
+module.exports = { transfer_progress: transfer_progress };
