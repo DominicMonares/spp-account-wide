@@ -55,8 +55,8 @@ const transfer_achievements = async () => {
   }));
 
   Object.values(store.accounts).forEach(async account => {
-    await transfer_credit(account);
-    await transfer_progress(account);
+    await transfer_credit(account, wotlkcharacters);
+    await transfer_progress(account, wotlkcharacters);
   });
 
   try {
