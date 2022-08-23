@@ -16,12 +16,12 @@ const getCharacters = async (accounts) => {
   }
 
   try {
-    // console.log('ACC ', accounts)
     const accountValues = '"' + accounts.join('", "') + '"';
     const accountQuery = `SELECT guid, account FROM characters WHERE account IN (${accountValues})`;
     let [rows] = await wotlkcharacters.execute(accountQuery);
     characters = rows;
   } catch (err) {
+    // native error msg printing after error func for some reason, revisit
     await error(err);
   }
 
@@ -29,6 +29,7 @@ const getCharacters = async (accounts) => {
     await wotlkcharacters.end();
     console.log('Disconnected from wotlkcharacters!')
   } catch (err) {
+    // native error msg printing after error func for some reason, revisit
     await error(err);
   }
 

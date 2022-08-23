@@ -21,6 +21,7 @@ const getAccounts = async () => {
     accounts = rows;
     console.log('Account data fetched!')
   } catch (err) {
+    // native error msg printing after error func for some reason, revisit
     await error(err);
   }
 
@@ -28,6 +29,7 @@ const getAccounts = async () => {
     await wotlkrealmd.end();
     console.log('Disconnected from wotlkrealmd!')
   } catch (err) {
+    // native error msg printing after error func for some reason, revisit
     await error(err);
   }
 
