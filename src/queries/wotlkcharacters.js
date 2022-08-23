@@ -7,8 +7,8 @@ const getCharacters = async (accounts, wotlkcharacters) => {
 
   try {
     const accountValues = '"' + accounts.join('", "') + '"';
-    const accountQuery = `SELECT guid, account, race FROM characters WHERE account IN (${accountValues})`;
-    let [rows] = await wotlkcharacters.execute(accountQuery);
+    const charactersQuery = `SELECT guid, account, race FROM characters WHERE account IN (${accountValues})`;
+    let [rows] = await wotlkcharacters.execute(charactersQuery);
     characters = rows;
     console.log('Character data fetched...')
   } catch (err) {
@@ -19,21 +19,21 @@ const getCharacters = async (accounts, wotlkcharacters) => {
   return characters;
 }
 
-const getAchievements = async (characters) => {
-  // let achievements;
+const getAchievements = async (characters, wotlkcharacters) => {
+  let achievements;
 
-  // try {
-  //   const characterValues = '"' + accounts.join('", "') + '"';
-  //   const accountQuery = `SELECT guid, account FROM character_achievement WHERE account IN (${characterValues})`;
-  //   let [rows] = await wotlkcharacters.execute(accountQuery);
-  //   characters = rows;
-  //   console.log('Achievement data fetched...')
-  // } catch (err) {
-  //   // native error msg printing after error func for some reason, revisit
-  //   await error(err);
-  // }
+  try {
+    const characterValues = '"' + characters.join('", "') + '"';
+    const achievementsQuery = `SELECT achievement, date FROM character_achievement WHERE guid IN (${characterValues})`;
+    let [rows] = await wotlkcharacters.execute(achievementsQuery);
+    achievements = rows;
+    console.log('Achievement data fetched...');
+  } catch (err) {
+    // native error msg printing after error func for some reason, revisit
+    await error(err);
+  }
 
-  // return characters;
+  return achievements;
 }
 
 module.exports = {

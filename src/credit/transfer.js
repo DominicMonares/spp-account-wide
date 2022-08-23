@@ -1,22 +1,25 @@
-/* 
-get all non-bot accounts
-go through each account and:
-  get each character guid
-  create object to track achievements on account
-  if timestamp of current achievement is older, replace in obj
-  once every character's achievements have been added:
-    go through every player again and for each player:
-      go through achievements and check to see if current character has it
-      add it if not 
-  
-NEED TO ACCOUNT FOR FACTION SPECIFIC ACHIEVEMENTS
-*/
+const { getAchievements } = require('../queries/wotlkcharacters');
 
-const achievements = {};
+let achievements = {};
 
-const transfer_credit = async (accounts) => {
+const transfer_credit = async (characters, wotlkcharacters) => {
+  if (Object.keys(achievements).length) { achievements = {} }
+  const allAchievements = await getAchievements(characters.map(c => c.id), wotlkcharacters);
+  allAchievements.forEach(a => {
+    if (!achievements[a.achievement]) {
+      achievements[a.achievement] = a.date;
+      return;
+    }
+
+    if (a.date < achievements[a.achievement]) {
+      achievements[a.achievement] = a.date;
+    }
+  })
+  console.log('achievements ', allAchievements)
+  console.log('CHEEVOS ', achievements);
   // accounts.forEach(a => achievements[a.id] = {});
   // console.log('Credit transfer called! ', achievements)
+  
 }
 
 module.exports = { 
