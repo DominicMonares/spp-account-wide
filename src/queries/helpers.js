@@ -1,5 +1,17 @@
 const readline = require('readline');
 
+const closeWindow = (count) => {
+  setInterval(() => {
+    // console.log(`This window will close in ${count} seconds...`);
+    process.stdout.clearLine();
+    process.stdout.cursorTo(0);
+    process.stdout.write(`This window will close in ${count - 1} seconds...`);
+    count--;
+
+    if (count <= 0) process.exit(0);
+  }, 1000);
+}
+
 const error = () => {
   const rl = readline.createInterface({
     input: process.stdin,
@@ -14,4 +26,9 @@ const error = () => {
   );
 }
 
-module.exports = { error: error };
+
+
+module.exports = { 
+  closeWindow: closeWindow,
+  error: error
+};
