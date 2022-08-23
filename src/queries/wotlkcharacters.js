@@ -3,8 +3,8 @@ const mysql = require('mysql2/promise');
 const { dbCredentials } = require('../config');
 const { error } = require('./helpers');
 
-const getAccounts = async () => {
-  let accounts, wotlkcharacters;
+const getCharacters = async (accounts) => {
+  let characters, wotlkcharacters;
   dbCredentials.database = 'wotlkcharacters';
 
   try {
@@ -16,10 +16,11 @@ const getAccounts = async () => {
   }
 
   try {
-    const accountQuery = `SELECT id FROM account WHERE username NOT LIKE '%RNDBOT%'`;
+    // console.log('ACC ', accounts)
+    const accountValues = '"' + accounts.join('", "') + '"';
+    const accountQuery = `SELECT guid, account FROM characters WHERE account IN (${accountValues})`;
     let [rows] = await wotlkcharacters.execute(accountQuery);
-    accounts = rows;
-    console.log('Account data fetched!')
+    characters = rows;
   } catch (err) {
     await error(err);
   }
@@ -31,9 +32,9 @@ const getAccounts = async () => {
     await error(err);
   }
 
-  return accounts;
+  return characters;
 }
 
 module.exports = {
-  getAccounts: getAccounts
+  getCharacters: getCharacters
 };
