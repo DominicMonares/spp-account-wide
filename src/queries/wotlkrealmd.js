@@ -1,18 +1,14 @@
 const mysql = require('mysql2/promise');
 
+const { dbCredentials } = require('../config');
 const { error } = require('./helpers');
 
 const getAccounts = async () => {
   let accounts, wotlkrealmd;
+  dbCredentials.database = 'wotlkrealmd';
 
   try {
-    wotlkrealmd = await mysql.createConnection({
-      host: "127.0.0.1",
-      port: 3310,
-      user: "root",
-      password: "123456",
-      database: "wotlkrealmd"
-    });
+    wotlkrealmd = await mysql.createConnection(dbCredentials);
     console.log('Connected to wotlkrealmd!');
   } catch (err) {
     // native error msg printing after error func for some reason, revisit

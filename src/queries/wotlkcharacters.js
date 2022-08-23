@@ -1,26 +1,39 @@
-const mysql = require('mysql2');
+const mysql = require('mysql2/promise');
 
-const wotlkcharacters = mysql.createConnection({
-  host: "127.0.0.1",
-  port: 3310,
-  user: "root",
-  password: "123456",
-  database: "wotlkcharacters"
-});
+const { dbCredentials } = require('../config');
+const { error } = require('./helpers');
 
-wotlkcharacters.connect(err => {
-  if (err) console.error(err);
-  console.log('Connected to wotlkcharacters!');
-});
+const getAccounts = async () => {
+  let accounts, wotlkcharacters;
+  dbCredentials.database = 'wotlkcharacters';
 
-// const charAchieves = `
-//   INSERT INTO character_achievement (guid, achievement, date)
-//   VALUES (4501, 9, 1660987033); 
-// `;
+  try {
+    wotlkcharacters = await mysql.createConnection(dbCredentials);
+    console.log('Connected to wotlkcharacters!');
+  } catch (err) {
+    // native error msg printing after error func for some reason, revisit
+    await error(err); 
+  }
 
-// wotlkcharacters.query(charAchieves, (err, data, fields) => {
-//   if (err) console.error(err);
-//   console.log('DATA ', data);
-// });
+  try {
+    const accountQuery = `SELECT id FROM account WHERE username NOT LIKE '%RNDBOT%'`;
+    let [rows] = await wotlkcharacters.execute(accountQuery);
+    accounts = rows;
+    console.log('Account data fetched!')
+  } catch (err) {
+    await error(err);
+  }
 
-wotlkcharacters.end();
+  try {
+    await wotlkcharacters.end();
+    console.log('Disconnected from wotlkcharacters!')
+  } catch (err) {
+    await error(err);
+  }
+
+  return accounts;
+}
+
+module.exports = {
+  getAccounts: getAccounts
+};
