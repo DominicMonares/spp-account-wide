@@ -54,10 +54,10 @@ const transfer_achievements = async () => {
     faction: faction(c.race)
   }));
 
-  Object.values(store.accounts).forEach(async account => {
+  for (let account of Object.values(store.accounts)) {
     await transfer_credit(account, wotlkcharacters);
     await transfer_progress(account, wotlkcharacters);
-  });
+  }
 
   try {
     await wotlkcharacters.end();
