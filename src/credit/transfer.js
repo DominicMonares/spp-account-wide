@@ -15,7 +15,9 @@ const transfer_credit = async (characters, wotlkcharacters) => {
     if (a.date < achievements[a.achievement]) {
       achievements[a.achievement] = a.date;
     }
-  })
+  });
+
+  console.log('TEST ', achievements);
 
   // go through each character one by one
   // make copy of all achievements

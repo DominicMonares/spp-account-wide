@@ -7,7 +7,7 @@ const getCharacters = async (accounts, wotlkcharacters) => {
 
   try {
     const accountValues = '"' + accounts.join('", "') + '"';
-    const charactersQuery = `SELECT guid, account, race FROM characters WHERE account IN (${accountValues})`;
+    const charactersQuery = `SELECT guid, account, race, gender FROM characters WHERE account IN (${accountValues})`;
     let [rows] = await wotlkcharacters.execute(charactersQuery);
     characters = rows;
     console.log('Character data fetched...')
