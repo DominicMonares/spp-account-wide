@@ -51,7 +51,8 @@ const transfer_achievements = async () => {
   const characters = await getCharacters(Object.keys(store.accounts), wotlkcharacters);
   characters.forEach(c => store['accounts'][c.account].push({
     id: c.guid, 
-    faction: faction(c.race)
+    faction: faction(c.race),
+    gender: c.gender
   }));
 
   for (let account of Object.values(store.accounts)) {
