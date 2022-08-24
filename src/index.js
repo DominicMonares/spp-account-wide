@@ -3,8 +3,8 @@ const mysql = require('mysql2/promise');
 const { dbCredentials } = require('./config');
 const { getAccounts } = require('./queries/wotlkrealmd');
 const { closeWindow, faction } = require('./helpers');
-const { transfer_credit } = require('./credit/transfer');
-const { transfer_progress } = require('./progress/transfer');
+const { transfer_credit } = require('./transfers/credit_transfer');
+const { transfer_progress } = require('./transfers/progress_transfer');
 const { getCharacters } = require('./queries/wotlkcharacters');
 
 const wotlkcharactersConnect = async () => {
