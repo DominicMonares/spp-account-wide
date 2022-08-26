@@ -45,7 +45,7 @@ const transfer_credit = async (characters, wotlkcharacters) => {
       }
     }
 
-    await addAchievements(queryAchievements);
+    await addAchievements(queryAchievements, wotlkcharacters);
   });
 
 
