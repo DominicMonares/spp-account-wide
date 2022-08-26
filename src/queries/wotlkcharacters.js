@@ -1,32 +1,38 @@
-const mysql = require('mysql2/promise');
-
 const getCharacters = (accounts, wotlkcharacters) => {
-  const accountValues = '"' + accounts.join('", "') + '"';
-  const charactersQuery = `SELECT guid, account, race, gender FROM characters WHERE account IN (${accountValues})`;
-  return wotlkcharacters.execute(charactersQuery)
-    .then(res => {
+  const accountVals = '"' + accounts.join('", "') + '"';
+  const sql = `
+    SELECT guid, name, account, race, gender FROM characters 
+    WHERE account IN (${accountVals})
+  `;
+  
+  return wotlkcharacters.execute(sql)
+    .then(chars => {
       console.log('Character data fetched...');
-      return res[0];
+      return chars[0];
     })
     .catch(err => { throw err });
 }
 
-const getAchievements = (characters, wotlkcharacters) => {
-  const characterValues = '"' + characters.join('", "') + '"';
-  const achievementsQuery = `SELECT achievement, date FROM character_achievement WHERE guid IN (${characterValues})`;
-  return wotlkcharacters.query(achievementsQuery, [characters])
-    .then(res => {
+const getAchievements = (chars, wotlkcharacters) => {
+  const charValues = '"' + chars.join('", "') + '"';
+  const sql = `
+    SELECT achievement, date FROM character_achievement 
+    WHERE guid IN (${charValues})
+  `;
+  
+  return wotlkcharacters.query(sql, [chars])
+    .then(achieves => {
       console.log('Achievement data fetched...');
-      return res[0];
+      return achieves[0];
     })
     .catch(err => { throw err });
 }
 
-const addAchievements = (achievements, wotlkcharacters) => {
-  const achievementsQuery = 'INSERT IGNORE INTO character_achievement (guid, achievement, date) VALUES ?';
-  return wotlkcharacters.query(achievementsQuery, [achievements])
+const addAchievements = (achieves, char, wotlkcharacters) => {
+  const sql = 'INSERT IGNORE INTO character_achievement (guid, achievement, date) VALUES ?';
+  return wotlkcharacters.query(sql, [achieves])
     .then(res => {
-      console.log('Achievements successfully transferred!');
+      console.log(`Achievement credit successfully transferred for ${char}!`);
       return res[0];
     })
     .catch(err => { throw err });

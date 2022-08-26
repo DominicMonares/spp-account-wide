@@ -7,15 +7,9 @@ const transfer_credit = async (characters, wotlkcharacters) => {
   if (Object.keys(achievements).length) { achievements = {} }
   
   const allAchievements = await getAchievements(characters.map(c => c.guid), wotlkcharacters);
-  await allAchievements.forEach(a => {
-    if (!achievements[a.achievement]) {
-      achievements[a.achievement] = a.date;
-      return;
-    }
-
-    if (a.date < achievements[a.achievement]) {
-      achievements[a.achievement] = a.date;
-    }
+  allAchievements.forEach(a => {
+    if (!achievements[a.achievement]) return achievements[a.achievement] = a.date;
+    if (a.date < achievements[a.achievement]) achievements[a.achievement] = a.date; 
   });
   
   await characters.forEach(async c => {
@@ -45,16 +39,8 @@ const transfer_credit = async (characters, wotlkcharacters) => {
       }
     }
 
-    await addAchievements(queryAchievements, wotlkcharacters);
+    return await addAchievements(queryAchievements, c.name, wotlkcharacters);
   });
-
-
-
-  // go through each character one by one
-  // make copy of all achievements
-  // check faction
-  // convert/delete achievements as necessary
-  // insert ignore achieves
 
   // HANDLE REWARDS!!!
 }

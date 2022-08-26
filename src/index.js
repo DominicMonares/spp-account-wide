@@ -2,39 +2,29 @@ const mysql = require('mysql2/promise');
 
 const { dbCredentials } = require('./config');
 const { getAccounts } = require('./queries/wotlkrealmd');
-const { closeWindow, faction } = require('./helpers');
+const { closeWindow, error, faction } = require('./helpers');
 const { transfer_credit } = require('./transfers/credit_transfer');
 const { transfer_progress } = require('./transfers/progress_transfer');
 const { getCharacters } = require('./queries/wotlkcharacters');
 
 const wotlkcharactersConnect = async () => {
   dbCredentials.database = 'wotlkcharacters';
-  let connection;
-
-  try {
-    connection = await mysql.createConnection(dbCredentials);
-    console.log('Connected to wotlkcharacters...');
-  } catch (err) {
-    // native error msg printing after error func for some reason, revisit
-    await error(err); 
-  }
-
-  return connection;
+  return mysql.createConnection(dbCredentials)
+    .then(res => {
+      console.log('Connected to wotlkcharacters...');
+      return res;
+    })
+    .catch(async err => await error(err));
 }
 
 const wotlkrealmdConnect = async () => {
   dbCredentials.database = 'wotlkrealmd';
-  let connection;
-
-  try {
-    connection = await mysql.createConnection(dbCredentials);
-    console.log('Connected to wotlkrealmd...');
-  } catch (err) {
-    // native error msg printing after error func for some reason, revisit
-    await error(err); 
-  }
-
-  return connection;
+  return mysql.createConnection(dbCredentials)
+    .then(res => {
+      console.log('Connected to wotlkrealmd...');
+      return res;
+    })
+    .catch(async err => await error(err));
 }
 
 const store = {
@@ -44,20 +34,34 @@ const store = {
 const transfer_achievements = async () => {
   const wotlkcharacters = await wotlkcharactersConnect();
   const wotlkrealmd = await wotlkrealmdConnect();
-
-  const accounts = await getAccounts(wotlkrealmd);
-  accounts.forEach(a => store['accounts'][a.id] = []);
   
-  const characters = await getCharacters(Object.keys(store.accounts), wotlkcharacters);
-  characters.forEach(c => store['accounts'][c.account].push({
-    guid: c.guid, 
-    faction: faction(c.race),
-    gender: c.gender
-  }));
+  await getAccounts(wotlkrealmd)
+    .then(accs => accs.forEach(a => store['accounts'][a.id] = {
+      username: a.username,
+      characters: []
+    }))
+    .catch(async err => await error(err));
+  
+  await getCharacters(Object.keys(store.accounts), wotlkcharacters)
+    .then(chars => chars.forEach(c => store['accounts'][c.account]['characters'].push({
+      guid: c.guid, 
+      name: c.name,
+      faction: faction(c.race),
+      gender: c.gender
+    })))
+    .catch(async err => await error(err));
 
-  for (let account of Object.values(store.accounts)) {
-    await transfer_credit(account, wotlkcharacters);
-    await transfer_progress(account, wotlkcharacters);
+  const accounts = Object.values(store.accounts);
+  console.log('ACC ', accounts)
+
+  for (let account of accounts) {
+    await transfer_credit(account.characters, wotlkcharacters)
+      .then(res => console.log('Credit successfully transferred!'))
+      .catch(async err => await error(err));
+
+    // await transfer_progress(account, wotlkcharacters);
+
+    console.log(`Account ${account.username} complete!`);
   }
 
   try {
