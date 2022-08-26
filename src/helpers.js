@@ -12,7 +12,8 @@ const closeWindow = (count) => {
   }, 1000);
 }
 
-const error = () => {
+const error = (err) => {
+  console.log('ERROR: ', err)
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
