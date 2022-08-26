@@ -1,55 +1,35 @@
 const mysql = require('mysql2/promise');
 
-const { error } = require('../helpers');
-
-const getCharacters = async (accounts, wotlkcharacters) => {
-  let characters;
-
-  try {
-    const accountValues = '"' + accounts.join('", "') + '"';
-    const charactersQuery = `SELECT guid, account, race, gender FROM characters WHERE account IN (${accountValues})`;
-    let [rows] = await wotlkcharacters.execute(charactersQuery);
-    characters = rows;
-    console.log('Character data fetched...')
-  } catch (err) {
-    // native error msg printing after error func for some reason, revisit
-    await error(err);
-  }
-
-  return characters;
+const getCharacters = (accounts, wotlkcharacters) => {
+  const accountValues = '"' + accounts.join('", "') + '"';
+  const charactersQuery = `SELECT guid, account, race, gender FROM characters WHERE account IN (${accountValues})`;
+  return wotlkcharacters.execute(charactersQuery)
+    .then(res => {
+      console.log('Character data fetched...');
+      return res[0];
+    })
+    .catch(err => { throw err });
 }
 
-const getAchievements = async (characters, wotlkcharacters) => {
-  let achievements;
-
-  try {
-    const characterValues = '"' + characters.join('", "') + '"';
-    const achievementsQuery = `SELECT achievement, date FROM character_achievement WHERE guid IN (${characterValues})`;
-    let [rows] = await wotlkcharacters.query(achievementsQuery, [characters]);
-    achievements = rows;
-    console.log('Achievement data fetched...');
-  } catch (err) {
-    // native error msg printing after error func for some reason, revisit
-    await error(err);
-  }
-
-  return achievements;
+const getAchievements = (characters, wotlkcharacters) => {
+  const characterValues = '"' + characters.join('", "') + '"';
+  const achievementsQuery = `SELECT achievement, date FROM character_achievement WHERE guid IN (${characterValues})`;
+  return wotlkcharacters.query(achievementsQuery, [characters])
+    .then(res => {
+      console.log('Achievement data fetched...');
+      return res[0];
+    })
+    .catch(err => { throw err });
 }
 
 const addAchievements = async (achievements, wotlkcharacters) => {
-  let response;
-  
-  try {
-    const achievementsQuery = `INSERT IGNORE INTO character_achievement (guid, achievement, date) VALUES ?`;
-    let res = await wotlkcharacters.query(achievementsQuery, [achievements]);
-    response = res;
-    console.log('Achievements successfully transferred!');
-  } catch (err) {
-    // native error msg printing after error func for some reason, revisit
-    await error(err);
-  }
-  
-  return response;
+  const achievementsQuery = 'INSERT IGNORE INTO character_achievement (guid, achievement, date) VALUES ?';
+  return wotlkcharacters.query(achievementsQuery, [achievements])
+    .then(res => {
+      console.log('Achievements successfully transferred!');
+      return res[0];
+    })
+    .catch(err => { throw err });
 }
 
 module.exports = {
