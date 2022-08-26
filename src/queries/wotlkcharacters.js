@@ -22,7 +22,7 @@ const getAchievements = (characters, wotlkcharacters) => {
     .catch(err => { throw err });
 }
 
-const addAchievements = async (achievements, wotlkcharacters) => {
+const addAchievements = (achievements, wotlkcharacters) => {
   const achievementsQuery = 'INSERT IGNORE INTO character_achievement (guid, achievement, date) VALUES ?';
   return wotlkcharacters.query(achievementsQuery, [achievements])
     .then(res => {
