@@ -1,40 +1,14 @@
-const mysql = require('mysql2/promise');
-
-const { dbCredentials } = require('./config');
-const { getAccounts } = require('./queries/wotlkrealmd');
+const { getAccounts, wotlkrealmdConnect } = require('./queries/wotlkrealmd');
+const { getCharacters, wotlkcharactersConnect } = require('./queries/wotlkcharacters');
 const { closeWindow, error, faction } = require('./helpers');
 const { transfer_credit } = require('./transfers/credit_transfer');
 const { transfer_progress } = require('./transfers/progress_transfer');
-const { getCharacters } = require('./queries/wotlkcharacters');
 
-const wotlkcharactersConnect = async () => {
-  dbCredentials.database = 'wotlkcharacters';
-  return mysql.createConnection(dbCredentials)
-    .then(res => {
-      console.log('Connected to wotlkcharacters...');
-      return res;
-    })
-    .catch(async err => await error(err));
-}
-
-const wotlkrealmdConnect = async () => {
-  dbCredentials.database = 'wotlkrealmd';
-  return mysql.createConnection(dbCredentials)
-    .then(res => {
-      console.log('Connected to wotlkrealmd...');
-      return res;
-    })
-    .catch(async err => await error(err));
-}
-
-const store = {
-  accounts: {}
-};
-
+const store = { accounts: {} };
 const transfer_achievements = async () => {
   const wotlkcharacters = await wotlkcharactersConnect();
   const wotlkrealmd = await wotlkrealmdConnect();
-  
+
   await getAccounts(wotlkrealmd)
     .then(accs => accs.forEach(a => store['accounts'][a.id] = {
       username: a.username,
@@ -52,8 +26,6 @@ const transfer_achievements = async () => {
     .catch(async err => await error(err));
 
   const accounts = Object.values(store.accounts);
-  console.log('ACC ', accounts)
-
   for (let account of accounts) {
     await transfer_credit(account.characters, wotlkcharacters)
       .then(res => console.log('Credit successfully transferred!'))
@@ -64,19 +36,10 @@ const transfer_achievements = async () => {
     console.log(`Account ${account.username} complete!`);
   }
 
-  try {
-    await wotlkcharacters.end();
-    await wotlkrealmd.end();
-    console.log('Disconnected from wotlkcharacters and wotlkrealmd...');
-  } catch (err) {
-    // native error msg printing after error func for some reason, revisit
-    await error(err);
-  }
-
-  console.log(
-    'Successfully transferred achievement credit and progress between all of your characters!'
-  );
-
+  await wotlkcharacters.end();
+  await wotlkrealmd.end();
+  console.log('Disconnected from wotlkcharacters and wotlkrealmd...');
+  console.log('Successfully completed all transfers!');
   closeWindow(61);
 }
 

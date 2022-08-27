@@ -1,3 +1,17 @@
+const mysql = require('mysql2/promise');
+
+const { dbCredentials } = require('../config');
+
+const wotlkcharactersConnect = async () => {
+  dbCredentials.database = 'wotlkcharacters';
+  return mysql.createConnection(dbCredentials)
+    .then(res => {
+      console.log('Connected to wotlkcharacters...');
+      return res;
+    })
+    .catch(async err => await error(err));
+}
+
 const getCharacters = (accounts, wotlkcharacters) => {
   const accountVals = '"' + accounts.join('", "') + '"';
   const sql = `
@@ -39,6 +53,7 @@ const addAchievements = (achieves, char, wotlkcharacters) => {
 }
 
 module.exports = {
+  wotlkcharactersConnect: wotlkcharactersConnect,
   getCharacters: getCharacters,
   getAchievements: getAchievements,
   addAchievements: addAchievements

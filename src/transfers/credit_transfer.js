@@ -16,22 +16,16 @@ const transfer_credit = async (characters, wotlkcharacters) => {
     const charAchievements = { ...achievements };
     const queryAchievements = [];
   
-    // Check for faction-specific achievements
+    // Handle faction-specific achievements
     for (const a in charAchievements) {
       const fAchievement = factionAchievements[a];
       if (fAchievement && fAchievement.faction === c.faction) {
         // Remove opposing faction version of this achievement
-        if (charAchievements[fAchievement.alt]) {
-          delete charAchievements[fAchievement.alt];
-        }
-  
+        if (charAchievements[fAchievement.alt]) delete charAchievements[fAchievement.alt];
         queryAchievements.push([c.guid, Number(a), charAchievements[a]]);
       } else if (fAchievement && fAchievement.faction !== c.faction) {
         // Add correct faction version if it doesn't exist, remove this version
-        if (!charAchievements[fAchievement.alt]) {
-          charAchievements[fAchievement.alt] = charAchievements[a];
-        }
-        
+        if (!charAchievements[fAchievement.alt]) charAchievements[fAchievement.alt] = charAchievements[a];
         delete charAchievements[a];
         queryAchievements.push([c.guid, Number(fAchievement.alt), charAchievements[fAchievement.alt]]);
       } else {
@@ -41,8 +35,6 @@ const transfer_credit = async (characters, wotlkcharacters) => {
   
     await addAchievements(queryAchievements, c.name, wotlkcharacters);
   }
-
-  return;
 }
 
 module.exports = {
