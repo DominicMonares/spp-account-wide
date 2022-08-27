@@ -26,14 +26,14 @@ const transfer_achievements = async () => {
     .catch(async err => await error(err));
 
   const accounts = Object.values(store.accounts);
-  for (let account of accounts) {
-    await transfer_credit(account.characters, wotlkcharacters)
+  for (let a of accounts) {
+    await transfer_credit(a.characters, wotlkcharacters)
       .then(res => console.log('Credit successfully transferred!'))
       .catch(async err => await error(err));
 
-    // await transfer_progress(account, wotlkcharacters);
+    // await transfer_progress(a, wotlkcharacters);
 
-    console.log(`Account ${account.username} complete!`);
+    console.log(`Account ${a.username} complete!`);
   }
 
   await wotlkcharacters.end();
