@@ -1,4 +1,4 @@
-const { getAchievements, addAchievements } = require('../queries/wotlkcharacters');
+const { getAchievements, addAchievements } = require('../db/wotlkcharacters');
 const { factionAchievements } = require('../data/factionAchievements');
 
 let achievements = {};

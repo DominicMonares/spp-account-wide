@@ -1,5 +1,5 @@
-const { getAccounts, wotlkrealmdConnect } = require('./queries/wotlkrealmd');
-const { getCharacters, wotlkcharactersConnect } = require('./queries/wotlkcharacters');
+const { getAccounts, wotlkrealmdConnect } = require('./db/wotlkrealmd');
+const { getCharacters, wotlkcharactersConnect } = require('./db/wotlkcharacters');
 const { closeWindow, error, faction } = require('./helpers');
 const { transfer_credit } = require('./transfers/credit_transfer');
 const { transfer_progress } = require('./transfers/progress_transfer');
