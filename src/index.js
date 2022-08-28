@@ -21,7 +21,8 @@ const transfer_achievements = async () => {
       guid: c.guid, 
       name: c.name,
       faction: faction(c.race),
-      gender: c.gender
+      gender: c.gender,
+      knownTitles: c.knownTitles
     })))
     .catch(async err => await error(err));
 

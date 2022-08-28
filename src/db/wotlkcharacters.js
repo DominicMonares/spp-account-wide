@@ -15,7 +15,7 @@ const wotlkcharactersConnect = async () => {
 const getCharacters = (accounts, wotlkcharacters) => {
   const accountVals = '"' + accounts.join('", "') + '"';
   const sql = `
-    SELECT guid, name, account, race, gender FROM characters 
+    SELECT guid, name, account, race, gender, knownTitles FROM characters 
     WHERE account IN (${accountVals})
   `;
   

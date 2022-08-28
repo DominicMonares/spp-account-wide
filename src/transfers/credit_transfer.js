@@ -33,8 +33,24 @@ const transfer_credit = async (chars, wotlkcharacters) => {
       }
     }
   
+    console.log('CHARRR ', c.knownTitles)
     await addAchievements(queryAchieves, c.name, wotlkcharacters);
     // add rewards
+
+
+    /*
+    NOTES ON TITLES
+
+    0 0 0 16384 0 0 | Jenkins only
+    0 0 0 24576 0 0 | Jenkins and the Undying
+
+    Jenkins
+    110 / 32 = 3.4375
+    
+    the Undying
+
+    
+    */
   }
 }
 
