@@ -23,6 +23,6 @@ const getAccounts = (wotlkrealmd) => {
 }
 
 module.exports = {
-  getAccounts: getAccounts,
-  wotlkrealmdConnect: wotlkrealmdConnect
+  wotlkrealmdConnect: wotlkrealmdConnect,
+  getAccounts: getAccounts
 };
