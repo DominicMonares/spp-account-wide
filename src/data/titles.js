@@ -1,8 +1,5 @@
 // { TitleID: InGameOrder }
 const titles = {
-  // Scarab lord? Other unobtainable titles from old feats of strength?
-
-
   442: { TitleID: 1, IGO: 1 }, // Private
   470: { TitleID: 2, IGO: 2 }, // Corporal
   471: { TitleID: 3, IGO: 3 }, // Sergeant
@@ -31,10 +28,11 @@ const titles = {
   446: { TitleID: 26, IGO: 26 }, // General
   445: { TitleID: 27, IGO: 27 }, // Warlord
   443: { TitleID: 28, IGO: 28 }, // High Warlord
-
-
+  416: { TitleID: 46, IGO: 33 }, // Scarab Lord
   714: { TitleID: 47, IGO: 34 }, // Conqueror
   907: { TitleID: 48, IGO: 35 }, // Justicar
+  432: { TitleID: 53, IGO: 36 }, // Champion of the Naaru
+  432: { TitleID: 64, IGO: 39 }, // Hand of A'dal
   230: { TitleID: 72, IGO: 41 }, // Battlemaster
   1175: { TitleID: 72, IGO: 41 }, // Battlemaster
   913: { TitleID: 74, IGO: 43 }, // Elder
@@ -54,59 +52,59 @@ const titles = {
   2054: { TitleID: 121, IGO: 89 }, // Twilight Vanquisher
   1402: { TitleID: 122, IGO: 90 }, // Conqueror of Naxxramas
   1656: { TitleID: 124, IGO: 92 }, // the Hallowed
-  1657: { TitleID: 124 },
-  1681: { TitleID: 125 },
-  1682: { TitleID: 125 },
-  870: { TitleID: [126, 127] }, // [A, H]
-  1658: { TitleID: 129 },
-  762: { TitleID: 130 },
-  948: { TitleID: 130 },
-  945: { TitleID: 131 },
-  953: { TitleID: 132 },
-  1683: { TitleID: 133 },
-  1684: { TitleID: 133 },
-  1691: { TitleID: 134 },
-  1692: { TitleID: 134 },
-  1693: { TitleID: 135 },
-  1707: { TitleID: 135 },
-  1793: { TitleID: [138, 137] }, // [M, F]
-  456: { TitleID: 139 },
-  2051: { TitleID: 140 },
-  2186: { TitleID: 141 },
-  2187: { TitleID: 142 },
-  2188: { TitleID: 143 },
-  871: { TitleID: 144 },
-  2336: { TitleID: 145 },
-  2761: { TitleID: 146 },
-  2760: { TitleID: 147 },
-  2763: { TitleID: 148 },
-  2764: { TitleID: 149 },
-  2765: { TitleID: 150 },
-  2766: { TitleID: 151 },
-  2767: { TitleID: 152 },
-  2768: { TitleID: 153 },
-  2769: { TitleID: 154 },
-  2797: { TitleID: 155 },
-  2798: { TitleID: 155 },
-  2816: { TitleID: 156 },
-  2817: { TitleID: 156 },
-  3117: { TitleID: 158 },
-  3259: { TitleID: 159 },
-  2904: { TitleID: 160 },
-  2903: { TitleID: 161 },
-  3036: { TitleID: 164 },
-  3037: { TitleID: 165 },
-  3316: { TitleID: 166 },
-  3478: { TitleID: 168 },
-  3656: { TitleID: 168 },
-  4078: { TitleID: 170 },
-  4080: { TitleID: 171 },
-  4477: { TitleID: 172 },
-  4584: { TitleID: 173 },
-  4583: { TitleID: 174 },
-  4530: { TitleID: 175 },
-  4597: { TitleID: 175 },
-  4598: { TitleID: 176 },
+  1657: { TitleID: 124, IGO: 92 }, // the Hallowed
+  1681: { TitleID: 125, IGO: 93 }, // Loremaster
+  1682: { TitleID: 125, IGO: 93 }, // Loremaster
+  870: { TitleID: [126, 127], IGO: [94, 95] }, // [of the Alliance, of the Horde]
+  1658: { TitleID: 129, IGO: 97 }, // Champion of the Frozen Wastes
+  762: { TitleID: 130, IGO: 98 }, // Ambassador
+  948: { TitleID: 130, IGO: 98 }, // Ambassador
+  945: { TitleID: 131, IGO: 99 }, // the Argent Champion
+  953: { TitleID: 132, IGO: 100 }, // Guardian of Cenarius
+  1683: { TitleID: 133, IGO: 101 }, // Brewmaster
+  1684: { TitleID: 133, IGO: 101 }, // Brewmaster
+  1691: { TitleID: 134, IGO: 102 }, // Merrymaker
+  1692: { TitleID: 134, IGO: 102 }, // Merrymaker
+  1693: { TitleID: 135, IGO: 103 }, // the Love Fool
+  1707: { TitleID: 135, IGO: 103 }, // the Love Fool
+  1793: { TitleID: [138, 137], IGO: [105, 104] }, // [Patron, Matron]
+  456: { TitleID: 139, IGO: 106 }, // Obsidian Slayer
+  2051: { TitleID: 140, IGO: 107 }, // of the Nightfall
+  2186: { TitleID: 141, IGO: 108 }, // the Immortal
+  2187: { TitleID: 142, IGO: 109 }, // the Undying
+  2188: { TitleID: 143, IGO: 110 }, // Jenkins
+  871: { TitleID: 144, IGO: 111 }, // Bloodsail Admiral
+  2336: { TitleID: 145, IGO: 112 }, // the Insane
+  2761: { TitleID: 146, IGO: 113 }, // of the Exodar
+  2760: { TitleID: 147, IGO: 114 }, // of Darnassus
+  2763: { TitleID: 148, IGO: 115 }, // of Ironforge
+  2764: { TitleID: 149, IGO: 116 }, // of Stormwind
+  2765: { TitleID: 150, IGO: 117 }, // of Orgrimmar
+  2766: { TitleID: 151, IGO: 118 }, // of Sen'jin
+  2767: { TitleID: 152, IGO: 119 }, // of Silvermoon
+  2768: { TitleID: 153, IGO: 120 }, // of Thunder Bluff
+  2769: { TitleID: 154, IGO: 121 }, // of the Undercity
+  2797: { TitleID: 155, IGO: 122 }, // the Noble
+  2798: { TitleID: 155, IGO: 122 }, // the Noble
+  2816: { TitleID: 156, IGO: 123 }, // Crusader
+  2817: { TitleID: 156, IGO: 123 }, // Crusader
+  3117: { TitleID: 158, IGO: 124 }, // Death's Demise
+  3259: { TitleID: 159, IGO: 125 }, // the Celestial Defender
+  2904: { TitleID: 160, IGO: 126 }, // Conqueror of Ulduar
+  2903: { TitleID: 161, IGO: 127 }, // Champion of Ulduar
+  3036: { TitleID: 164, IGO: 129 }, // Starcaller
+  3037: { TitleID: 165, IGO: 130 }, // the Astral Walker
+  3316: { TitleID: 166, IGO: 131 }, // Herald of the Titans
+  3478: { TitleID: 168, IGO: 133 }, // the Pilgrim
+  3656: { TitleID: 168, IGO: 133 }, // the Pilgrim
+  4078: { TitleID: 170, IGO: 135 }, // Grand Crusader
+  4080: { TitleID: 171, IGO: 136 }, // the Argent Defender
+  4477: { TitleID: 172, IGO: 137 }, // the Patient
+  4584: { TitleID: 173, IGO: 138 }, // the Light of Dawn
+  4583: { TitleID: 174, IGO: 139 }, // Bane of the Fallen King
+  4530: { TitleID: 175, IGO: 140 }, // the Kingslayer
+  4597: { TitleID: 175, IGO: 140 }, // the Kingslayer
+  4598: { TitleID: 176, IGO: 141 }, // of the Ashen Verdict
 };
 
 module.exports = {
