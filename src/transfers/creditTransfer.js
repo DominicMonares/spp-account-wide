@@ -3,7 +3,7 @@ const { factionAchievements } = require('../data/factionAchievements');
 
 let achievements = {};
 
-const transfer_credit = async (chars, wotlkcharacters) => {
+const transferCredit = async (chars, rewards, wotlkcharacters) => {
   if (Object.keys(achievements).length) { achievements = {} }
   
   const allAchieves = await getAchievements(chars.map(c => c.guid), wotlkcharacters);
@@ -54,6 +54,10 @@ const transfer_credit = async (chars, wotlkcharacters) => {
   }
 }
 
+const transferRewards = async () => {
+
+}
+
 module.exports = {
-  transfer_credit: transfer_credit
+  transferCredit: transferCredit
 };
