@@ -9,13 +9,13 @@ const wotlkcharactersConnect = async () => {
       console.log('Connected to wotlkcharacters...');
       return res;
     })
-    .catch(async err => await error(err));
+    .catch(async err => { throw err });
 }
 
 const getCharacters = (accounts, wotlkcharacters) => {
   const accountVals = '"' + accounts.join('", "') + '"';
   const sql = `
-    SELECT guid, name, account, race, gender, knownTitles FROM characters 
+    SELECT guid, name, race, gender, knownTitles FROM characters 
     WHERE account IN (${accountVals})
   `;
   
@@ -42,11 +42,11 @@ const getAchievements = (chars, wotlkcharacters) => {
     .catch(err => { throw err });
 }
 
-const addAchievements = (achieves, char, wotlkcharacters) => {
+const addAchievements = (achieves, wotlkcharacters) => {
   const sql = 'INSERT IGNORE INTO character_achievement (guid, achievement, date) VALUES ?';
   return wotlkcharacters.query(sql, [achieves])
     .then(res => {
-      console.log(`Achievement credit successfully transferred for ${char}!`);
+      console.log('Achievement credit successfully transferred!');
       return res[0];
     })
     .catch(err => { throw err });

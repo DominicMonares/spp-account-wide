@@ -9,15 +9,15 @@ const wotlkrealmdConnect = async () => {
       console.log('Connected to wotlkrealmd...');
       return res;
     })
-    .catch(async err => await error(err));
+    .catch(async err => { throw err});
 }
 
 const getAccounts = (wotlkrealmd) => {
-  const sql = 'SELECT id, username FROM account WHERE username NOT LIKE "%RNDBOT%"';
+  const sql = 'SELECT id FROM account WHERE username NOT LIKE "%RNDBOT%"';
   return wotlkrealmd.execute(sql)
     .then(accounts => {
       console.log('Account data fetched...');
-      return accounts[0]}
+      return accounts[0].map(a => a.id)}
     )
     .catch(err => { throw err });
 }

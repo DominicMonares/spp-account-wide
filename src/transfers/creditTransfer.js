@@ -1,61 +1,60 @@
 const { getAchievements, addAchievements } = require('../db/wotlkcharacters');
+const { getRewards } = require('../db/wotlkmangos');
 const { factionAchievements } = require('../data/factionAchievements');
+const { error } = require('../utils');
 
-let achievements = {};
-let rewards;
+const achievements = {};
+const rewards = {};
+const queryAchieves = [];
+const queryRewardMail = [];
 
-const transferCredit = async (chars, achievementRewards, wotlkcharacters) => {
-  if (Object.keys(achievements).length) { achievements = {} }
-  rewards = achievementRewards;
+const transferCredit = async (chars, wotlkcharacters, wotlkmangos) => {
+  await getAchievements(chars.map(c => c.guid), wotlkcharacters)
+    .then(charAchievements => charAchievements.forEach(a => {
+      if (!achievements[a.achievement]) return achievements[a.achievement] = a.date;
+      if (a.date < achievements[a.achievement]) achievements[a.achievement] = a.date;
+    }))
+    .catch(err => error(err));
 
-  const allAchieves = await getAchievements(chars.map(c => c.guid), wotlkcharacters);
-  allAchieves.forEach(a => {
-    if (!achievements[a.achievement]) return achievements[a.achievement] = a.date;
-    if (a.date < achievements[a.achievement]) achievements[a.achievement] = a.date;
-  });
+  await getRewards(wotlkmangos)
+    .then(rews => rews.forEach(r => rewards[r.entry] = r))
+    .catch(err => error(err));
 
   for (const c of chars) {
     const charAchieves = { ...achievements };
-    const queryAchieves = [];
-    const queryRewardTitles = [];
-    const queryRewardMail = [];
 
-    // Handle faction-specific achievements
     for (const a in charAchieves) {
       const factionAchieves = factionAchievements[a];
-      if (factionAchieves && factionAchieves.faction === c.faction) {
-        // Remove opposing faction version of this achievement
+      const correctFaction = factionAchieves && factionAchieves.faction === c.faction;
+      const incorrectFaction = factionAchieves && factionAchieves.faction !== c.faction;
+
+      if (correctFaction) {
         if (charAchieves[factionAchieves.alt]) delete charAchieves[factionAchieves.alt];
         queryAchieves.push([c.guid, Number(a), charAchieves[a]]);
-
-
-        
-      } else if (factionAchieves && factionAchieves.faction !== c.faction) {
-        // Add correct faction version if it doesn't exist, remove this version
+        await handleReward().catch(err => error(err));
+      } else if (incorrectFaction) {
         if (!charAchieves[factionAchieves.alt]) charAchieves[factionAchieves.alt] = charAchieves[a];
         delete charAchieves[a];
         queryAchieves.push([c.guid, Number(factionAchieves.alt), charAchieves[factionAchieves.alt]]);
-
-
-
+        await handleReward().catch(err => error(err));
       } else {
         queryAchieves.push([c.guid, Number(a), charAchieves[a]]);
+        await handleReward().catch(err => error(err));
       }
     }
-
-    console.log('CHARRR ', c.knownTitles)
-    await addAchievements(queryAchieves, c.name, wotlkcharacters);
-    // add reward titles
-    // add reward mail
-    hasReward()
-
   }
+
+  await addAchievements(queryAchieves, wotlkcharacters).catch(err => error(err));
 }
 
-const hasReward = async (achievement, character) => {
+
+
+const handleReward = async (achievement, character) => {
+  // handle titles and mail
+
   // this.queryRewardMail.push()
 
-  console.log('TETETE ', this.queryRewardMail)
+  // console.log('TETETE ', this.queryRewardMail)
 
   /*
   NOTES ON TITLES

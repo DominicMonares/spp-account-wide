@@ -9,7 +9,7 @@ const wotlkmangosConnect = async () => {
       console.log('Connected to wotlkmangos...');
       return res;
     })
-    .catch(async err => await error(err));
+    .catch(err => { throw err });
 }
 
 const getRewards = (wotlkmangos) => {

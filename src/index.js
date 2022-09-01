@@ -1,47 +1,23 @@
 const { getAccounts, wotlkrealmdConnect } = require('./db/wotlkrealmd');
-const { wotlkmangosConnect, getRewards } = require('./db/wotlkmangos');
 const { getCharacters, wotlkcharactersConnect } = require('./db/wotlkcharacters');
-const { closeWindow, error, faction } = require('./utils');
+const { wotlkmangosConnect } = require('./db/wotlkmangos');
+const { closeWindow, error } = require('./utils');
 const { transferCredit } = require('./transfers/creditTransfer');
 const { transferProgress } = require('./transfers/progressTransfer');
 
-const store = { accounts: {}, rewards: {} };
-const transfer_achievements = async () => {
-  const wotlkcharacters = await wotlkcharactersConnect();
-  const wotlkmangos = await wotlkmangosConnect();
-  const wotlkrealmd = await wotlkrealmdConnect();
+const accountwideAchievements = async () => {
+  const wotlkcharacters = await wotlkcharactersConnect().catch(err => error(err));
+  const wotlkmangos = await wotlkmangosConnect().catch(err => error(err));
+  const wotlkrealmd = await wotlkrealmdConnect().catch(err => error(err));
 
-  await getAccounts(wotlkrealmd)
-    .then(accs => accs.forEach(a => store['accounts'][a.id] = {
-      username: a.username,
-      characters: []
-    }))
-    .catch(async err => await error(err));
-  
-  await getCharacters(Object.keys(store.accounts), wotlkcharacters)
-    .then(chars => chars.forEach(c => store['accounts'][c.account]['characters'].push({
-      guid: c.guid, 
-      name: c.name,
-      faction: faction(c.race),
-      gender: c.gender,
-      knownTitles: c.knownTitles
-    })))
+  const accounts = await getAccounts(wotlkrealmd).catch(err => error(err));
+  const characters = await getCharacters(accounts, wotlkcharacters).catch(err => error(err));
+
+  await transferCredit(characters, wotlkcharacters, wotlkmangos)
+    .then(res => console.log('Credit successfully transferred!'))
     .catch(async err => await error(err));
 
-  await getRewards(wotlkmangos)
-    .then(rewards => rewards.forEach(r => store['rewards'][r.entry] = r))
-    .catch(async err =>  await error(err));
-
-  const accounts = Object.values(store.accounts);
-  for (let a of accounts) {
-    await transferCredit(a.characters, store.rewards, wotlkcharacters)
-      .then(res => console.log('Credit successfully transferred!'))
-      .catch(async err => await error(err));
-
-    // await transferProgress(a, wotlkcharacters);
-
-    console.log(`Account ${a.username} complete!`);
-  }
+  // await transferProgress(a, wotlkcharacters);
 
   await wotlkcharacters.end();
   await wotlkmangos.end();
@@ -51,9 +27,9 @@ const transfer_achievements = async () => {
   closeWindow(61);
 }
 
-transfer_achievements();
+accountwideAchievements();
 
 // REMOVE EXPORTS FOR PRODUCTION
 module.exports = { 
-  transfer_achievements: transfer_achievements 
+  accountwideAchievements: accountwideAchievements 
 };
