@@ -30,7 +30,7 @@ const getCharacters = (accounts, wotlkcharacters) => {
 const getAchievements = (chars, wotlkcharacters) => {
   const charValues = '"' + chars.join('", "') + '"';
   const sql = `
-    SELECT achievement, date FROM character_achievement 
+    SELECT * FROM character_achievement 
     WHERE guid IN (${charValues})
   `;
   
@@ -52,9 +52,17 @@ const addAchievements = (achieves, wotlkcharacters) => {
     .catch(err => { throw err });
 }
 
+const addTitleReward = (char, titles, wotlkcharacters) => {
+  const sql = `UPDATE characters SET knownTitles = '${titles}' WHERE guid = ${char}`;
+  return wotlkcharacters.query(sql)
+    .then(res => res[0])
+    .catch(err => { throw err });
+}
+
 module.exports = {
   wotlkcharactersConnect: wotlkcharactersConnect,
   getCharacters: getCharacters,
   getAchievements: getAchievements,
-  addAchievements: addAchievements
+  addAchievements: addAchievements,
+  addTitleReward: addTitleReward
 };
