@@ -45,16 +45,50 @@ const getAchievements = (chars, wotlkcharacters) => {
 const addAchievements = (achieves, wotlkcharacters) => {
   const sql = 'INSERT IGNORE INTO character_achievement (guid, achievement, date) VALUES ?';
   return wotlkcharacters.query(sql, [achieves])
+    .then(res => res[0])
+    .catch(err => { throw err });
+}
+
+const addRewardTitles = (char, titles, wotlkcharacters) => {
+  const sql = `UPDATE characters SET knownTitles = '${titles}' WHERE guid = ${char}`;
+  return wotlkcharacters.query(sql)
+    .then(res => res[0])
+    .catch(err => { throw err });
+}
+
+const getRewardItems = (items, wotlkcharacters) => {
+  const itemValues = '"' + items.join('", "') + '"';
+  // console.log('ITEMS ', itemValues)
+  const sql = `SELECT guid, itemEntry FROM item_instance WHERE itemEntry IN (${itemValues})`;
+  return wotlkcharacters.query(sql)
     .then(res => {
-      console.log('Achievement credit successfully transferred!');
+      console.log('Reward item data fetched...');
       return res[0];
     })
     .catch(err => { throw err });
 }
 
-const addTitleReward = (char, titles, wotlkcharacters) => {
-  const sql = `UPDATE characters SET knownTitles = '${titles}' WHERE guid = ${char}`;
+const getMailIDs = (wotlkcharacters) => {
+  const sql = 'SELECT id FROM mail';
   return wotlkcharacters.query(sql)
+    .then(res => {
+      console.log('Mail data fetched...');
+      return res[0];
+    })
+    .catch(err => { throw err });
+}
+
+const addRewardMail = (mail, wotlkcharacters) => {
+  const fields = '(id, messageType, stationery, mailTemplateId, sender, receiver, subject, body, has_items, expire_time, deliver_time, money, cod, checked)';
+  const sql = `INSERT IGNORE INTO mail ${fields} VALUES ?`;
+  return wotlkcharacters.query(sql, [mail])
+    .then(res => res[0])
+    .catch(err => { throw err });
+}
+
+const addRewardItems = (items, wotlkcharacters) => {
+  const sql = 'INSERT IGNORE INTO mail_items (mail_id, item_guid, item_template, receiver) VALUES ?';
+  return wotlkcharacters.query(sql, [items])
     .then(res => res[0])
     .catch(err => { throw err });
 }
@@ -64,5 +98,9 @@ module.exports = {
   getCharacters: getCharacters,
   getAchievements: getAchievements,
   addAchievements: addAchievements,
-  addTitleReward: addTitleReward
+  addRewardTitles: addRewardTitles,
+  getRewardItems: getRewardItems,
+  getMailIDs: getMailIDs,
+  addRewardMail: addRewardMail,
+  addRewardItems: addRewardItems
 };
