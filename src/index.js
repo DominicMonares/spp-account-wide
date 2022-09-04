@@ -27,7 +27,8 @@ const accountwideAchievements = async () => {
   closeWindow(61);
 }
 
-accountwideAchievements();
+// UNCOMMENT FOR PRODUCTION
+// accountwideAchievements();
 
 // REMOVE EXPORTS FOR PRODUCTION
 module.exports = { 

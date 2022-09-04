@@ -56,7 +56,7 @@ const transferCredit = async (chars, wotlkcharacters, wotlkmangos) => {
 
   // Get topmost item guid
   await getItemGuid(wotlkcharacters)
-    .then(guid => itemGuid = guid[0]['guid'] + 100) // +100 to account for new characters
+    .then(guid => itemGuid = guid[0]['guid'] + 100) // +100 to account for newly created characters
     .catch(err => error(err));
 
   // Get topmost mail ID
@@ -112,8 +112,8 @@ const transferCredit = async (chars, wotlkcharacters, wotlkmangos) => {
     console.log('Item instances successfully transferred!');
   }
   
-  const charTitleKeys = Object.keys(charTitles);
-  for (const char of charTitleKeys) {
+  console.log('TITLES ', charTitles)
+  for (const char of Object.keys(charTitles)) {
     await addRewardTitles(char, charTitles[char], wotlkcharacters).catch(err => error(err));
   }
   console.log('Achievement title rewards successfully transferred!');
@@ -173,10 +173,10 @@ const addMail = (char, reward) => {
 const addTitle = (char, gender, faction, achievement) => {
   const knownTitles = charTitles[char].split(' ').map(t => Number(t));
   if (knownTitles.length === 7) knownTitles.pop();
-
+  
   let id = titles[achievement]['TitleID'];
   let order = titles[achievement]['IGO'];
-
+  
   if (achievement === '870') { // of the Alliance | of the Horde
     id = faction === 'A' ? id[0] : id[1];
     order = faction === 'A' ? order[0] : order[1];
@@ -184,11 +184,12 @@ const addTitle = (char, gender, faction, achievement) => {
     id = gender === 0 ? id[0] : id[1];
     order = gender === 0 ? order[0] : order[1];
   } 
-
+  
   const titleIndex = Number((order / 32).toString()[0]);
   const bit = 2 ** (order % 32);
   knownTitles[titleIndex] = knownTitles[titleIndex] + bit;
   charTitles[char] = knownTitles.join(' ');
+  console.log('CHARTITLES ', charTitles)
 }
 
 module.exports = {
