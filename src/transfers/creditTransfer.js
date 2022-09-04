@@ -56,8 +56,10 @@ const transferCredit = async (chars, wotlkcharacters, wotlkmangos) => {
 
   // Get topmost item guid
   await getItemGuid(wotlkcharacters)
-    .then(guid => itemGuid = guid[0]['guid'] + 100) // +100 to account for newly created characters
+    .then(guid => itemGuid = guid[0]['guid'] + 40000) // +40k to account for newly created characters
     .catch(err => error(err));
+
+  console.log('GASDF ', itemGuid)
 
   // Get topmost mail ID
   await getMailIDs(wotlkcharacters)
@@ -112,7 +114,6 @@ const transferCredit = async (chars, wotlkcharacters, wotlkmangos) => {
     console.log('Item instances successfully transferred!');
   }
   
-  console.log('TITLES ', charTitles)
   for (const char of Object.keys(charTitles)) {
     await addRewardTitles(char, charTitles[char], wotlkcharacters).catch(err => error(err));
   }
@@ -146,6 +147,8 @@ const addMail = (char, reward) => {
     0, // cod
     0, // checked
   ]);
+
+  console.log('REWARD MAIL ', queryRewardMail)
   
   queryMailItems.push([mailID + 1, itemGuid, reward.item, char]);
 
@@ -189,7 +192,6 @@ const addTitle = (char, gender, faction, achievement) => {
   const bit = 2 ** (order % 32);
   knownTitles[titleIndex] = knownTitles[titleIndex] + bit;
   charTitles[char] = knownTitles.join(' ');
-  console.log('CHARTITLES ', charTitles)
 }
 
 module.exports = {
