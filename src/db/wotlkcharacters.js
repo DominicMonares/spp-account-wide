@@ -43,7 +43,7 @@ const getAchievements = (chars, wotlkcharacters) => {
 }
 
 const addAchievements = (achieves, wotlkcharacters) => {
-  const sql = 'INSERT IGNORE INTO character_achievement (guid, achievement, date) VALUES ?';
+  const sql = 'INSERT IGNORE INTO character_achievement VALUES ?';
   return wotlkcharacters.query(sql, [achieves])
     .then(res => res[0])
     .catch(err => { throw err });
@@ -53,18 +53,6 @@ const addRewardTitles = (char, titles, wotlkcharacters) => {
   const sql = `UPDATE characters SET knownTitles = '${titles}' WHERE guid = ${char}`;
   return wotlkcharacters.query(sql)
     .then(res => res[0])
-    .catch(err => { throw err });
-}
-
-const getRewardItems = (items, wotlkcharacters) => {
-  const itemValues = '"' + items.join('", "') + '"';
-  // console.log('ITEMS ', itemValues)
-  const sql = `SELECT guid, itemEntry FROM item_instance WHERE itemEntry IN (${itemValues})`;
-  return wotlkcharacters.query(sql)
-    .then(res => {
-      console.log('Reward item data fetched...');
-      return res[0];
-    })
     .catch(err => { throw err });
 }
 
@@ -79,16 +67,32 @@ const getMailIDs = (wotlkcharacters) => {
 }
 
 const addRewardMail = (mail, wotlkcharacters) => {
-  const fields = '(id, messageType, stationery, mailTemplateId, sender, receiver, subject, body, has_items, expire_time, deliver_time, money, cod, checked)';
-  const sql = `INSERT IGNORE INTO mail ${fields} VALUES ?`;
+  const sql = 'INSERT IGNORE INTO mail VALUES ?';
   return wotlkcharacters.query(sql, [mail])
     .then(res => res[0])
     .catch(err => { throw err });
 }
 
 const addRewardItems = (items, wotlkcharacters) => {
-  const sql = 'INSERT IGNORE INTO mail_items (mail_id, item_guid, item_template, receiver) VALUES ?';
+  const sql = 'INSERT IGNORE INTO mail_items VALUES ?';
   return wotlkcharacters.query(sql, [items])
+    .then(res => res[0])
+    .catch(err => { throw err });
+}
+
+const getItemGuid = (wotlkcharacters) => {
+  const sql = 'SELECT guid FROM item_instance ORDER BY guid DESC LIMIT 1';
+  return wotlkcharacters.query(sql)
+  .then(res => {
+    console.log('Item guid data fetched...');
+    return res[0];
+  })
+    .catch(err => { throw err });
+}
+
+const addItemInstances = (instances, wotlkcharacters) => {
+  const sql = 'INSERT IGNORE INTO item_instance VALUES ?';
+  return wotlkcharacters.query(sql, [instances])
     .then(res => res[0])
     .catch(err => { throw err });
 }
@@ -99,8 +103,9 @@ module.exports = {
   getAchievements: getAchievements,
   addAchievements: addAchievements,
   addRewardTitles: addRewardTitles,
-  getRewardItems: getRewardItems,
   getMailIDs: getMailIDs,
   addRewardMail: addRewardMail,
-  addRewardItems: addRewardItems
+  addRewardItems: addRewardItems,
+  getItemGuid: getItemGuid,
+  addItemInstances: addItemInstances
 };

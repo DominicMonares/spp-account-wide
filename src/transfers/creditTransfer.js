@@ -2,10 +2,11 @@ const {
   getAchievements, 
   addAchievements, 
   addRewardTitles,
-  getRewardItems,
   getMailIDs,
   addRewardMail,
-  addRewardItems
+  addRewardItems,
+  getItemGuid,
+  addItemInstances
 } = require('../db/wotlkcharacters');
 const { getRewards } = require('../db/wotlkmangos');
 const { error, faction } = require('../utils');
@@ -16,11 +17,13 @@ const achievements = {}; // Primary achievement store
 const charAchievements = {}; // Individual achievements
 const charTitles = {};
 const rewards = {};
-let mailID; 
+let itemGuid;
+let mailID = 1; 
 
 const queryAchieves = []; 
 const queryRewardMail = [];
 const queryMailItems = [];
+const queryItemInstances = [];
 
 const transferCredit = async (chars, wotlkcharacters, wotlkmangos) => {
   // Create achievement store for each character
@@ -51,19 +54,14 @@ const transferCredit = async (chars, wotlkcharacters, wotlkmangos) => {
     if (rewards[r]['item']) queryItems.push(rewards[r]['item']); 
   });
 
-
-  await getRewardItems(queryItems, wotlkcharacters)
-    .then(items => items.forEach(i => {
-      for (const r in rewards) {
-        // console.log('ITEMMMMM ', rewards[r][i.itemEntry])
-        if (rewards[r]['item'] === i.itemEntry) rewards[r]['itemGuid'] = i.guid;
-      }
-    }))
+  // Get topmost item guid
+  await getItemGuid(wotlkcharacters)
+    .then(guid => itemGuid = guid[0]['guid'] + 100) // +100 to account for new characters
     .catch(err => error(err));
 
   // Get topmost mail ID
   await getMailIDs(wotlkcharacters)
-    .then(mail => mailID = mail.pop().id)
+    .then(mail => { if (mail.length) mailID = mail.pop().id })
     .catch(err => error(err));
 
   // Add achievement credit and rewards for each character
@@ -108,6 +106,11 @@ const transferCredit = async (chars, wotlkcharacters, wotlkmangos) => {
     await addRewardItems(queryMailItems, wotlkcharacters).catch(err => error(err));
     console.log('Achievement mail items successfully transferred!');
   }
+
+  if (queryItemInstances.length) {
+    await addItemInstances(queryItemInstances, wotlkcharacters).catch(err => error(err));
+    console.log('Item instances successfully transferred!');
+  }
   
   const charTitleKeys = Object.keys(charTitles);
   for (const char of charTitleKeys) {
@@ -118,15 +121,14 @@ const transferCredit = async (chars, wotlkcharacters, wotlkmangos) => {
 
 const handleReward = (char, achievement) => {
   if (charAchievements[char.guid][achievement] || !rewards[achievement]) return;
+  charAchievements[char.guid][achievement] = achievements[achievement];
   const rew = rewards[achievement];
   if (rew.sender) addMail(char.guid, rew);
   if (rew.title_A || rew.title_H) addTitle(char.guid, char.gender, faction(char.race), achievement);
 }
 
 const addMail = (char, reward) => {
-  const itemGuid = rewards[reward.entry]['itemGuid'];
   const date = new Date();
-  // console.log('FUASDFA ', rewards[reward.entry])
   
   queryRewardMail.push([
     mailID + 1, // id
@@ -142,10 +144,29 @@ const addMail = (char, reward) => {
     date.getTime()/1000, // deliver_time
     0, // money
     0, // cod
-    0 // checked
+    0, // checked
   ]);
   
   queryMailItems.push([mailID + 1, itemGuid, reward.item, char]);
+
+  queryItemInstances.push([
+    itemGuid, // guid
+    0, // owner_guid
+    reward.item, // itemEntry
+    0, // creatorGuid
+    0, // giftCreatorGuid
+    1, // count
+    0, // duration
+    '0 0 0 0 0', // charges
+    0, // flags
+    '0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ', // enchantments
+    0, // randomPropertyId
+    0, // durability
+    0, // playedTime
+    '' // text
+  ]);
+
+  itemGuid++;
   mailID++;
 }
 
