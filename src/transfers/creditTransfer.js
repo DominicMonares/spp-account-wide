@@ -56,14 +56,12 @@ const transferCredit = async (chars, wotlkcharacters, wotlkmangos) => {
 
   // Get topmost item guid
   await getItemGuid(wotlkcharacters)
-    .then(guid => itemGuid = guid[0]['guid'] + 40000) // +40k to account for newly created characters
+    .then(guid => itemGuid = guid[0]['guid'] + 1000) // +1000 for newly created characters & overwrites
     .catch(err => error(err));
-
-  console.log('GASDF ', itemGuid)
 
   // Get topmost mail ID
   await getMailIDs(wotlkcharacters)
-    .then(mail => { if (mail.length) mailID = mail.pop().id })
+    .then(mail => { if (mail.length) mailID = mail.pop().id + 3 }) // +3 for new char CE mail
     .catch(err => error(err));
 
   // Add achievement credit and rewards for each character
@@ -132,7 +130,7 @@ const addMail = (char, reward) => {
   const date = new Date();
   
   queryRewardMail.push([
-    mailID + 1, // id
+    mailID, // id
     3, // messageType
     41, // stationery
     0, // mailTemplateId
@@ -150,11 +148,11 @@ const addMail = (char, reward) => {
 
   console.log('REWARD MAIL ', queryRewardMail)
   
-  queryMailItems.push([mailID + 1, itemGuid, reward.item, char]);
+  queryMailItems.push([mailID, itemGuid, reward.item, char]);
 
   queryItemInstances.push([
     itemGuid, // guid
-    0, // owner_guid
+    char, // owner_guid
     reward.item, // itemEntry
     0, // creatorGuid
     0, // giftCreatorGuid
