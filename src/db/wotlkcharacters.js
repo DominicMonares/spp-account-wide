@@ -97,6 +97,26 @@ const addItemInstances = (instances, wotlkcharacters) => {
     .catch(err => { throw err });
 }
 
+const progressTableExists = (wotlkcharacters) => {
+  const sql = 'SHOW TABLES LIKE "character_achievement_shared_progress"';
+  return wotlkcharacters.query(sql)
+    .then(res => res[0].length ? true : false)
+    .catch(err => { throw err });
+}
+
+const createProgressTable = (wotlkcharacters) => {
+  const sql = `
+    CREATE TABLE character_achievement_shared_progress (
+      achievement INT NOT NULL,
+      progress INT DEFAULT 0,
+      PRIMARY KEY (achievement)
+    )
+  `
+  return wotlkcharacters.query(sql)
+    .then(res => console.log('Table character_achievement_shared_progress successfully created!'))
+    .catch(err => { throw err });
+}
+
 module.exports = {
   wotlkcharactersConnect: wotlkcharactersConnect,
   getCharacters: getCharacters,
@@ -107,5 +127,7 @@ module.exports = {
   addRewardMail: addRewardMail,
   addRewardItems: addRewardItems,
   getItemGuid: getItemGuid,
-  addItemInstances: addItemInstances
+  addItemInstances: addItemInstances,
+  progressTableExists: progressTableExists,
+  createProgressTable: createProgressTable
 };

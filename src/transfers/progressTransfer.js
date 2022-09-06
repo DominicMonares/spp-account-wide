@@ -1,40 +1,23 @@
-/* 
-  transfer achievement progress for achievements like:
-    x amount of honor kills
-    x amount of gold looted
-    etc.
-
-  Loremaster? Will be complicated
-*/
+const { 
+  progressTableExists,
+  createProgressTable
+} = require('../db/wotlkcharacters');
+const { error } = require('../utils');
 
 /*
-Got My Mind On My Money
-50 Honorable Kills
-Mercilessly Dedicated
-Alterac Valley Veteran
-Arathi Basin Veteran
-Eye of the Storm Veteran
-Warsong Gulch Veteran
-Strand of the Ancients Veteran
-Wintergrasp Veteran
-Isle of Conquest Victory
-25 Dungeon & Raid Emblems
-Looking for Multitudes
-
-
-
-SEPARATE, MORE SPECIFIC
-Loremaster of Eastern Kingdoms
-Loremaster of Kalimdor
-50 Quests Complete -> batch with Loremaster logic
-5 Daily Quests Complete -> same logic as previous, different db queries
-Frostbitten
-Bloody Rare
-40 Exalted Reputations
+690 = H
+1101 = A
+0
+Query db to get quests completed from all characters
+Query db to get all quests
+Filter by faction similar to achievements
+if faction matches and quest is non class specific, add to progress
 */
 
-const transfer_progress = () => {
-  console.log('Transfer progress called!')
+const transferProgress = async (chars, wotlkcharacters) => {
+  const progressTable = await progressTableExists(wotlkcharacters).catch(err => error(err));
+  if (!progressTable) await createProgressTable(wotlkcharacters).catch(err => error(err));
+  
 }
 
-module.exports = { transfer_progress: transfer_progress };
+module.exports = { transferProgress: transferProgress };
