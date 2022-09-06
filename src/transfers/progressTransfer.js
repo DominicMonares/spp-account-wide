@@ -17,6 +17,9 @@ if faction matches and quest is non class specific, add to progress
 const transferProgress = async (chars, wotlkcharacters) => {
   const progressTable = await progressTableExists(wotlkcharacters).catch(err => error(err));
   if (!progressTable) await createProgressTable(wotlkcharacters).catch(err => error(err));
+
+  // check to see if achievement already earned
+  // add progress
   
 }
 
