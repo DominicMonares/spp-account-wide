@@ -145,8 +145,6 @@ const addMail = (char, reward) => {
     0, // cod
     0, // checked
   ]);
-
-  console.log('REWARD MAIL ', queryRewardMail)
   
   queryMailItems.push([mailID, itemGuid, reward.item, char]);
 
