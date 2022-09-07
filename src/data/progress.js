@@ -1,5 +1,11 @@
 // criteria - version - completion - achievement id
 const progress = {
+
+  //////////////////////////////////////////
+  /////////////// Currencies ///////////////
+  //////////////////////////////////////////
+
+  /* Gold */
   1176: { // Got My Mind On My Money - 100g
     criteria: 3506,
     complete: 10000
@@ -21,6 +27,98 @@ const progress = {
     complete: 250000000
   },
 
+  /* Dungeon & Raid Emblems */
+  3839: { // 25 Dungeon & Raid Emblems
+    criteria: 11556,
+    complete: 25
+  },
+  3840: { // 50 Dungeon & Raid Emblems
+    criteria: 11601,
+    complete: 50
+  },
+  3841: { // 100 Dungeon & Raid Emblems
+    criteria: 11605,
+    complete: 100
+  },
+  3842: { // 250 Dungeon & Raid Emblems
+    criteria: 11609,
+    complete: 250
+  },
+  3843: { // 500 Dungeon & Raid Emblems
+    criteria: 11613,
+    complete: 500
+  },
+  3844: { // 1000 Dungeon & Raid Emblems
+    criteria: 11617,
+    complete: 1000
+  },
+  3876: { // 1500 Dungeon & Raid Emblems
+    criteria: 11621,
+    complete: 1500
+  },
+  4316: { // 2500 Dungeon & Raid Emblems
+    criteria: 12421,
+    complete: 2500
+  },
+
+
+  ///////////////////////////////////
+  /////////////// PVE ///////////////
+  ///////////////////////////////////
+
+  /* Group Finder */
+  // UNABLE TO GET CRITERIA - RANDOM BOTS LFG NYI
+  // 4476: { // Looking For More
+  //   criteria: UNKNOWN,
+  //   complete: 10
+  // },
+  // 4477: { // Looking For Many
+  //   criteria: UNKNOWN,
+  //   complete: 50
+  // },
+  // 4478: { // Looking For Multitudes
+  //   criteria: UNKNOWN,
+  //   complete: 100
+  // },
+
+
+  ///////////////////////////////////
+  /////////////// PVP ///////////////
+  ///////////////////////////////////
+
+  /* Battleground Wins */
+  219: { // Alterac Valley Veteran
+    criteria: 225,
+    complete: 100
+  },
+  155: { // Arathi Basin Veteran
+    criteria: 176,
+    complete: 100
+  },
+  209: { // Eye of the Storm Veteran
+    criteria: 223,
+    complete: 100
+  },
+  // UNABLE TO GET CRITERIA - BG BUGGED
+  // 3777: { // Isle of Conquest Victory
+  //   criteria: UNKNOWN,
+  //   complete: 100
+  // },
+  1309: { // Strand of the Ancients Veteran
+    criteria: 4502,
+    complete: 100
+  },
+  167: { // Warsong Gulch Veteran
+    criteria: 221,
+    complete: 100
+  },
+  // UNABLE TO GET CRITERIA - BG BUGGED
+  // 1718: { // Wintergrasp Veteran
+  //   criteria: UNKNOWN,
+  //   complete: 100
+  // }
+
+  /* Honorable Kills */
   513: { // 100 Honorable Kills
     criteria: 6797,
     complete: 100
@@ -54,6 +152,7 @@ const progress = {
     complete: 100000
   },
 
+  /* Rated Arena Wins */
   398: { // Mercilessly Dedicated
     criteria: 307,
     complete: 100
@@ -67,100 +166,72 @@ const progress = {
     complete: 300
   },
 
-  219: { // Alterac Valley Veteran
-    criteria: 225,
+
+  //////////////////////////////////////
+  /////////////// Quests ///////////////
+  //////////////////////////////////////
+
+  /* Daily Quests */
+  973: { // 5 Daily Quests Complete
+    criteria: 2232,
+    complete: 5
+  },
+  974: { // 50 Daily Quests Complete
+    criteria: 2233,
+    complete: 50
+  },
+  975: { // 200 Daily Quests Complete
+    criteria: 2234,
+    complete: 200
+  },
+  976: { // 500 Daily Quests Complete
+    criteria: 2235,
+    complete: 500
+  },
+  977: { // 1000 Daily Quests Complete
+    criteria: 2236,
+    complete: 1000
+  },
+
+  /* Regular Quests */
+  503: { // 50 Quests Completed
+    criteria: 230,
+    complete: 50
+  },
+  504: { // 100 Quests Completed
+    criteria: 231,
     complete: 100
   },
-  155: { // Arathi Basin Veteran
-    criteria: 176,
-    complete: 100
+  505: { // 250 Quests Completed
+    criteria: 232,
+    complete: 250
   },
-  209: { // Eye of the Storm Veteran
-    criteria: 223,
-    complete: 100
+  506: { // 500 Quests Completed
+    criteria: 233,
+    complete: 500
   },
-  167: { // Warsong Gulch Veteran
-    criteria: 221,
-    complete: 100
+  507: { // 1000 Quests Completed
+    criteria: 234,
+    complete: 1000
   },
-  1309: { // Strand of the Ancients Veteran
-    criteria: 4502,
-    complete: 100
+  508: { // 1500 Quests Completed
+    criteria: 236,
+    complete: 1500
   },
-
-  3839: { // 25 Dungeon & Raid Emblems
-    criteria: 11556,
-    complete: 25
+  32: { // 2000 Quests Completed
+    criteria: 73,
+    complete: 2000
   },
-
-/*
-// Wintergrasp Veteran
-100 - 1718
-///// criteria /////
-
-// Isle of Conquest Victory
-100 - 3777
-///// criteria /////
-
-// 25 Dungeon & Raid Emblems
-
-50 - 3840
-100 - 3841
-250 - 3842
-500 - 3843
-1000 - 3844
-1500 - 3876
-2500 - 4316
-///// criteria /////
-4950
-4952
-4955
-6140
-6141
-6142
-11601
-11605
-11609
-11613
-11617
-11621
-12421
-
-// Looking for Multitudes
-10 - 4476
-50 - 4477
-100 - 4478
-///// criteria /////
-
-// 5 Daily Quests Complete
-5 - 973
-50 - 974
-200 - 975
-500 - 976
-1000 - 977
-///// criteria /////
-
-// 50 Quests Complete
-50 - 503
-100 - 504
-250 - 505
-500 - 506
-1000 - 507
-1500 - 508
-2000 - 32
-3000 - 978
-///// criteria /////
-
-SEPARATE, MORE SPECIFIC
-Loremaster of Eastern Kingdoms
-Loremaster of Kalimdor
-
-*/
+  978: { // 3000 Quests Completed
+    criteria: 2239,
+    complete: 3000
+  }
 };
+
+// SEPARATE, MORE SPECIFIC
+// Loremaster of Eastern Kingdoms
+// Loremaster of Kalimdor
 
 module.exports = {
   progress: progress
 }
-
-// 426
-// 427
