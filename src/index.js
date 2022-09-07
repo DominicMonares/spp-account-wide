@@ -13,9 +13,9 @@ const accountwideAchievements = async () => {
   const accounts = await getAccounts(wotlkrealmd).catch(err => error(err));
   const characters = await getCharacters(accounts, wotlkcharacters).catch(err => error(err));
 
-  // await transferCredit(characters, wotlkcharacters, wotlkmangos)
-  //   .then(() => console.log('Credit successfully transferred!'))
-  //   .catch(err => error(err));
+  await transferCredit(characters, wotlkcharacters, wotlkmangos)
+    .then(() => console.log('Credit successfully transferred!'))
+    .catch(err => error(err));
 
   await transferProgress(characters, wotlkcharacters)
     .then(() => console.log('Progress successfully transferred!'))
