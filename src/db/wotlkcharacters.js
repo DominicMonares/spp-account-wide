@@ -12,6 +12,8 @@ const wotlkcharactersConnect = async () => {
     .catch(async err => { throw err });
 }
 
+// Credit Transfer
+
 const getCharacters = (accounts, wotlkcharacters) => {
   const accountVals = '"' + accounts.join('", "') + '"';
   const sql = `
@@ -97,6 +99,8 @@ const addItemInstances = (instances, wotlkcharacters) => {
     .catch(err => { throw err });
 }
 
+// Progress Transfer
+
 const progressTableExists = (wotlkcharacters) => {
   const sql = 'SHOW TABLES LIKE "character_achievement_shared_progress"';
   return wotlkcharacters.query(sql)
@@ -111,10 +115,38 @@ const createProgressTable = (wotlkcharacters) => {
       progress INT DEFAULT 0,
       PRIMARY KEY (achievement)
     )
-  `
+  `;
   return wotlkcharacters.query(sql)
     .then(res => console.log('Table character_achievement_shared_progress successfully created!'))
     .catch(err => { throw err });
+}
+
+const getProgAchievements = (achieves, wotlkcharacters) => {
+  const achieveVals = '(' + achieves.map(a => a.join(', ')).join('), (') + ')';
+  const sql = `
+    SELECT achievement FROM character_achievement
+    WHERE (guid, achievement) IN (${achieveVals})
+  `;
+  return wotlkcharacters.query(sql)
+  .then(res => {
+    console.log('Currently earned progress achievements fetched...');
+    return res[0];
+  })
+  .catch(err => { throw err });
+}
+
+const getProgress = (criteria, wotlkcharacters) => {
+  const achieveVals = '(' + criteria.map(a => a.join(', ')).join('), (') + ')';
+  const sql = `
+    SELECT * FROM character_achievement_progress
+    WHERE (guid, criteria) IN (${criteria})
+  `;
+  return wotlkcharacters.query(sql)
+  .then(res => {
+    console.log('Achievement progress fetched...');
+    return res[0];
+  })
+  .catch(err => { throw err });
 }
 
 module.exports = {
@@ -129,5 +161,7 @@ module.exports = {
   getItemGuid: getItemGuid,
   addItemInstances: addItemInstances,
   progressTableExists: progressTableExists,
-  createProgressTable: createProgressTable
+  createProgressTable: createProgressTable,
+  getProgAchievements: getProgAchievements,
+  getProgress: getProgress
 };
