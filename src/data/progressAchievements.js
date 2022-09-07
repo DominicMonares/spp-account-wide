@@ -1,5 +1,5 @@
 // criteria - version - completion - achievement id
-const progress = {
+const progressAchievements = {
   
   //////////////////////////////////////////
   /////////////// Currencies ///////////////
@@ -249,5 +249,5 @@ const progress = {
 };
 
 module.exports = {
-  progress: progress
+  progressAchievements: progressAchievements
 }
