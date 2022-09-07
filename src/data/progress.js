@@ -248,8 +248,6 @@ const progress = {
 
 };
 
-
-
 module.exports = {
   progress: progress
 }
