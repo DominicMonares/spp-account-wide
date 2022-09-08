@@ -121,7 +121,7 @@ const createProgressTable = (wotlkcharacters) => {
     .catch(err => { throw err });
 }
 
-const getProgAchievements = (achieves, wotlkcharacters) => {
+const getEarnedAchievements = (achieves, wotlkcharacters) => {
   const achieveVals = '(' + achieves.map(a => a.join(', ')).join('), (') + ')';
   const sql = `
     SELECT achievement FROM character_achievement
@@ -129,21 +129,35 @@ const getProgAchievements = (achieves, wotlkcharacters) => {
   `;
   return wotlkcharacters.query(sql)
   .then(res => {
-    console.log('Currently earned progress achievements fetched...');
+    console.log('Earned progress achievements fetched...');
     return res[0];
   })
   .catch(err => { throw err });
 }
 
 const getProgress = (criteria, wotlkcharacters) => {
-  const achieveVals = '(' + criteria.map(a => a.join(', ')).join('), (') + ')';
+  const criteriaVals = '(' + criteria.map(c => c.join(', ')).join('), (') + ')';
   const sql = `
     SELECT * FROM character_achievement_progress
-    WHERE (guid, criteria) IN (${criteria})
+    WHERE (guid, criteria) IN (${criteriaVals})
   `;
   return wotlkcharacters.query(sql)
   .then(res => {
     console.log('Achievement progress fetched...');
+    return res[0];
+  })
+  .catch(err => { throw err });
+}
+
+const getPreviousProgress = (achieves, wotlkcharacters) => {
+  const achieveVals = '"' + achieves.join('", "') + '"';
+  const sql = `
+    SELECT * FROM character_achievement_shared_progress
+    WHERE achievement IN (${achieveVals})
+  `;
+  return wotlkcharacters.query(sql)
+  .then(res => {
+    console.log('Previous achievement progress fetched...');
     return res[0];
   })
   .catch(err => { throw err });
@@ -162,6 +176,7 @@ module.exports = {
   addItemInstances: addItemInstances,
   progressTableExists: progressTableExists,
   createProgressTable: createProgressTable,
-  getProgAchievements: getProgAchievements,
-  getProgress: getProgress
+  getEarnedAchievements: getEarnedAchievements,
+  getProgress: getProgress,
+  getPreviousProgress: getPreviousProgress
 };
