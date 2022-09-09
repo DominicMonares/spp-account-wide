@@ -42,11 +42,11 @@ const transferCredit = async (chars, wotlkcharacters, wotlkmangos) => {
       // Add to character achievements pool
       charAchievements[a.guid][a.achievement] = a.date;
     }))
-    .catch(err => error(err));
+    .catch(err => { throw err });
 
   await getRewards(wotlkmangos)
     .then(rews => rews.forEach(r => rewards[r.entry] = r))
-    .catch(err => error(err));
+    .catch(err => { throw err });
   
   // Add item entry to rewards store
   const queryItems = [];
@@ -57,12 +57,12 @@ const transferCredit = async (chars, wotlkcharacters, wotlkmangos) => {
   // Get topmost item guid
   await getItemGuid(wotlkcharacters)
     .then(guid => itemGuid = guid[0]['guid'] + 1000) // +1000 for newly created characters & overwrites
-    .catch(err => error(err));
+    .catch(err => { throw err });
 
   // Get topmost mail ID
   await getMailIDs(wotlkcharacters)
     .then(mail => { if (mail.length) mailID = mail.pop().id + 3 }) // +3 for new char CE mail
-    .catch(err => error(err));
+    .catch(err => { throw err });
 
   // Add achievement credit and rewards for each character
   for (const c of chars) {
@@ -94,26 +94,26 @@ const transferCredit = async (chars, wotlkcharacters, wotlkmangos) => {
   }
 
   // Add all credit and rewards to database
-  await addAchievements(queryAchieves, wotlkcharacters).catch(err => error(err));
+  await addAchievements(queryAchieves, wotlkcharacters).catch(err => { throw err });
   console.log('Achievement credit successfully transferred!');
 
   if (queryRewardMail.length) {
-    await addRewardMail(queryRewardMail, wotlkcharacters).catch(err => error(err));
+    await addRewardMail(queryRewardMail, wotlkcharacters).catch(err => { throw err });
     console.log('Achievement mail successfully transferred!');
   }
   
   if (queryMailItems.length) {
-    await addRewardItems(queryMailItems, wotlkcharacters).catch(err => error(err));
+    await addRewardItems(queryMailItems, wotlkcharacters).catch(err => { throw err });
     console.log('Achievement mail items successfully transferred!');
   }
 
   if (queryItemInstances.length) {
-    await addItemInstances(queryItemInstances, wotlkcharacters).catch(err => error(err));
+    await addItemInstances(queryItemInstances, wotlkcharacters).catch(err => { throw err });
     console.log('Item instances successfully transferred!');
   }
   
   for (const char of Object.keys(charTitles)) {
-    await addRewardTitles(char, charTitles[char], wotlkcharacters).catch(err => error(err));
+    await addRewardTitles(char, charTitles[char], wotlkcharacters).catch(err => { throw err });
   }
   console.log('Achievement title rewards successfully transferred!');
 }
