@@ -52,7 +52,7 @@ const addAchievements = (achieves, wotlkcharacters) => {
 }
 
 const addRewardTitles = (char, titles, wotlkcharacters) => {
-  const sql = `UPDATE characters SET knownTitles = '${titles}' WHERE guid = ${char}`;
+  const sql = `UPDATE characters SET knownTitles='${titles}' WHERE guid=${char}`;
   return wotlkcharacters.query(sql)
     .then(res => res[0])
     .catch(err => { throw err });
@@ -163,6 +163,33 @@ const getPreviousProgress = (achieves, wotlkcharacters) => {
   .catch(err => { throw err });
 }
 
+const addPrevious = (previous, wotlkcharacters) => {
+  const sql = `
+    INSERT INTO character_achievement_shared_progress VALUES ?
+      ON DUPLICATE KEY UPDATE progress=VALUES(progress)
+  `;
+  return wotlkcharacters.query(sql, [previous])
+    .then(res => res[0])
+    .catch(err => { throw err });
+}
+
+const addProgress = (progress, wotlkcharacters) => {
+  const sql = `
+    INSERT INTO character_achievement_progress VALUES ?
+      ON DUPLICATE KEY UPDATE counter=VALUES(counter), date=VALUES(date)
+  `;
+  return wotlkcharacters.query(sql, [progress])
+    .then(res => res[0])
+    .catch(err => { throw err });
+}
+
+const addNewAchievements = (achieves, wotlkcharacters) => {
+  const sql = 'INSERT IGNORE INTO character_achievement VALUES ?';
+  return wotlkcharacters.query(sql, [achieves])
+    .then(res => res[0])
+    .catch(err => { throw err });
+}
+
 module.exports = {
   wotlkcharactersConnect: wotlkcharactersConnect,
   getCharacters: getCharacters,
@@ -178,5 +205,8 @@ module.exports = {
   createProgressTable: createProgressTable,
   getEarnedAchievements: getEarnedAchievements,
   getProgress: getProgress,
-  getPreviousProgress: getPreviousProgress
+  getPreviousProgress: getPreviousProgress,
+  addPrevious: addPrevious,
+  addProgress: addProgress,
+  addNewAchievements: addNewAchievements
 };
