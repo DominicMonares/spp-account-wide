@@ -9,7 +9,7 @@ const {
   addItemInstances
 } = require('../db/wotlkcharacters');
 const { getRewards } = require('../db/wotlkmangos');
-const { error, faction } = require('../utils');
+const { faction } = require('../utils');
 const { factionAchievements } = require('../data/factionAchievements');
 const { titles } = require('../data/titles');
 
@@ -122,11 +122,11 @@ const handleReward = (char, achievement) => {
   if (charAchievements[char.guid][achievement] || !rewards[achievement]) return;
   charAchievements[char.guid][achievement] = achievements[achievement];
   const rew = rewards[achievement];
-  if (rew.sender) storeMail(char.guid, rew);
-  if (rew.title_A || rew.title_H) storeTitle(char.guid, char.gender, faction(char.race), achievement);
+  if (rew.sender) createMailQuery(char.guid, rew);
+  if (rew.title_A || rew.title_H) createTitleQuery(char.guid, char.gender, faction(char.race), achievement);
 }
 
-const storeMail = (char, reward) => {
+const createMailQuery = (char, reward) => {
   const date = new Date();
   
   queryRewardMail.push([
@@ -169,7 +169,7 @@ const storeMail = (char, reward) => {
   mailID++;
 }
 
-const storeTitle = (char, gender, faction, achievement) => {
+const createTitleQuery = (char, gender, faction, achievement) => {
   const knownTitles = charTitles[char].split(' ').map(t => Number(t));
   if (knownTitles.length === 7) knownTitles.pop();
   
