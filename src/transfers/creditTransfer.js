@@ -122,11 +122,11 @@ const handleReward = (char, achievement) => {
   if (charAchievements[char.guid][achievement] || !rewards[achievement]) return;
   charAchievements[char.guid][achievement] = achievements[achievement];
   const rew = rewards[achievement];
-  if (rew.sender) addMail(char.guid, rew);
-  if (rew.title_A || rew.title_H) addTitle(char.guid, char.gender, faction(char.race), achievement);
+  if (rew.sender) handleMail(char.guid, rew);
+  if (rew.title_A || rew.title_H) handleTitle(char.guid, char.gender, faction(char.race), achievement);
 }
 
-const addMail = (char, reward) => {
+const handleMail = (char, reward) => {
   const date = new Date();
   
   queryRewardMail.push([
@@ -169,7 +169,7 @@ const addMail = (char, reward) => {
   mailID++;
 }
 
-const addTitle = (char, gender, faction, achievement) => {
+const handleTitle = (char, gender, faction, achievement) => {
   const knownTitles = charTitles[char].split(' ').map(t => Number(t));
   if (knownTitles.length === 7) knownTitles.pop();
   
