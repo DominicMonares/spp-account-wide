@@ -7,11 +7,11 @@ const {
   addRewardItems,
   getItemGuid,
   addItemInstances
-} = require('../db/wotlkcharacters');
-const { getRewards } = require('../db/wotlkmangos');
-const { faction } = require('../utils');
-const { factionAchievements } = require('../data/factionAchievements');
-const { titles } = require('../data/titles');
+} = require('../../db/wotlkcharacters');
+const { getRewards } = require('../../db/wotlkmangos');
+const { faction } = require('./utils');
+const { factionAchievements } = require('../../data/factionAchievements');
+const { titles } = require('../../data/titles');
 
 const achievements = {}; // Primary achievement store
 const charAchievements = {}; // Individual achievements

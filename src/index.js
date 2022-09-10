@@ -2,8 +2,8 @@ const { getAccounts, wotlkrealmdConnect } = require('./db/wotlkrealmd');
 const { getCharacters, wotlkcharactersConnect } = require('./db/wotlkcharacters');
 const { wotlkmangosConnect } = require('./db/wotlkmangos');
 const { closeWindow, error } = require('./utils');
-const { transferCredit } = require('./transfers/creditTransfer');
-const { transferProgress } = require('./transfers/progressTransfer');
+const { transferCredit } = require('./transfers/creditTransfer/creditTransfer');
+const { transferProgress } = require('./transfers/progressTransfer/progressTransfer');
 
 const accountwideAchievements = async () => {
   const wotlkcharacters = await wotlkcharactersConnect().catch(err => error(err));

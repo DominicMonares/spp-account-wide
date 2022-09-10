@@ -17,7 +17,7 @@ const wotlkcharactersConnect = async () => {
 const getCharacters = (accounts, wotlkcharacters) => {
   const accountVals = '"' + accounts.join('", "') + '"';
   const sql = `
-    SELECT guid, name, race, gender, knownTitles FROM characters 
+    SELECT guid, name, race, gender, totalKills, knownTitles FROM characters 
     WHERE account IN (${accountVals})
   `;
   
@@ -113,12 +113,37 @@ const createProgressTable = (wotlkcharacters) => {
     CREATE TABLE character_achievement_shared_progress (
       achievement INT NOT NULL,
       progress INT DEFAULT 0,
+      date BIGINT DEFAULT 0,
       PRIMARY KEY (achievement)
     )
   `;
   return wotlkcharacters.query(sql)
-    .then(res => console.log('Table character_achievement_shared_progress successfully created!'))
+    .then(() => console.log('Table character_achievement_shared_progress successfully created!'))
     .catch(err => { throw err });
+}
+
+// const getPreviousProgress = (achieves, wotlkcharacters) => {
+//   const achieveVals = '"' + achieves.join('", "') + '"';
+//   const sql = `
+//     SELECT * FROM character_achievement_shared_progress
+//     WHERE achievement IN (${achieveVals})
+//   `;
+//   return wotlkcharacters.query(sql)
+//   .then(res => {
+//     console.log('Previous achievement progress fetched...');
+//     return res[0];
+//   })
+//   .catch(err => { throw err });
+// }
+
+const getSharedProgress = (wotlkcharacters) => {
+  const sql = 'SELECT * FROM character_achievement_shared_progress';
+  return wotlkcharacters.query(sql)
+  .then(res => {
+    console.log('Previous achievement progress fetched...');
+    return res[0];
+  })
+  .catch(err => { throw err });
 }
 
 const getEarnedAchievements = (achieves, wotlkcharacters) => {
@@ -144,20 +169,6 @@ const getProgress = (criteria, wotlkcharacters) => {
   return wotlkcharacters.query(sql)
   .then(res => {
     console.log('Achievement progress fetched...');
-    return res[0];
-  })
-  .catch(err => { throw err });
-}
-
-const getPreviousProgress = (achieves, wotlkcharacters) => {
-  const achieveVals = '"' + achieves.join('", "') + '"';
-  const sql = `
-    SELECT * FROM character_achievement_shared_progress
-    WHERE achievement IN (${achieveVals})
-  `;
-  return wotlkcharacters.query(sql)
-  .then(res => {
-    console.log('Previous achievement progress fetched...');
     return res[0];
   })
   .catch(err => { throw err });
@@ -203,9 +214,9 @@ module.exports = {
   addItemInstances: addItemInstances,
   progressTableExists: progressTableExists,
   createProgressTable: createProgressTable,
+  getSharedProgress: getSharedProgress,
   getEarnedAchievements: getEarnedAchievements,
   getProgress: getProgress,
-  getPreviousProgress: getPreviousProgress,
   addPrevious: addPrevious,
   addProgress: addProgress,
   addNewAchievements: addNewAchievements
