@@ -92,7 +92,7 @@ const arena = {
     complete: 100
   },
   875: { // Vengefully Dedicated
-    citeria: 1829,
+    criteria: 1829,
     complete: 200
   },
   876: { // Brutally Dedicated
