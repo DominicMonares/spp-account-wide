@@ -92,7 +92,7 @@ const arena = {
     complete: 100
   },
   875: { // Vengefully Dedicated
-    criteria: 1829,
+    citeria: 1829,
     complete: 200
   },
   876: { // Brutally Dedicated
@@ -213,7 +213,7 @@ const daily = {
   }
 };
 
-const reg = {
+const quest = {
   503: { // 50 Quests Completed
     criteria: 230,
     complete: 50
@@ -262,5 +262,5 @@ module.exports = {
   wsg: wsg,
   hk: hk,
   daily: daily,
-  reg: reg
+  quest: quest
 }
