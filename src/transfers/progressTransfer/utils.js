@@ -3,6 +3,12 @@ const latestDate = (progress) => {
   progress.forEach(e => {
     if (e.date > newDate) newDate = e.date;
   });
+
+  if (!newDate) {
+    const date = new Date();
+    newDate = Math.floor(date.getTime()/1000)
+  }
+  
   return newDate;
 }
 

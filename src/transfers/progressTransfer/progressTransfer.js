@@ -56,6 +56,7 @@ const transferProgress = async (chars, wotlkcharacters) => {
 
   // Begin sub-transfers
   transferGold(chars);
+  transferEmblems(chars);
   transferHK(chars);
 
 
@@ -87,6 +88,16 @@ const transferGold = (chars) => {
   const newProgress = combineProgress(currentGold, previous);
   const newDate = latestDate(goldProgress);
   createQueries(chars, 'gold', previous, newProgress, newDate);
+}
+
+const transferEmblems = (chars) => {
+  // Get total amount of emblems looted, use 4316 (2500 Emblems Looted) for counter
+  const previous = previousProgress[4316] || 0;
+  const emblemProgress = currentProgress[progress['emblems'][4316]['criteria']] || [];
+  const currentEmblems = emblemProgress.map(e => e.counter);
+  const newProgress = combineProgress(currentEmblems, previous);
+  const newDate = latestDate(emblemProgress);
+  createQueries(chars, 'emblems', previous, newProgress, newDate);
 }
 
 const transferHK = (chars) => {
