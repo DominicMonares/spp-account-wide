@@ -12,7 +12,9 @@ const wotlkcharactersConnect = async () => {
     .catch(async err => { throw err });
 }
 
-// Credit Transfer
+//////////////////////////////////////
+/////////////// Credit ///////////////
+//////////////////////////////////////
 
 const getCharacters = (accounts, wotlkcharacters) => {
   const accountVals = '"' + accounts.join('", "') + '"';
@@ -99,7 +101,9 @@ const addItemInstances = (instances, wotlkcharacters) => {
     .catch(err => { throw err });
 }
 
-// Progress Transfer
+////////////////////////////////////////
+/////////////// Progress ///////////////
+////////////////////////////////////////
 
 const progressTableExists = (wotlkcharacters) => {
   const sql = 'SHOW TABLES LIKE "character_achievement_shared_progress"';
@@ -175,6 +179,10 @@ const addHonorKills = (chars, wotlkcharacters) => {
     .catch(err => { throw err });
 }
 
+const getQuests = (chars, wotlkcharacters) => {
+
+}
+
 module.exports = {
   wotlkcharactersConnect: wotlkcharactersConnect,
   getCharacters: getCharacters,
@@ -192,5 +200,6 @@ module.exports = {
   getCurrentProgress: getCurrentProgress,
   addSharedProgress: addSharedProgress,
   addNewProgress: addNewProgress,
-  addHonorKills: addHonorKills
+  addHonorKills: addHonorKills,
+  getQuests: getQuests
 };

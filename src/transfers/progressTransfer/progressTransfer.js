@@ -8,6 +8,7 @@ const {
   addNewProgress,
   addAchievements,
   addHonorKills,
+  getQuests
 } = require('../../db/wotlkcharacters');
 const {
   latestDate,
@@ -17,8 +18,9 @@ const {
 // const progressStore = {}; // Primary progress store
 const previousProgress = {}; // Uses achievement index
 const currentProgress = {}; // Uses criteria index
-const allCriteria = [];
+const quests = {};
 
+const queryCriteria = [];
 const queryNewShared = [];
 const queryNewProgress = [];
 const queryNewAchieves = [];
@@ -39,25 +41,39 @@ const transferProgress = async (chars, wotlkcharacters) => {
   // Get current progress for all shared achievements
   for (const chain in progress) {
     Object.values(progress[chain]).forEach(a => {
-      chars.forEach(c => allCriteria.push([c.guid, a.criteria]));
+      chars.forEach(c => queryCriteria.push([c.guid, a.criteria]));
     });
   }
 
-  await getCurrentProgress(allCriteria, wotlkcharacters)
-    .then(prog => prog.forEach(p => {
-      const { criteria, ...crit } = p;
-      if (!currentProgress[p.criteria]) {
-        currentProgress[p.criteria] = [crit];
-      } else {
-        currentProgress[p.criteria].push(crit); 1
-      }
+  if (queryCriteria.length) {
+    await getCurrentProgress(queryCriteria, wotlkcharacters)
+      .then(prog => prog.forEach(p => {
+        const { criteria, ...crit } = p;
+        if (!currentProgress[p.criteria]) {
+          currentProgress[p.criteria] = [crit];
+        } else {
+          currentProgress[p.criteria].push(crit); 1
+        }
+      }))
+      .catch(err => { throw err });
+  }
+
+  // Get completed quests from all characters
+  await getQuests(chars.map(c => c.guid))
+    .then(qs => qs.forEach(q => {
+
     }))
     .catch(err => { throw err });
 
   // Begin sub-transfers
   transferGold(chars);
   transferEmblems(chars);
+  // ARENA
+  // BATTLEGROUNDS
   transferHK(chars);
+  transferDailies(chars);
+  transferQuests(chars); // NEED TO FIGURE DATA STRUCTURE OUT
+  // LOREMASTER
 
 
   // Run Queries
@@ -104,9 +120,30 @@ const transferHK = (chars) => {
   // Get total number of kills, use 870 (100k Honorable Kills) for counter
   const previous = previousProgress[870] || 0;
   const newProgress = combineProgress(chars.map(c => c.totalKills), previous);
-  const newDate = latestDate(currentProgress[progress['hk'][870]['criteria']]);
+  const newDate = latestDate(currentProgress[progress['hk'][870]['criteria']] || []);
   chars.forEach(c => queryNewHK.push([c.guid, newProgress])); // Create HK queries
   createQueries(chars, 'hk', previous, newProgress, newDate);
+}
+
+const transferDailies = (chars) => {
+  // Get total number of kills, use 977 (1000 Daily Quests) for counter
+  const previous = previousProgress[977] || 0;
+  const dailyProgress = currentProgress[progress['daily'][977]['criteria']] || [];
+  const currentDailies = dailyProgress.map(e => e.counter);
+  const newProgress = combineProgress(currentDailies, previous);
+  const newDate = latestDate(currentDailies);
+  createQueries(chars, 'daily', previous, newProgress, newDate);
+}
+
+// NEED TO FIGURE QUEST DATA STRUCTURE OUT
+const transferQuests = (chars) => {
+  // Get total number of kills, use 978 (3000 Quests) for counter
+  const previous = previousProgress[978] || 0;
+  const questProgress = currentProgress[progress['quest'][978]['criteria']] || [];
+  const currentQuests = questProgress.map(e => e.counter);
+  const newProgress = combineQuests(currentQuests, previous);
+  const newDate = latestDate(currentQuests);
+  createQueries(chars, 'quest', previous, newProgress, newDate);
 }
 
 const createQueries = (chars, chain, previous, newProgress, newDate) => {
