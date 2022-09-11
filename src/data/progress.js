@@ -5,7 +5,7 @@
 const gold = {
   1176: { // Got My Mind On My Money - 100g
     criteria: 3506,
-    complete: 10000
+    complete: 1000000
   },
   1177: { // Got My Mind On My Money - 1,000g
     criteria: 3507,
