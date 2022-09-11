@@ -1,10 +1,18 @@
-const combineHK = (kills, previous) => {
+const latestDate = (progress) => {
+  let newDate = 0;
+  progress.forEach(e => {
+    if (e.date > newDate) newDate = e.date;
+  });
+  return newDate;
+}
+
+const combineProgress = (entries, previous) => {
   let count = 0;
-  kills.forEach(k => { 
-    if (k - previous < 0) {
-      count += k;
+  entries.forEach(e => { 
+    if (e - previous < 0) {
+      count += e;
     } else {
-      count += k - previous;
+      count += e - previous;
     }
   });
 
@@ -12,5 +20,6 @@ const combineHK = (kills, previous) => {
 }
 
 module.exports = {
-  combineHK: combineHK
+  latestDate: latestDate,
+  combineProgress: combineProgress
 };

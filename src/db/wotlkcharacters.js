@@ -165,9 +165,9 @@ const addNewProgress = (progress, wotlkcharacters) => {
     .catch(err => { throw err });
 }
 
-const addHonorKills = (char, wotlkcharacters) => {
+const addHonorKills = (chars, wotlkcharacters) => {
   let sql = '';
-  char.forEach(c => {
+  chars.forEach(c => {
     sql +=`UPDATE characters SET totalKills=${c[1]} WHERE guid=${c[0]};`
   });
   return wotlkcharacters.query(sql)
