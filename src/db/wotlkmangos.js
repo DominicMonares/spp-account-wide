@@ -22,7 +22,23 @@ const getRewards = (wotlkmangos) => {
     .catch(err => { throw err });
 }
 
+const getQuestZones = (chars, wotlkcharacters) => {
+  const charValues = '"' + chars.join('", "') + '"';
+  const sql = `
+    SELECT entry, ZoneOrSort FROM quest_template
+    WHERE entry IN (${charValues})
+  `;
+
+  return wotlkcharacters.query(sql, [chars])
+    .then(achieves => {
+      console.log('Quest zone data fetched...');
+      return achieves[0];
+    })
+    .catch(err => { throw err });
+}
+
 module.exports = {
   wotlkmangosConnect: wotlkmangosConnect,
-  getRewards: getRewards
+  getRewards: getRewards,
+  getQuestZones: getQuestZones
 };
