@@ -1,4 +1,7 @@
 const progress = require('../../data/progress');
+const { zones } = require('../../data/zones');
+const { latestDate, combineProgress } = require('./utils.js');
+const { faction } = require('../../utils.js');
 const {
   progressTableExists,
   createProgressTable,
@@ -10,23 +13,21 @@ const {
   addHonorKills,
   getQuests
 } = require('../../db/wotlkcharacters');
-const {
-  latestDate,
-  combineProgress
-} = require('./utils.js');
+const { getQuestZones } = require('../../db/wotlkmangos');
 
 const previousProgress = {}; // Uses achievement index
 const currentProgress = {}; // Uses criteria index
-const completedQuests = {};
-let rawQuests; // Needed to get latest date for quests
+const loremasterProgress = {A: {0: {}, 1: {}}, H: {0: {}, 1: {}}}; // Faction: EK, Kalimdor
+let questProgress; // Used for regular quest transfer
 
 const queryCriteria = [];
+const queryQuestZones = {};
 const queryNewShared = [];
 const queryNewProgress = [];
 const queryNewAchieves = [];
 const queryNewHK = [];
 
-const transferProgress = async (chars, wotlkcharacters) => {
+const transferProgress = async (chars, wotlkcharacters, wotlkmangos) => {
   // Create character_achievement_shared_progress table if it doesn't exist
   const progressTable = await progressTableExists(wotlkcharacters).catch(err => { throw err });
   if (!progressTable) await createProgressTable(wotlkcharacters).catch(err => { throw err });
@@ -40,7 +41,7 @@ const transferProgress = async (chars, wotlkcharacters) => {
 
   // Get current progress for all shared achievements
   for (const chain in progress) {
-    if (chain === 'bg') {
+    if (chain === 'bg' || chain === 'lmA' || chain === 'lmH') {
       for (const map in progress[chain]) {
         const criteria = Object.values(progress[chain][map])[0]['criteria'];
         chars.forEach(c => queryCriteria.push([c.guid, criteria]));
@@ -66,21 +67,33 @@ const transferProgress = async (chars, wotlkcharacters) => {
   }
 
   // Get completed quests from all characters
-  await getQuests(chars.map(c => [c.guid, 1]), wotlkcharacters)
-    .then(qs => {
-      rawQuests = qs;
-      qs.forEach(q => {
-        const { guid, ...quest } = q;
-        if (!completedQuests[q.guid]) {
-          completedQuests[q.guid] = [quest];
-        } else {
-          completedQuests[q.guid].push(quest);
-        }
-      });
-    })
+  const quests = await getQuests(chars.map(c => [c.guid, 1]), wotlkcharacters).catch(err => { throw err });
+  questProgress = quests;
+  
+  // Get quest zones then store quests by faction and continent
+  const questZones = {};
+  quests.forEach(q => { if (!queryQuestZones[q.quest]) queryQuestZones[q.quest] = 1 });
+  await getQuestZones(Object.keys(queryQuestZones), wotlkmangos)
+    .then(qs => qs.forEach(q => questZones[q.entry] = q.ZoneOrSort))
     .catch(err => { throw err });
 
-  // Begin sub-transfers
+  quests.forEach(q => {
+    chars.forEach(c => {
+      if (questZones[q.quest] < 0) return;
+      const charFaction = faction(c.race);
+      console.log('FUCK ', loremasterProgress.A[0]['4'])
+      const continent = zones[questZones[q.quest]];
+      if (continent !== 0 && continent !== 1) return;
+      const { guid, ...quest } = q;
+      if (!loremasterProgress[charFaction][continent][c.guid]) {
+        loremasterProgress[charFaction][continent][c.guid] = [quest];
+      } else {
+        loremasterProgress[charFaction][continent][c.guid].push(quest);
+      }
+    });
+  })
+
+  // Run sub-transfers
   transferGold(chars);
   transferEmblems(chars);
   transferArena(chars);
@@ -88,7 +101,7 @@ const transferProgress = async (chars, wotlkcharacters) => {
   transferHK(chars);
   transferDailies(chars);
   transferQuests(chars);
-  // LOREMASTER
+  transferLoremaster(chars);
 
 
   // Run Queries
@@ -185,9 +198,17 @@ const transferQuests = (chars) => {
   // Unable to add to char achieves without cluttering/messing character_queststatus table up
   // Get total number of kills, use 978 (3000 Quests) for counter
   const previous = previousProgress[978] || 0;
-  const newProgress = rawQuests.length;
-  const newDate = latestDate(rawQuests);
+  const newProgress = questProgress.length;
+  const newDate = latestDate(questProgress);
   createQueries(chars, 'quest', previous, newProgress, newDate);
+}
+
+const transferLoremaster = (chars) => {
+  // questProgress.forEach(q => {
+    
+  // });
+
+  console.log('FUCK ', loremasterProgress)
 }
 
 const createQueries = (chars, chain, previous, newProgress, newDate, bg) => {
@@ -220,8 +241,8 @@ const createQueries = (chars, chain, previous, newProgress, newDate, bg) => {
 module.exports = { transferProgress: transferProgress };
 
 /*
-690 = H
-1101 = A
+690 = H 
+1101 = A 
 
 // SEPARATE, MORE SPECIFIC
 // Loremaster of Eastern Kingdoms
