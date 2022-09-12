@@ -209,6 +209,35 @@ const daily = {
   }
 };
 
+const lmA = {
+  easternKingdoms: { // Loremaster of Eastern Kingdoms - Alliance
+    1676: {
+      criteria: 7884,
+      complete: 700
+    }
+  },
+  kalimdor: { // Loremaster of Kalimdor - Alliance
+    1678: {
+      criteria: 7894,
+      complete: 700
+    }
+  }
+};
+
+const lmH = {
+  easternKingdoms: { // Loremaster of Eastern Kingdoms - Horde
+    1677: {
+      criteria: 7890,
+      complete: 550
+    }
+  },
+  kalimdor: { // Loremaster of Kalimdor - Horde
+    1680: {
+      criteria: 7896,
+      complete: 685
+    }
+  }
+};
 const quest = {
   503: { // 50 Quests Completed
     criteria: 230,
@@ -249,15 +278,10 @@ module.exports = {
   emblems: emblems,
   // lfg: lfg,
   arena: arena,
-  // ab: ab,
-  // av: av,
-  // eos: eos,
-  // // ioc: ioc,
-  // soa: soa,
-  // // wg: wg,
-  // wsg: wsg,
   bg: bg,
   hk: hk,
   daily: daily,
+  lmA: lmA,
+  lmH: lmH,
   quest: quest
 }
