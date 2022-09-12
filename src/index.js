@@ -17,7 +17,7 @@ const accountwideAchievements = async () => {
     .then(() => console.log('Credit successfully transferred!'))
     .catch(err => error(err));
 
-  await transferProgress(characters, wotlkcharacters)
+  await transferProgress(characters, wotlkcharacters, wotlkmangos)
     .then(() => console.log('Progress successfully transferred!'))
     .catch(err => error(err));
 
