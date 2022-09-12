@@ -40,9 +40,16 @@ const transferProgress = async (chars, wotlkcharacters) => {
 
   // Get current progress for all shared achievements
   for (const chain in progress) {
-    Object.values(progress[chain]).forEach(a => {
-      chars.forEach(c => queryCriteria.push([c.guid, a.criteria]));
-    });
+    if (chain === 'bg') {
+      for (const map in progress[chain]) {
+        const criteria = Object.values(progress[chain][map])[0]['criteria'];
+        chars.forEach(c => queryCriteria.push([c.guid, criteria]));
+      }
+    } else {
+      Object.values(progress[chain]).forEach(a => {
+        chars.forEach(c => queryCriteria.push([c.guid, a.criteria]));
+      });
+    }
   }
 
   if (queryCriteria.length) {
@@ -76,11 +83,11 @@ const transferProgress = async (chars, wotlkcharacters) => {
   // Begin sub-transfers
   transferGold(chars);
   transferEmblems(chars);
-  // ARENA
-  // BATTLEGROUNDS
+  transferArena(chars);
+  transferBG(chars);
   transferHK(chars);
   transferDailies(chars);
-  transferQuests(chars); // NEED TO FIGURE DATA STRUCTURE OUT
+  transferQuests(chars);
   // LOREMASTER
 
 
@@ -105,6 +112,7 @@ const transferProgress = async (chars, wotlkcharacters) => {
 }
 
 const transferGold = (chars) => {
+  // Works using achievement count
   // Get total amount of gold looted, use 1181 (25k Gold Looted) for counter
   const previous = previousProgress[1181] || 0;
   const goldProgress = currentProgress[progress['gold'][1181]['criteria']] || [];
@@ -115,6 +123,7 @@ const transferGold = (chars) => {
 }
 
 const transferEmblems = (chars) => {
+  // Works using achievement count
   // Get total amount of emblems looted, use 4316 (2500 Emblems Looted) for counter
   const previous = previousProgress[4316] || 0;
   const emblemProgress = currentProgress[progress['emblems'][4316]['criteria']] || [];
@@ -124,7 +133,34 @@ const transferEmblems = (chars) => {
   createQueries(chars, 'emblems', previous, newProgress, newDate);
 }
 
+const transferArena = (chars) => {
+  // Works using achievement count
+  // Get total amount of rated arena wins, use 876 (300 Rated Arena Wins) for counter
+  const previous = previousProgress[876] || 0;
+  const arenaProgress = currentProgress[progress['arena'][876]['criteria']] || [];
+  const currentWins = arenaProgress.map(e => e.counter);
+  const newProgress = combineProgress(currentWins, previous);
+  const newDate = latestDate(arenaProgress);
+  createQueries(chars, 'arena', previous, newProgress, newDate);
+}
+
+const transferBG = (chars) => {
+  // Works using achievement count
+  // Get total amount of battleground wins and their counters
+  for (const m in progress.bg) {
+    const map = progress['bg'][m];
+    const achieve = Object.keys(map)[0];
+    const previous = previousProgress[achieve] || 0;
+    const bgProgress = currentProgress[map[achieve]['criteria']] || [];
+    const currentWins = bgProgress.map(e => e.counter);
+    const newProgress = combineProgress(currentWins, previous);
+    const newDate = latestDate(bgProgress);
+    createQueries(chars, 'bg', previous, newProgress, newDate, m);
+  }
+}
+
 const transferHK = (chars) => {
+  // Only works if kills themselves are shared between chars, cannot use achievement count
   // Get total number of kills, use 870 (100k Honorable Kills) for counter
   const previous = previousProgress[870] || 0;
   const newProgress = combineProgress(chars.map(c => c.totalKills), previous);
@@ -134,6 +170,7 @@ const transferHK = (chars) => {
 }
 
 const transferDailies = (chars) => {
+  // Works using achievement count
   // Get total number of kills, use 977 (1000 Daily Quests) for counter
   const previous = previousProgress[977] || 0;
   const dailyProgress = currentProgress[progress['daily'][977]['criteria']] || [];
@@ -144,6 +181,8 @@ const transferDailies = (chars) => {
 }
 
 const transferQuests = (chars) => {
+  // Only works by checking earned quests, in-game counter doesn't work properly
+  // Unable to add to char achieves without cluttering/messing character_queststatus table up
   // Get total number of kills, use 978 (3000 Quests) for counter
   const previous = previousProgress[978] || 0;
   const newProgress = rawQuests.length;
@@ -151,10 +190,11 @@ const transferQuests = (chars) => {
   createQueries(chars, 'quest', previous, newProgress, newDate);
 }
 
-const createQueries = (chars, chain, previous, newProgress, newDate) => {
-  for (const a in progress[chain]) {
+const createQueries = (chars, chain, previous, newProgress, newDate, bg) => {
+  const progChain = bg ? progress[chain][bg] : progress[chain];
+  for (const a in progChain) {
     chars.forEach(c => {
-      const complete = progress[chain][a]['complete'];
+      const complete = progChain[a]['complete'];
 
       // Add new shared progress
       queryNewShared.push([a, newProgress]);
@@ -164,7 +204,7 @@ const createQueries = (chars, chain, previous, newProgress, newDate) => {
       if (validProgress > complete) validProgress = complete;
       queryNewProgress.push([
         c.guid, // guid
-        progress[chain][a]['criteria'], // criteria
+        progChain[a]['criteria'], // criteria
         validProgress, // counter
         newDate // date
       ]);

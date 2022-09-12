@@ -101,54 +101,50 @@ const arena = {
   }
 };
 
-const ab = {
-  155: { // Arathi Basin Veteran
-    criteria: 176,
-    complete: 100
+const bg = {
+  ab: {
+    155: { // Arathi Basin Veteran
+      criteria: 176,
+      complete: 100
+    }
+  },
+  av: {
+    219: { // Alterac Valley Veteran
+      criteria: 225,
+      complete: 100
+    }
+  },
+  eos: {
+    209: { // Eye of the Storm Veteran
+      criteria: 223,
+      complete: 100
+    }
+  },
+  // ioc: { // UNABLE TO GET CRITERIA - BG BUGGED
+  //   3777: { // Isle of Conquest Victory
+  //     criteria: UNKNOWN,
+  //     complete: 100
+  //   }
+  // },
+  soa: {
+    1309: { // Strand of the Ancients Veteran
+      criteria: 4502,
+      complete: 100
+    }
+  },
+  // wg: { // UNABLE TO GET CRITERIA - BG BUGGED
+  //   1718: { // Wintergrasp Veteran
+  //     criteria: UNKNOWN,
+  //     complete: 100
+  //   }
+  // },
+  wsg: {
+    167: { // Warsong Gulch Veteran
+      criteria: 221,
+      complete: 100
+    }
   }
-};
-
-const av = {
-  219: { // Alterac Valley Veteran
-    criteria: 225,
-    complete: 100
-  }
-};
-
-const eos = {
-  209: { // Eye of the Storm Veteran
-    criteria: 223,
-    complete: 100
-  }
-};
-
-// const ioc = { // UNABLE TO GET CRITERIA - BG BUGGED
-//   3777: { // Isle of Conquest Victory
-//     criteria: UNKNOWN,
-//     complete: 100
-//   }
-// };
-
-const soa = {
-  1309: { // Strand of the Ancients Veteran
-    criteria: 4502,
-    complete: 100
-  }
-};
-
-// const wg = { // UNABLE TO GET CRITERIA - BG BUGGED
-//   1718: { // Wintergrasp Veteran
-//     criteria: UNKNOWN,
-//     complete: 100
-//   }
-// };
-
-const wsg = {
-  167: { // Warsong Gulch Veteran
-    criteria: 221,
-    complete: 100
-  }
-};
+}
 
 const hk = {
   513: { // 100 Honorable Kills
@@ -253,13 +249,14 @@ module.exports = {
   emblems: emblems,
   // lfg: lfg,
   arena: arena,
-  ab: ab,
-  av: av,
-  eos: eos,
-  // ioc: ioc,
-  soa: soa,
-  // wg: wg,
-  wsg: wsg,
+  // ab: ab,
+  // av: av,
+  // eos: eos,
+  // // ioc: ioc,
+  // soa: soa,
+  // // wg: wg,
+  // wsg: wsg,
+  bg: bg,
   hk: hk,
   daily: daily,
   quest: quest
