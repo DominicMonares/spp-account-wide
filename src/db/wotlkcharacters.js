@@ -22,7 +22,7 @@ const getCharacters = (accounts, wotlkcharacters) => {
     SELECT guid, name, race, gender, totalKills, knownTitles FROM characters 
     WHERE account IN (${accountVals})
   `;
-  
+
   return wotlkcharacters.execute(sql)
     .then(chars => {
       console.log('Character data fetched...');
@@ -37,7 +37,7 @@ const getAchievements = (chars, wotlkcharacters) => {
     SELECT * FROM character_achievement 
     WHERE guid IN (${charValues})
   `;
-  
+
   return wotlkcharacters.query(sql, [chars])
     .then(achieves => {
       console.log('Achievement data fetched...');
@@ -87,10 +87,10 @@ const addRewardItems = (items, wotlkcharacters) => {
 const getItemGuid = (wotlkcharacters) => {
   const sql = 'SELECT guid FROM item_instance ORDER BY guid DESC LIMIT 1';
   return wotlkcharacters.query(sql)
-  .then(res => {
-    console.log('Item guid data fetched...');
-    return res[0];
-  })
+    .then(res => {
+      console.log('Item guid data fetched...');
+      return res[0];
+    })
     .catch(err => { throw err });
 }
 
@@ -128,11 +128,11 @@ const createProgressTable = (wotlkcharacters) => {
 const getSharedProgress = (wotlkcharacters) => {
   const sql = 'SELECT * FROM character_achievement_shared_progress';
   return wotlkcharacters.query(sql)
-  .then(res => {
-    console.log('Previous achievement progress fetched...');
-    return res[0];
-  })
-  .catch(err => { throw err });
+    .then(res => {
+      console.log('Previous achievement progress fetched...');
+      return res[0];
+    })
+    .catch(err => { throw err });
 }
 
 const getCurrentProgress = (criteria, wotlkcharacters) => {
@@ -142,11 +142,11 @@ const getCurrentProgress = (criteria, wotlkcharacters) => {
     WHERE (guid, criteria) IN (${criteriaVals})
   `;
   return wotlkcharacters.query(sql)
-  .then(res => {
-    console.log('Achievement progress fetched...');
-    return res[0];
-  })
-  .catch(err => { throw err });
+    .then(res => {
+      console.log('Achievement progress fetched...');
+      return res[0];
+    })
+    .catch(err => { throw err });
 }
 
 const addSharedProgress = (progress, wotlkcharacters) => {
@@ -172,7 +172,7 @@ const addNewProgress = (progress, wotlkcharacters) => {
 const addHonorKills = (chars, wotlkcharacters) => {
   let sql = '';
   chars.forEach(c => {
-    sql +=`UPDATE characters SET totalKills=${c[1]} WHERE guid=${c[0]};`
+    sql += `UPDATE characters SET totalKills=${c[1]} WHERE guid=${c[0]};`
   });
   return wotlkcharacters.query(sql)
     .then(res => res[0])
@@ -180,7 +180,17 @@ const addHonorKills = (chars, wotlkcharacters) => {
 }
 
 const getQuests = (chars, wotlkcharacters) => {
-
+  const questVals = '(' + chars.map(c => c.join(', ')).join('), (') + ')';
+  const sql = `
+    SELECT guid, quest, status, timer FROM character_queststatus
+    WHERE (guid, status) IN (${questVals})
+  `
+  return wotlkcharacters.query(sql)
+    .then(res => {
+      console.log('Completed quests fetched...');
+      return res[0];
+    })
+    .catch(err => { throw err });
 }
 
 module.exports = {

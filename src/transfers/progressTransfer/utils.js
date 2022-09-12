@@ -1,12 +1,13 @@
 const latestDate = (progress) => {
   let newDate = 0;
   progress.forEach(e => {
-    if (e.date > newDate) newDate = e.date;
+    const date = e.date || e.timer
+    if (date > newDate) newDate = date;
   });
 
   if (!newDate) {
-    const date = new Date();
-    newDate = Math.floor(date.getTime()/1000)
+    const today = new Date();
+    newDate = Math.floor(today.getTime()/1000)
   }
   
   return newDate;

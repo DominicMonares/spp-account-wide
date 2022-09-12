@@ -15,10 +15,10 @@ const {
   combineProgress
 } = require('./utils.js');
 
-// const progressStore = {}; // Primary progress store
 const previousProgress = {}; // Uses achievement index
 const currentProgress = {}; // Uses criteria index
-const quests = {};
+const completedQuests = {};
+let rawQuests; // Needed to get latest date for quests
 
 const queryCriteria = [];
 const queryNewShared = [];
@@ -59,10 +59,18 @@ const transferProgress = async (chars, wotlkcharacters) => {
   }
 
   // Get completed quests from all characters
-  await getQuests(chars.map(c => c.guid))
-    .then(qs => qs.forEach(q => {
-
-    }))
+  await getQuests(chars.map(c => [c.guid, 1]), wotlkcharacters)
+    .then(qs => {
+      rawQuests = qs;
+      qs.forEach(q => {
+        const { guid, ...quest } = q;
+        if (!completedQuests[q.guid]) {
+          completedQuests[q.guid] = [quest];
+        } else {
+          completedQuests[q.guid].push(quest);
+        }
+      });
+    })
     .catch(err => { throw err });
 
   // Begin sub-transfers
@@ -135,14 +143,11 @@ const transferDailies = (chars) => {
   createQueries(chars, 'daily', previous, newProgress, newDate);
 }
 
-// NEED TO FIGURE QUEST DATA STRUCTURE OUT
 const transferQuests = (chars) => {
   // Get total number of kills, use 978 (3000 Quests) for counter
   const previous = previousProgress[978] || 0;
-  const questProgress = currentProgress[progress['quest'][978]['criteria']] || [];
-  const currentQuests = questProgress.map(e => e.counter);
-  const newProgress = combineQuests(currentQuests, previous);
-  const newDate = latestDate(currentQuests);
+  const newProgress = rawQuests.length;
+  const newDate = latestDate(rawQuests);
   createQueries(chars, 'quest', previous, newProgress, newDate);
 }
 
