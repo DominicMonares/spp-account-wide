@@ -1,7 +1,11 @@
 const progress = require('../../data/progress');
 const { zones } = require('../../data/zones');
-const { latestDate, combineProgress } = require('./utils.js');
-const { faction } = require('../../utils.js');
+const { getFaction } = require('../../utils.js');
+const { 
+  latestDate, 
+  combineProgress,
+  combineLoremaster
+} = require('./utils.js');
 const {
   progressTableExists,
   createProgressTable,
@@ -15,10 +19,11 @@ const {
 } = require('../../db/wotlkcharacters');
 const { getQuestZones } = require('../../db/wotlkmangos');
 
+const characters = {};
 const previousProgress = {}; // Uses achievement index
 const currentProgress = {}; // Uses criteria index
-const loremasterProgress = {A: {0: {}, 1: {}}, H: {0: {}, 1: {}}}; // Faction: EK, Kalimdor
-let questProgress; // Used for regular quest transfer
+const loremasterProgress = {A: {0: [], 1: []}, H: {0: [], 1: []}}; // Faction: EK, Kalimdor
+let questProgress;
 
 const queryCriteria = [];
 const queryQuestZones = {};
@@ -28,6 +33,8 @@ const queryNewAchieves = [];
 const queryNewHK = [];
 
 const transferProgress = async (chars, wotlkcharacters, wotlkmangos) => {
+  chars.forEach(c => characters[c.guid] = c);
+  
   // Create character_achievement_shared_progress table if it doesn't exist
   const progressTable = await progressTableExists(wotlkcharacters).catch(err => { throw err });
   if (!progressTable) await createProgressTable(wotlkcharacters).catch(err => { throw err });
@@ -39,11 +46,11 @@ const transferProgress = async (chars, wotlkcharacters, wotlkmangos) => {
     }))
     .catch(err => { throw err });
 
-  // Get current progress for all shared achievements
+  // Create criteria query
   for (const chain in progress) {
     if (chain === 'bg' || chain === 'lmA' || chain === 'lmH') {
-      for (const map in progress[chain]) {
-        const criteria = Object.values(progress[chain][map])[0]['criteria'];
+      for (const sub in progress[chain]) {
+        const criteria = Object.values(progress[chain][sub])[0]['criteria'];
         chars.forEach(c => queryCriteria.push([c.guid, criteria]));
       }
     } else {
@@ -53,6 +60,7 @@ const transferProgress = async (chars, wotlkcharacters, wotlkmangos) => {
     }
   }
 
+  // Get current progress for all shared achievements
   if (queryCriteria.length) {
     await getCurrentProgress(queryCriteria, wotlkcharacters)
       .then(prog => prog.forEach(p => {
@@ -67,31 +75,25 @@ const transferProgress = async (chars, wotlkcharacters, wotlkmangos) => {
   }
 
   // Get completed quests from all characters
-  const quests = await getQuests(chars.map(c => [c.guid, 1]), wotlkcharacters).catch(err => { throw err });
-  questProgress = quests;
-  
-  // Get quest zones then store quests by faction and continent
+  const completedQuests = await getQuests(chars.map(c => [c.guid, 1]), wotlkcharacters)
+    .catch(err => { throw err });
+  questProgress = completedQuests;
+
+  // Get quest zones before storing
   const questZones = {};
-  quests.forEach(q => { if (!queryQuestZones[q.quest]) queryQuestZones[q.quest] = 1 });
+  completedQuests.forEach(q => { if (!queryQuestZones[q.quest]) queryQuestZones[q.quest] = 1 });
   await getQuestZones(Object.keys(queryQuestZones), wotlkmangos)
     .then(qs => qs.forEach(q => questZones[q.entry] = q.ZoneOrSort))
     .catch(err => { throw err });
 
-  quests.forEach(q => {
-    chars.forEach(c => {
-      if (questZones[q.quest] < 0) return;
-      const charFaction = faction(c.race);
-      console.log('FUCK ', loremasterProgress.A[0]['4'])
-      const continent = zones[questZones[q.quest]];
-      if (continent !== 0 && continent !== 1) return;
-      const { guid, ...quest } = q;
-      if (!loremasterProgress[charFaction][continent][c.guid]) {
-        loremasterProgress[charFaction][continent][c.guid] = [quest];
-      } else {
-        loremasterProgress[charFaction][continent][c.guid].push(quest);
-      }
-    });
-  })
+  // Store quests by faction and continent
+  completedQuests.forEach(q => {
+    if (questZones[q.quest] < 0) return;
+    const charFaction = getFaction(characters[q.guid]['race']);
+    const continent = zones[questZones[q.quest]];
+    if (continent !== 0 && continent !== 1) return;
+    loremasterProgress[charFaction][continent].push(q);
+  });
 
   // Run sub-transfers
   transferGold(chars);
@@ -102,7 +104,6 @@ const transferProgress = async (chars, wotlkcharacters, wotlkmangos) => {
   transferDailies(chars);
   transferQuests(chars);
   transferLoremaster(chars);
-
 
   // Run Queries
   if (queryNewShared.length) {
@@ -193,6 +194,22 @@ const transferDailies = (chars) => {
   createQueries(chars, 'daily', previous, newProgress, newDate);
 }
 
+const transferLoremaster = (chars) => {
+  // Get total amount of quests by faction and continent
+  for (const faction in loremasterProgress) {
+    for (const continent in loremasterProgress[faction]) {
+      const chain = `lm${faction}`;
+      const achieve = Object.keys(progress[chain][continent])[0];
+      const previous = previousProgress[achieve] || 0;
+      const lmProgress = loremasterProgress[faction][continent];
+      const newProgress = combineLoremaster(lmProgress);
+      const newDate = latestDate(lmProgress);
+      const factionChars = chars.filter(c => getFaction(c.race) === faction ? true : false);
+      createQueries(factionChars, chain, previous, newProgress, newDate, continent);
+    }
+  }
+}
+
 const transferQuests = (chars) => {
   // Only works by checking earned quests, in-game counter doesn't work properly
   // Unable to add to char achieves without cluttering/messing character_queststatus table up
@@ -203,16 +220,9 @@ const transferQuests = (chars) => {
   createQueries(chars, 'quest', previous, newProgress, newDate);
 }
 
-const transferLoremaster = (chars) => {
-  // questProgress.forEach(q => {
-    
-  // });
 
-  console.log('FUCK ', loremasterProgress)
-}
-
-const createQueries = (chars, chain, previous, newProgress, newDate, bg) => {
-  const progChain = bg ? progress[chain][bg] : progress[chain];
+const createQueries = (chars, chain, previous, newProgress, newDate, sub) => {
+  const progChain = sub ? progress[chain][sub] : progress[chain];
   for (const a in progChain) {
     chars.forEach(c => {
       const complete = progChain[a]['complete'];

@@ -210,14 +210,14 @@ const daily = {
 };
 
 const lmA = {
-  easternKingdoms: { // Loremaster of Eastern Kingdoms - Alliance
-    1676: {
+  0: { 
+    1676: { // Loremaster of Eastern Kingdoms - Alliance
       criteria: 7884,
       complete: 700
     }
   },
-  kalimdor: { // Loremaster of Kalimdor - Alliance
-    1678: {
+  1: { 
+    1678: { // Loremaster of Kalimdor - Alliance
       criteria: 7894,
       complete: 700
     }
@@ -225,19 +225,20 @@ const lmA = {
 };
 
 const lmH = {
-  easternKingdoms: { // Loremaster of Eastern Kingdoms - Horde
-    1677: {
+  0: { 
+    1677: { // Loremaster of Eastern Kingdoms - Horde
       criteria: 7890,
       complete: 550
     }
   },
-  kalimdor: { // Loremaster of Kalimdor - Horde
-    1680: {
+  1: { 
+    1680: { // Loremaster of Kalimdor - Horde
       criteria: 7896,
       complete: 685
     }
   }
 };
+
 const quest = {
   503: { // 50 Quests Completed
     criteria: 230,

@@ -9,7 +9,7 @@ const {
   addItemInstances
 } = require('../../db/wotlkcharacters');
 const { getRewards } = require('../../db/wotlkmangos');
-const { faction } = require('./utils');
+const { getFaction } = require('./utils');
 const { factionAchievements } = require('../../data/factionAchievements');
 const { titles } = require('../../data/titles');
 
@@ -70,8 +70,8 @@ const transferCredit = async (chars, wotlkcharacters, wotlkmangos) => {
     charTitles[c.guid] = c.knownTitles;
     for (const a of Object.keys(charAchieves)) {
       const factAchieves = factionAchievements[a];
-      const correctFaction = factAchieves && factAchieves.faction === faction(c.race);
-      const incorrectFaction = factAchieves && factAchieves.faction !== faction(c.race);
+      const correctFaction = factAchieves && factAchieves.faction === getFaction(c.race);
+      const incorrectFaction = factAchieves && factAchieves.faction !== getFaction(c.race);
 
       if (correctFaction) {
         // Delete opposing faction version of achievement
@@ -125,7 +125,7 @@ const handleReward = (char, achievement) => {
   charAchievements[char.guid][achievement] = achievements[achievement];
   const rew = rewards[achievement];
   if (rew.sender) createMailQuery(char.guid, rew);
-  if (rew.title_A || rew.title_H) createTitleQuery(char.guid, char.gender, faction(char.race), achievement);
+  if (rew.title_A || rew.title_H) createTitleQuery(char.guid, char.gender, getFaction(char.race), achievement);
 }
 
 const createMailQuery = (char, reward) => {

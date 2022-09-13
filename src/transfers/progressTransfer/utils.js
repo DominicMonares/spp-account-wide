@@ -26,7 +26,17 @@ const combineProgress = (entries, previous) => {
   return count + previous;
 }
 
+const combineLoremaster = (quests) => {
+  const uniqueQuests = {};
+  quests.forEach(q => { 
+    if (!uniqueQuests[q.quest]) uniqueQuests[q.quest] = true;
+  });
+
+  return Object.keys(uniqueQuests).length;
+}
+
 module.exports = {
   latestDate: latestDate,
-  combineProgress: combineProgress
+  combineProgress: combineProgress,
+  combineLoremaster: combineLoremaster
 };
