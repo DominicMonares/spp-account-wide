@@ -32,7 +32,6 @@ const accountwideAchievements = async () => {
   await wotlkcharactersClose().catch(err => error(err));
   await wotlkmangosClose().catch(err => error(err));
   await wotlkrealmClose().catch(err => error(err));
-  console.log('Disconnected from wotlkcharacters, wotlkmangos, and wotlkrealmd...');
   console.log('Successfully completed all transfers!');
   closeWindow(1);
 }

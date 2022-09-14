@@ -210,6 +210,9 @@ const transferDailies = (chars) => {
 }
 
 const transferLoremaster = (chars) => {
+  // Only works by checking earned quests, in-game counter doesn't work properly
+  // BUT it does work properly for Blood Elves and Draenei for some reason
+  // BE/Draenei seem to track the quests they've completed, then add it to the new progress
   // Get total amount of quests by faction and continent
   for (const faction in loremasterProgress) {
     for (const continent in loremasterProgress[faction]) {
@@ -282,17 +285,3 @@ const createQueries = (chars, chain, previous, newProgress, newDate, sub) => {
 }
 
 module.exports = { transferProgress: transferProgress };
-
-/*
-690 = H 
-1101 = A 
-
-// SEPARATE, MORE SPECIFIC
-// Loremaster of Eastern Kingdoms
-// Loremaster of Kalimdor
-
-Query db to get quests completed from all characters
-Query db to get all quests
-Filter by faction similar to achievements
-if faction matches and quest is non class specific, add to progress
-*/
