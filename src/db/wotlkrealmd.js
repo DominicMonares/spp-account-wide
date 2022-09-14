@@ -2,17 +2,19 @@ const mysql = require('mysql2/promise');
 
 const { dbCredentials } = require('../config');
 
+let wotlkrealmd;
+
 const wotlkrealmdConnect = () => {
   dbCredentials.database = 'wotlkrealmd';
   return mysql.createConnection(dbCredentials)
     .then(res => {
       console.log('Connected to wotlkrealmd...');
-      return res;
+      wotlkrealmd = res;
     })
     .catch(async err => { throw err});
 }
 
-const getAccounts = (wotlkrealmd) => {
+const getAccounts = () => {
   const sql = 'SELECT id FROM account WHERE username NOT LIKE "%RNDBOT%;"';
   return wotlkrealmd.execute(sql)
     .then(accounts => {
@@ -22,7 +24,14 @@ const getAccounts = (wotlkrealmd) => {
     .catch(err => { throw err });
 }
 
+const wotlkrealmClose = () => {
+  return wotlkrealmd.end()
+    .then(console.log('Disconnected from wotlkrealmd...'))
+    .catch(err => { throw err });
+}
+
 module.exports = {
   wotlkrealmdConnect: wotlkrealmdConnect,
-  getAccounts: getAccounts
+  getAccounts: getAccounts,
+  wotlkrealmClose: wotlkrealmClose
 };

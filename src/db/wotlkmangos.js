@@ -2,12 +2,14 @@ const mysql = require('mysql2/promise');
 
 const { dbCredentials } = require('../config');
 
+let wotlkmangos;
+
 const wotlkmangosConnect = () => {
   dbCredentials.database = 'wotlkmangos';
   return mysql.createConnection(dbCredentials)
     .then(res => {
       console.log('Connected to wotlkmangos...');
-      return res;
+      wotlkmangos = res;
     })
     .catch(err => { throw err });
 }
@@ -15,7 +17,7 @@ const wotlkmangosConnect = () => {
 
 /* Credit Transfer */
 
-const getRewards = (wotlkmangos) => {
+const getRewards = () => {
   const sql = 'SELECT * FROM achievement_reward';
   return wotlkmangos.execute(sql)
     .then(rewards => {
@@ -28,14 +30,14 @@ const getRewards = (wotlkmangos) => {
 
 /* Progress Transfer */
 
-const getQuestZones = (chars, wotlkcharacters) => {
+const getQuestZones = (chars) => {
   const charValues = '"' + chars.join('", "') + '"';
   const sql = `
     SELECT entry, ZoneOrSort FROM quest_template
     WHERE entry IN (${charValues})
   `;
 
-  return wotlkcharacters.query(sql, [chars])
+  return wotlkmangos.query(sql, [chars])
     .then(achieves => {
       console.log('Quest zone data fetched...');
       return achieves[0];
@@ -43,8 +45,15 @@ const getQuestZones = (chars, wotlkcharacters) => {
     .catch(err => { throw err });
 }
 
+const wotlkmangosClose = () => {
+  return wotlkmangos.end()
+    .then(console.log('Disconnected from wotlkmangos...'))
+    .catch(err => { throw err });
+}
+
 module.exports = {
   wotlkmangosConnect: wotlkmangosConnect,
   getRewards: getRewards,
-  getQuestZones: getQuestZones
+  getQuestZones: getQuestZones,
+  wotlkmangosClose: wotlkmangosClose
 };

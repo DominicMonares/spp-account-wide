@@ -99,7 +99,7 @@ const transferProgress = async (chars, wotlkcharacters, wotlkmangos) => {
   // Get quest zones before storing
   const questZones = {};
   completedQuests.forEach(q => { if (!queryQuestZones[q.quest]) queryQuestZones[q.quest] = 1 });
-  await getQuestZones(Object.keys(queryQuestZones), wotlkmangos)
+  await getQuestZones(Object.keys(queryQuestZones))
     .then(qs => qs.forEach(q => questZones[q.entry] = q.ZoneOrSort))
     .catch(err => { throw err });
 

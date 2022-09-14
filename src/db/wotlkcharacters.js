@@ -2,12 +2,14 @@ const mysql = require('mysql2/promise');
 
 const { dbCredentials } = require('../config');
 
+let wotlkcharacters;
+
 const wotlkcharactersConnect = () => {
   dbCredentials.database = 'wotlkcharacters';
   return mysql.createConnection(dbCredentials)
     .then(res => {
       console.log('Connected to wotlkcharacters...');
-      return res;
+      wotlkcharacters = res;
     })
     .catch(async err => { throw err });
 }
@@ -15,7 +17,7 @@ const wotlkcharactersConnect = () => {
 
 /* Credit Transfer */
 
-const getCharacters = (accounts, wotlkcharacters) => {
+const getCharacters = (accounts) => {
   const accountVals = '"' + accounts.join('", "') + '"';
   const sql = `
     SELECT guid, name, race, gender, totalKills, knownTitles FROM characters 
@@ -30,7 +32,7 @@ const getCharacters = (accounts, wotlkcharacters) => {
     .catch(err => { throw err });
 }
 
-const getAchievements = (chars, wotlkcharacters) => {
+const getAchievements = (chars) => {
   const charValues = '"' + chars.join('", "') + '"';
   const sql = `
     SELECT * FROM character_achievement 
@@ -45,21 +47,21 @@ const getAchievements = (chars, wotlkcharacters) => {
     .catch(err => { throw err });
 }
 
-const addAchievements = (achieves, wotlkcharacters) => {
+const addAchievements = (achieves) => {
   const sql = 'INSERT IGNORE INTO character_achievement VALUES ?';
   return wotlkcharacters.query(sql, [achieves])
     .then(console.log('Achievement credit successfully transferred!'))
     .catch(err => { throw err });
 }
 
-const addRewardTitles = (char, titles, wotlkcharacters) => {
+const addRewardTitles = (char, titles) => {
   const sql = `UPDATE characters SET knownTitles='${titles}' WHERE guid=${char}`;
   return wotlkcharacters.query(sql)
     .then(console.log(`Achievement title reward successfully transferred for char ${char}!`))
     .catch(err => { throw err });
 }
 
-const getMailIDs = (wotlkcharacters) => {
+const getMailIDs = () => {
   const sql = 'SELECT id FROM mail';
   return wotlkcharacters.query(sql)
     .then(mail => {
@@ -69,21 +71,21 @@ const getMailIDs = (wotlkcharacters) => {
     .catch(err => { throw err });
 }
 
-const addRewardMail = (mail, wotlkcharacters) => {
+const addRewardMail = (mail) => {
   const sql = 'INSERT IGNORE INTO mail VALUES ?';
   return wotlkcharacters.query(sql, [mail])
     .then(console.log('Achievement mail successfully transferred!'))
     .catch(err => { throw err });
 }
 
-const addRewardItems = (items, wotlkcharacters) => {
+const addRewardItems = (items) => {
   const sql = 'INSERT IGNORE INTO mail_items VALUES ?';
   return wotlkcharacters.query(sql, [items])
     .then(console.log('Achievement mail items successfully transferred!'))
     .catch(err => { throw err });
 }
 
-const getItemGuid = (wotlkcharacters) => {
+const getItemGuid = () => {
   const sql = 'SELECT guid FROM item_instance ORDER BY guid DESC LIMIT 1';
   return wotlkcharacters.query(sql)
     .then(item => {
@@ -93,7 +95,7 @@ const getItemGuid = (wotlkcharacters) => {
     .catch(err => { throw err });
 }
 
-const addItemInstances = (instances, wotlkcharacters) => {
+const addItemInstances = (instances) => {
   const sql = 'INSERT IGNORE INTO item_instance VALUES ?';
   return wotlkcharacters.query(sql, [instances])
     .then(console.log('Item instances successfully transferred!'))
@@ -103,7 +105,7 @@ const addItemInstances = (instances, wotlkcharacters) => {
 
 /* Progress Transfer */
 
-const progressTableExists = (wotlkcharacters) => {
+const progressTableExists = () => {
   const sql = 'SHOW TABLES LIKE "character_achievement_shared_progress"';
   return wotlkcharacters.query(sql)
     .then(res => {
@@ -113,7 +115,7 @@ const progressTableExists = (wotlkcharacters) => {
     .catch(err => { throw err });
 }
 
-const createProgressTable = (wotlkcharacters) => {
+const createProgressTable = () => {
   const sql = `
     CREATE TABLE character_achievement_shared_progress (
       achievement INT NOT NULL,
@@ -127,7 +129,7 @@ const createProgressTable = (wotlkcharacters) => {
     .catch(err => { throw err });
 }
 
-const getSharedProgress = (wotlkcharacters) => {
+const getSharedProgress = () => {
   const sql = 'SELECT * FROM character_achievement_shared_progress';
   return wotlkcharacters.query(sql)
     .then(progress => {
@@ -137,7 +139,7 @@ const getSharedProgress = (wotlkcharacters) => {
     .catch(err => { throw err });
 }
 
-const getCurrentProgress = (criteria, wotlkcharacters) => {
+const getCurrentProgress = (criteria) => {
   const criteriaVals = '(' + criteria.map(c => c.join(', ')).join('), (') + ')';
   const sql = `
     SELECT * FROM character_achievement_progress
@@ -152,7 +154,7 @@ const getCurrentProgress = (criteria, wotlkcharacters) => {
     .catch(err => { throw err });
 }
 
-const getQuests = (chars, wotlkcharacters) => {
+const getQuests = (chars) => {
   const questVals = '(' + chars.map(c => c.join(', ')).join('), (') + ')';
   const sql = `
     SELECT guid, quest, status, timer FROM character_queststatus
@@ -166,7 +168,7 @@ const getQuests = (chars, wotlkcharacters) => {
     .catch(err => { throw err });
 }
 
-const addSharedProgress = (progress, wotlkcharacters) => {
+const addSharedProgress = (progress) => {
   const sql = `
     INSERT INTO character_achievement_shared_progress VALUES ?
       ON DUPLICATE KEY UPDATE progress=VALUES(progress)
@@ -177,7 +179,7 @@ const addSharedProgress = (progress, wotlkcharacters) => {
     .catch(err => { throw err });
 }
 
-const addNewProgress = (progress, wotlkcharacters) => {
+const addNewProgress = (progress) => {
   const sql = `
     INSERT INTO character_achievement_progress VALUES ?
       ON DUPLICATE KEY UPDATE counter=VALUES(counter), date=VALUES(date)
@@ -188,7 +190,7 @@ const addNewProgress = (progress, wotlkcharacters) => {
     .catch(err => { throw err });
 }
 
-const addHonorKills = (chars, wotlkcharacters) => {
+const addHonorKills = (chars) => {
   let sql = '';
   chars.forEach(c => {
     sql += `UPDATE characters SET totalKills=${c[1]} WHERE guid=${c[0]};`
@@ -199,6 +201,11 @@ const addHonorKills = (chars, wotlkcharacters) => {
     .catch(err => { throw err });
 }
 
+const wotlkcharactersClose = () => {
+  return wotlkcharacters.end()
+    .then(console.log('Disconnected from wotlkmangos...'))
+    .catch(err => { throw err });
+}
 
 module.exports = {
   wotlkcharactersConnect: wotlkcharactersConnect,
@@ -218,5 +225,6 @@ module.exports = {
   getQuests: getQuests,
   addSharedProgress: addSharedProgress,
   addNewProgress: addNewProgress,
-  addHonorKills: addHonorKills
+  addHonorKills: addHonorKills,
+  wotlkcharactersClose: wotlkcharactersClose
 };

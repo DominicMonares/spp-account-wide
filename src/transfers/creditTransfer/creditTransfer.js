@@ -25,12 +25,12 @@ const queryRewardMail = [];
 const queryMailItems = [];
 const queryItemInstances = [];
 
-const transferCredit = async (chars, wotlkcharacters, wotlkmangos) => {
+const transferCredit = async (chars) => {
   // Create achievement store for each character
   chars.forEach(c => charAchievements[c.guid] = {});
 
   // Get earned achievements from every character
-  await getAchievements(chars.map(c => c.guid), wotlkcharacters)
+  await getAchievements(chars.map(c => c.guid))
     .then(achieves => achieves.forEach(a => {
       // Add to primary achievements to pool
       if (!achievements[a.achievement]) {
@@ -44,7 +44,7 @@ const transferCredit = async (chars, wotlkcharacters, wotlkmangos) => {
     }))
     .catch(err => { throw err });
 
-  await getRewards(wotlkmangos)
+  await getRewards()
     .then(rews => rews.forEach(r => rewards[r.entry] = r))
     .catch(err => { throw err });
   
@@ -55,12 +55,12 @@ const transferCredit = async (chars, wotlkcharacters, wotlkmangos) => {
   });
 
   // Get topmost item guid
-  await getItemGuid(wotlkcharacters)
+  await getItemGuid()
     .then(guid => itemGuid = guid[0]['guid'] + 1000) // +1000 for newly created characters & overwrites
     .catch(err => { throw err });
 
   // Get topmost mail ID
-  await getMailIDs(wotlkcharacters)
+  await getMailIDs()
     .then(mail => { if (mail.length) mailID = mail.pop().id + 3 }) // +3 for new char CE mail
     .catch(err => { throw err });
 
@@ -95,28 +95,28 @@ const transferCredit = async (chars, wotlkcharacters, wotlkmangos) => {
 
   // Add all credit and rewards to database
   if (queryAchieves.length) {
-    await addAchievements(queryAchieves, wotlkcharacters).catch(err => { throw err });
+    await addAchievements(queryAchieves).catch(err => { throw err });
   }
 
   if (queryRewardMail.length) {
-    await addRewardMail(queryRewardMail, wotlkcharacters).catch(err => { throw err });
-    console.log('Achievement mail successfully transferred!');
+    await addRewardMail(queryRewardMail).catch(err => { throw err });
+    
   }
   
   if (queryMailItems.length) {
-    await addRewardItems(queryMailItems, wotlkcharacters).catch(err => { throw err });
-    console.log('Achievement mail items successfully transferred!');
+    await addRewardItems(queryMailItems).catch(err => { throw err });
+    
   }
 
   if (queryItemInstances.length) {
-    await addItemInstances(queryItemInstances, wotlkcharacters).catch(err => { throw err });
-    console.log('Item instances successfully transferred!');
+    await addItemInstances(queryItemInstances).catch(err => { throw err });
   }
   
   for (const char of Object.keys(charTitles)) {
-    await addRewardTitles(char, charTitles[char], wotlkcharacters).catch(err => { throw err });
+    await addRewardTitles(char, charTitles[char]).catch(err => { throw err });
   }
-  console.log('Achievement title rewards successfully transferred!');
+
+  console.log('All achievement title rewards successfully transferred!');
 }
 
 const handleReward = (char, achievement) => {
