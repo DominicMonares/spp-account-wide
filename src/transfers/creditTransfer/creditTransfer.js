@@ -96,7 +96,6 @@ const transferCredit = async (chars, wotlkcharacters, wotlkmangos) => {
   // Add all credit and rewards to database
   if (queryAchieves.length) {
     await addAchievements(queryAchieves, wotlkcharacters).catch(err => { throw err });
-    console.log('Achievement credit successfully transferred!');
   }
 
   if (queryRewardMail.length) {

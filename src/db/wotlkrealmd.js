@@ -2,7 +2,7 @@ const mysql = require('mysql2/promise');
 
 const { dbCredentials } = require('../config');
 
-const wotlkrealmdConnect = async () => {
+const wotlkrealmdConnect = () => {
   dbCredentials.database = 'wotlkrealmd';
   return mysql.createConnection(dbCredentials)
     .then(res => {
@@ -13,12 +13,12 @@ const wotlkrealmdConnect = async () => {
 }
 
 const getAccounts = (wotlkrealmd) => {
-  const sql = 'SELECT id FROM account WHERE username NOT LIKE "%RNDBOT%"';
+  const sql = 'SELECT id FROM account WHERE username NOT LIKE "%RNDBOT%;"';
   return wotlkrealmd.execute(sql)
     .then(accounts => {
       console.log('Account data fetched...');
-      return accounts[0].map(a => a.id)}
-    )
+      return accounts[0].map(a => a.id);
+    })
     .catch(err => { throw err });
 }
 

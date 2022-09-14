@@ -13,10 +13,10 @@ const {
   getSharedProgress,
   getCurrentProgress,
   addSharedProgress,
+  getQuests,
   addNewProgress,
   addAchievements,
-  addHonorKills,
-  getQuests
+  addHonorKills
 } = require('../../db/wotlkcharacters');
 const { getQuestZones } = require('../../db/wotlkmangos');
 
@@ -125,12 +125,10 @@ const transferProgress = async (chars, wotlkcharacters, wotlkmangos) => {
   // Run Queries
   if (queryNewShared.length) {
     await addSharedProgress(queryNewShared, wotlkcharacters).catch(err => { throw err });
-    console.log('Shared progress successfully updated!');
   }
 
   if (queryNewProgress.length) {
     await addNewProgress(queryNewProgress, wotlkcharacters).catch(err => { throw err });
-    console.log('Progress successfully updated for all characters!');
   }
 
   if (queryNewAchieves.length) {
