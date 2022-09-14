@@ -112,11 +112,9 @@ const transferCredit = async (chars) => {
     await addItemInstances(queryItemInstances).catch(err => { throw err });
   }
   
-  for (const char of Object.keys(charTitles)) {
-    await addRewardTitles(char, charTitles[char]).catch(err => { throw err });
+  if (Object.keys(charTitles).length) {
+    await addRewardTitles(charTitles).catch(err => { throw err });
   }
-
-  console.log('All achievement title rewards successfully transferred!');
 }
 
 const handleReward = (char, achievement) => {

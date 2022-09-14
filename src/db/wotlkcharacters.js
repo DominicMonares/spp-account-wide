@@ -54,10 +54,14 @@ const addAchievements = (achieves) => {
     .catch(err => { throw err });
 }
 
-const addRewardTitles = (char, titles) => {
-  const sql = `UPDATE characters SET knownTitles='${titles}' WHERE guid=${char}`;
+const addRewardTitles = (charTitles) => {
+  let sql = '';
+  for (const char in charTitles) {
+    sql += `UPDATE characters SET knownTitles='${charTitles[char]}' WHERE guid=${char};`
+  }
+
   return wotlkcharacters.query(sql)
-    .then(console.log(`Achievement title reward successfully transferred for char ${char}!`))
+    .then(console.log(`Achievement title rewards successfully transferred!`))
     .catch(err => { throw err });
 }
 
