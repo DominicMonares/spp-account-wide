@@ -35,8 +35,27 @@ const combineLoremaster = (quests) => {
   return Object.keys(uniqueQuests).length;
 }
 
+const correctFaction = (faction, achieve) => {
+  if (faction === 'A') {
+    if (achieve === 1677) {
+      return 1676;
+    } else if (achieve === 1680) {
+      return 1678;
+    }
+  } else {
+    if (achieve === 1676) {
+      return 1677;
+    } else if (achieve === 1678) {
+      return 1680;
+    }
+  }
+
+  return achieve;
+}
+
 module.exports = {
   latestDate: latestDate,
   combineProgress: combineProgress,
-  combineLoremaster: combineLoremaster
+  combineLoremaster: combineLoremaster,
+  correctFaction: correctFaction
 };

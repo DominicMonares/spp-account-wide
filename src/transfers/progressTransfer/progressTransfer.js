@@ -4,7 +4,8 @@ const { getFaction } = require('../../utils.js');
 const { 
   latestDate, 
   combineProgress,
-  combineLoremaster
+  combineLoremaster,
+  correctFaction
 } = require('./utils.js');
 const {
   progressTableExists,
@@ -19,11 +20,11 @@ const {
 } = require('../../db/wotlkcharacters');
 const { getQuestZones } = require('../../db/wotlkmangos');
 
-const characters = {};
 const previousProgress = {}; // Uses achievement index
 const currentProgress = {}; // Uses criteria index
 const loremasterProgress = {A: {0: [], 1: []}, H: {0: [], 1: []}}; // Faction: EK, Kalimdor
-let questProgress;
+const characters = {}; // Only used for Loremaster
+let completedQuests;
 
 const queryCriteria = [];
 const queryQuestZones = {};
@@ -33,6 +34,7 @@ const queryNewAchieves = [];
 const queryNewHK = [];
 
 const transferProgress = async (chars, wotlkcharacters, wotlkmangos) => {
+  if (!chars.length) return;
   chars.forEach(c => characters[c.guid] = c);
   
   // Create character_achievement_shared_progress table if it doesn't exist
@@ -75,9 +77,24 @@ const transferProgress = async (chars, wotlkcharacters, wotlkmangos) => {
   }
 
   // Get completed quests from all characters
-  const completedQuests = await getQuests(chars.map(c => [c.guid, 1]), wotlkcharacters)
+  await getQuests(chars.map(c => [c.guid, 1]), wotlkcharacters)
+    .then(quests => {
+      completedQuests = quests;
+
+      // Add completed quests for Blood Elves and Draenei, used for Loremaster
+      chars.forEach(c => {
+        if (c.race === 10 || c.race === 11) quests.forEach(q => {
+          if (c.guid === q.guid) {
+            if (!characters[c.guid]['questCount']) {
+              characters[c.guid]['questCount'] = 1;
+            } else {
+              characters[c.guid]['questCount']++;
+            }
+          };
+        });
+      });
+    })
     .catch(err => { throw err });
-  questProgress = completedQuests;
 
   // Get quest zones before storing
   const questZones = {};
@@ -104,7 +121,7 @@ const transferProgress = async (chars, wotlkcharacters, wotlkmangos) => {
   transferDailies(chars);
   transferQuests(chars);
   transferLoremaster(chars);
-
+  
   // Run Queries
   if (queryNewShared.length) {
     await addSharedProgress(queryNewShared, wotlkcharacters).catch(err => { throw err });
@@ -215,24 +232,37 @@ const transferQuests = (chars) => {
   // Unable to add to char achieves without cluttering/messing character_queststatus table up
   // Get total number of kills, use 978 (3000 Quests) for counter
   const previous = previousProgress[978] || 0;
-  const newProgress = questProgress.length;
-  const newDate = latestDate(questProgress);
+  const newProgress = completedQuests.length;
+  const newDate = latestDate(completedQuests);
   createQueries(chars, 'quest', previous, newProgress, newDate);
 }
 
-
 const createQueries = (chars, chain, previous, newProgress, newDate, sub) => {
+
   const progChain = sub ? progress[chain][sub] : progress[chain];
-  for (const a in progChain) {
+  for (let a in progChain) {
+    a = Number(a);
     chars.forEach(c => {
       const complete = progChain[a]['complete'];
 
       // Add new shared progress
       queryNewShared.push([a, newProgress]);
-
-      // Add all new progress
+      
+      // Update new progress if greater than achievement completion criteria
       let validProgress = newProgress;
-      if (validProgress > complete) validProgress = complete;
+      const achieveEarned = validProgress > complete;
+      if (achieveEarned) validProgress = complete;
+      
+      // Subtract quests completed by Blood Elves and Draenei characters for Loremaster
+      const loremaster = chain === 'lmA' || chain === 'lmH';
+      const bcChar = c.race === 10 || c.race === 11;
+      if (loremaster && bcChar && !achieveEarned)  {
+        let questCount = characters[c.guid]['questCount'];
+        if (!questCount) questCount = 0;
+        validProgress -= questCount;
+      };
+      
+      // Add all new progress
       queryNewProgress.push([
         c.guid, // guid
         progChain[a]['criteria'], // criteria
@@ -242,7 +272,12 @@ const createQueries = (chars, chain, previous, newProgress, newDate, sub) => {
 
       // Add new achievements if any were earned after sharing
       if (previous < complete && newProgress > complete) {
-        queryNewAchieves.push([c.guid, Number(a), newDate]);
+        // Ensure faction is correct if Loremaster is earned
+        if (chain === 'lmA' || chain === 'lmH') {
+          a = correctFaction(getFaction(c.race), a);
+        }
+
+        queryNewAchieves.push([c.guid, a, newDate]);
       }
     });
   }
