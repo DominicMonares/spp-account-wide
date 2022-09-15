@@ -1,6 +1,7 @@
 const mysql = require('mysql2/promise');
 
 const { dbCredentials } = require('../config');
+const { quoteJoin, parenJoin } = require('../utils');
 
 let wotlkcharacters;
 
@@ -18,10 +19,9 @@ const wotlkcharactersConnect = () => {
 /* Credit Transfer */
 
 const getCharacters = (accounts) => {
-  const accountVals = '"' + accounts.join('", "') + '"';
   const sql = `
-    SELECT guid, name, race, gender, totalKills, knownTitles FROM characters 
-    WHERE account IN (${accountVals})
+    SELECT guid, name, race, gender, totaltime, totalKills, knownTitles FROM characters 
+    WHERE account IN (${quoteJoin(accounts)})
   `;
 
   return wotlkcharacters.execute(sql)
@@ -33,10 +33,9 @@ const getCharacters = (accounts) => {
 }
 
 const getAchievements = (chars) => {
-  const charValues = '"' + chars.join('", "') + '"';
   const sql = `
     SELECT * FROM character_achievement 
-    WHERE guid IN (${charValues})
+    WHERE guid IN (${quoteJoin(chars)})
   `;
 
   return wotlkcharacters.query(sql, [chars])
@@ -144,10 +143,9 @@ const getSharedProgress = () => {
 }
 
 const getCurrentProgress = (criteria) => {
-  const criteriaVals = '(' + criteria.map(c => c.join(', ')).join('), (') + ')';
   const sql = `
     SELECT * FROM character_achievement_progress
-    WHERE (guid, criteria) IN (${criteriaVals})
+    WHERE (guid, criteria) IN (${parenJoin(criteria)})
   `;
 
   return wotlkcharacters.query(sql)
@@ -159,10 +157,9 @@ const getCurrentProgress = (criteria) => {
 }
 
 const getQuests = (chars) => {
-  const questVals = '(' + chars.map(c => c.join(', ')).join('), (') + ')';
   const sql = `
     SELECT guid, quest, status, timer FROM character_queststatus
-    WHERE (guid, status) IN (${questVals})
+    WHERE (guid, status) IN (${parenJoin(chars)})
   `
   return wotlkcharacters.query(sql)
     .then(quests => {

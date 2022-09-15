@@ -1,7 +1,7 @@
 const readline = require('readline');
 
 const closeWindow = (count) => {
-  setInterval(() => {
+  setInterval(() => {3
     // console.log(`This window will close in ${count} seconds...`);
     process.stdout.clearLine();
     process.stdout.cursorTo(0);
@@ -27,6 +27,9 @@ const error = (err) => {
   );
 }
 
+const quoteJoin = (queryVals) => '"' + queryVals.join('", "') + '"';
+const parenJoin = (queryVals) => '(' + queryVals.map(qv => qv.join(', ')).join('), (') + ')';
+
 const getFaction = (race) => {
   if (race === 1 || race === 3 || race === 4 || race === 7 || race === 11) {
     return 'A';
@@ -38,5 +41,7 @@ const getFaction = (race) => {
 module.exports = { 
   closeWindow: closeWindow,
   error: error,
+  quoteJoin: quoteJoin,
+  parenJoin: parenJoin,
   getFaction: getFaction
 };

@@ -1,3 +1,11 @@
+const getFaction = (race) => {
+  if (race === 1 || race === 3 || race === 4 || race === 7 || race === 11) {
+    return 'A';
+  } else {
+    return 'H';
+  }
+}
+
 const latestDate = (progress) => {
   let newDate = 0;
   progress.forEach(e => {
@@ -7,15 +15,15 @@ const latestDate = (progress) => {
 
   if (!newDate) {
     const today = new Date();
-    newDate = Math.floor(today.getTime()/1000)
+    newDate = Math.floor(today.getTime() / 1000)
   }
-  
+
   return newDate;
 }
 
 const combineProgress = (entries, previous) => {
   let count = 0;
-  entries.forEach(e => { 
+  entries.forEach(e => {
     if (e - previous < 0) {
       count += e;
     } else {
@@ -28,7 +36,7 @@ const combineProgress = (entries, previous) => {
 
 const combineLoremaster = (quests) => {
   const uniqueQuests = {};
-  quests.forEach(q => { 
+  quests.forEach(q => {
     if (!uniqueQuests[q.quest]) uniqueQuests[q.quest] = true;
   });
 
@@ -54,6 +62,7 @@ const correctFaction = (faction, achieve) => {
 }
 
 module.exports = {
+  getFaction: getFaction,
   latestDate: latestDate,
   combineProgress: combineProgress,
   combineLoremaster: combineLoremaster,
