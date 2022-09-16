@@ -51,11 +51,11 @@ const transferCredit = async (characters) => {
 
   // Get topmost item guid & mail ID
   await getItemGuid()
-    .then(guid => itemGuid = guid[0]['guid'] + 1000) // +1000 to buffer overwrites
+    .then(guid => itemGuid = guid[0]['guid'] + 10000) // +10000 to buffer overwrites
     .catch(err => { throw err });
 
   await getMailIDs()
-    .then(mail => mailID = mail[0]['id'] + 3 ) // +1000 to buffer overwrites
+    .then(mail => mailID = mail[0]['id'] + 10000 ) // +10000 to buffer overwrites
     .catch(err => { throw err });
 
   // Run sub-transfers
