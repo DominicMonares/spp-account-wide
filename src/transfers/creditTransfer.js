@@ -154,7 +154,7 @@ const transferTitles = (char, gender, faction, achievement) => {
   let id = titles[achievement]['TitleID'];
   let order = titles[achievement]['IGO'];
 
-  // Remove last value if char has no titles, unsure why the extra gets added
+  // Remove last value if char titles never transferred, an extra gets added due to extra space
   if (knownTitles.length === 7) knownTitles.pop();
 
   // Handle unique titles

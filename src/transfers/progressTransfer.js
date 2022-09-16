@@ -205,7 +205,7 @@ const transferDailies = () => {
 
 const transferLoremaster = () => {
   // Only works by checking earned quests, in-game counter doesn't work properly
-  // BUT it does work properly for Blood Elves and Draenei for some reason
+  // BUT it does work properly for Blood Elves/Draenei, something to do with client or db script?
   // BE/Draenei seem to track the quests they've completed, then add it to the new progress
   // Get total amount of quests by faction and continent
   for (const faction in loremasterProgress) {
