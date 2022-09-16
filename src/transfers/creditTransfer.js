@@ -51,11 +51,11 @@ const transferCredit = async (characters) => {
 
   // Get topmost item guid & mail ID
   await getItemGuid()
-    .then(guid => itemGuid = guid[0]['guid'] + 1000) // +1000 for newly created characters & overwrites
+    .then(guid => itemGuid = guid[0]['guid'] + 1000) // +1000 to buffer overwrites
     .catch(err => { throw err });
 
   await getMailIDs()
-    .then(mail => { if (mail.length) mailID = mail.pop().id + 3 }) // +3 for new char CE mail
+    .then(mail => mailID = mail[0]['id'] + 3 ) // +1000 to buffer overwrites
     .catch(err => { throw err });
 
   // Run sub-transfers
@@ -100,12 +100,14 @@ const transferAchievements = () => {
 }
 
 const transferReward = (char, achievement) => {
-  if (charAchievements[char.guid][achievement] || !rewards[achievement]) return;
-  charAchievements[char.guid][achievement] = achievements[achievement];
   const rew = rewards[achievement];
+  const alreadyEarned = charAchievements[char.guid][achievement];
+  const noReward = !rew && !titles[achievement];
+  if (alreadyEarned || noReward) return;
+  charAchievements[char.guid][achievement] = achievements[achievement];
   const faction = getFaction(char.race);
-  if (rew.sender) transferMail(char.guid, rew);
-  if (rew.title_A || rew.title_H) transferTitles(char.guid, char.gender, faction, achievement);
+  if (rew && rew.sender) transferMail(char.guid, rew);
+  if (titles[achievement]) transferTitle(char.guid, char.gender, faction, achievement);
 }
 
 const transferMail = (char, reward) => {
@@ -149,7 +151,7 @@ const transferMail = (char, reward) => {
   mailID++;
 }
 
-const transferTitles = (char, gender, faction, achievement) => {
+const transferTitle = (char, gender, faction, achievement) => {
   const knownTitles = charTitles[char].split(' ').map(t => Number(t));
   let id = titles[achievement]['TitleID'];
   let order = titles[achievement]['IGO'];

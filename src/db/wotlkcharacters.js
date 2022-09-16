@@ -64,8 +64,18 @@ const addRewardTitles = (charTitles) => {
     .catch(err => { throw err });
 }
 
+const getItemGuid = () => {
+  const sql = 'SELECT guid FROM item_instance ORDER BY guid DESC LIMIT 1';
+  return wotlkcharacters.query(sql)
+    .then(item => {
+      console.log('Item guid data fetched...');
+      return item[0];
+    })
+    .catch(err => { throw err });
+}
+
 const getMailIDs = () => {
-  const sql = 'SELECT id FROM mail';
+  const sql = 'SELECT id FROM mail ORDER BY id DESC LIMIT 1';
   return wotlkcharacters.query(sql)
     .then(mail => {
       console.log('Mail data fetched...');
@@ -85,16 +95,6 @@ const addRewardItems = (items) => {
   const sql = 'INSERT IGNORE INTO mail_items VALUES ?';
   return wotlkcharacters.query(sql, [items])
     .then(console.log('Achievement mail items successfully transferred!'))
-    .catch(err => { throw err });
-}
-
-const getItemGuid = () => {
-  const sql = 'SELECT guid FROM item_instance ORDER BY guid DESC LIMIT 1';
-  return wotlkcharacters.query(sql)
-    .then(item => {
-      console.log('Item guid data fetched...');
-      return item[0];
-    })
     .catch(err => { throw err });
 }
 
