@@ -112,7 +112,7 @@ const progressTableExists = () => {
   const sql = 'SHOW TABLES LIKE "character_achievement_shared_progress"';
   return wotlkcharacters.query(sql)
     .then(res => {
-      console.log('Progress table does not exist!')
+      if (!res[0].length) console.log('Progress table does not exist!');
       return res[0].length ? true : false;
     })
     .catch(err => { throw err });
@@ -187,7 +187,7 @@ const addNewProgress = (progress) => {
   `;
 
   return wotlkcharacters.query(sql, [progress])
-    .then(console.log('Progress successfully updated for all characters!'))
+    .then(console.log('Current progress successfully updated!'))
     .catch(err => { throw err });
 }
 

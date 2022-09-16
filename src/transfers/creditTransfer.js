@@ -33,6 +33,8 @@ const queryMailItems = [];
 const queryItemInstances = [];
 
 const transferCredit = async (characters) => {
+  console.log('Achievement credit transfer started!');
+  
   chars = characters;
   chars.forEach(c => charAchievements[c.guid] = {});
 
@@ -62,10 +64,10 @@ const transferCredit = async (characters) => {
   transferAchievements();
 
   // Run all database queries
+  if (queryItemInstances.length) await addItemInstances(queryItemInstances).catch(err => { throw err });
   if (queryAchieves.length) await addAchievements(queryAchieves).catch(err => { throw err });
   if (queryRewardMail.length) await addRewardMail(queryRewardMail).catch(err => { throw err });
   if (queryMailItems.length) await addRewardItems(queryMailItems).catch(err => { throw err });
-  if (queryItemInstances.length) await addItemInstances(queryItemInstances).catch(err => { throw err });
   await addRewardTitles(charTitles).catch(err => { throw err });
 }
 

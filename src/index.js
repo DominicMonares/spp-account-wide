@@ -20,44 +20,43 @@ const { closeWindow, error } = require('./utils');
 
 
 const accountwideAchievements = async () => {
-  await wotlkcharactersConnect().catch(err => error(err));
-  await wotlkmangosConnect().catch(err => error(err));
-  await wotlkrealmdConnect().catch(err => error(err));
+  await wotlkcharactersConnect().catch(async err => await error(err));
+  await wotlkmangosConnect().catch(async err => await error(err));
+  await wotlkrealmdConnect().catch(async err => await error(err));
 
   const accounts = await getAccounts()
-    .then(accts => accts.length ? accts : error('No player accounts found...'))
-    .catch(err => error(err));
+    .then(async accts => accts.length ? accts : await error('No player accounts found...'))
+    .catch(async err => await error(err));
 
   const characters = await getCharacters(accounts)
-    .then(chars => {
+    .then(async chars => {
       if (chars.length) {
         // Exclude newly created characters that haven't logged in for the first time yet
         return chars.filter(c => c.totaltime === 0 ? false : true);
       } else {
-        error('No player characters found...');
+        await error('No player characters found...');
       }
     })
-    .catch(err => error(err));
+    .catch(async err => await error(err));
 
-  await transferCredit(characters)
-    .then(console.log('Credit successfully transferred!'))
-    .catch(err => error(err));
+  await transferCredit(characters).catch(async err => await error(err));
+  console.log('Achievement credit transfer complete!');
 
-  await transferProgress(characters)
-    .then(console.log('Progress successfully transferred!'))
-    .catch(err => error(err));
+  await transferProgress(characters).catch(async err => await error(err));
+  console.log('Achievement progress transfer complete!');
 
-  await wotlkcharactersClose().catch(err => error(err));
-  await wotlkmangosClose().catch(err => error(err));
-  await wotlkrealmClose().catch(err => error(err));
+  await wotlkcharactersClose().catch(async err => await error(err));
+  await wotlkmangosClose().catch(async err => await error(err));
+  await wotlkrealmClose().catch(async err => await error(err));
   console.log('Successfully completed all transfers!');
-  closeWindow(1);
+
+  await closeWindow();
 }
 
 // UNCOMMENT FOR PRODUCTION
-// accountwideAchievements();
+accountwideAchievements();
 
 // REMOVE EXPORTS FOR PRODUCTION
-module.exports = {
-  accountwideAchievements: accountwideAchievements
-};
+// module.exports = {
+//   accountwideAchievements: accountwideAchievements
+// };

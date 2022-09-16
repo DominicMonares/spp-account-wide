@@ -41,6 +41,8 @@ const queryNewAchieves = [];
 const queryNewHK = [];
 
 const transferProgress = async (characters) => {
+  console.log('Achievement progress transfer started!');
+
   chars = characters;
   chars.forEach(c => bcChars[c.guid] = c);
 
@@ -128,10 +130,10 @@ const transferProgress = async (characters) => {
   transferLoremaster();
 
   // Run all database queries
+  if (queryNewHK.length) await addHonorKills(queryNewHK).catch(err => { throw err });
   if (queryNewShared.length) await addSharedProgress(queryNewShared).catch(err => { throw err });
   if (queryNewProgress.length) await addNewProgress(queryNewProgress).catch(err => { throw err });
   if (queryNewAchieves.length) await addAchievements(queryNewAchieves).catch(err => { throw err });
-  if (queryNewHK.length) await addHonorKills(queryNewHK).catch(err => { throw err });
 }
 
 const transferGold = () => {
