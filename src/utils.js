@@ -17,9 +17,9 @@ const endProcess = (err) => {
 }
 
 const closeWindow = async () => {
-  let count = 10;
+  let count = 100;
   setInterval(() => {
-    if (count === 10) {
+    if (count === 100) {
       process.stdout.write('Press ENTER to close window.\n');
       process.stdout.write(`This window will close in ${count - 1} seconds...`);
     } else {
