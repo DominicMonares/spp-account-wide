@@ -52,6 +52,7 @@ const transferRewards = async (achievements) => {
   // Run sub-transfers
   achievements.forEach(a => transferReward(a[0], a[1]));
 
+  // Run database queries
   if (queryItemInstances.length) await addItemInstances(queryItemInstances).catch(err => { throw err });
   if (queryRewardMail.length) await addRewardMail(queryRewardMail).catch(err => { throw err });
   if (queryMailItems.length) await addRewardItems(queryMailItems).catch(err => { throw err });
@@ -86,7 +87,7 @@ const transferMail = (char, reward) => {
   ]);
   
   if (reward.item) queryMailItems.push([mailID, itemGuid, reward.item, char]);
-  
+
   queryItemInstances.push([
     itemGuid, // guid
     char, // owner_guid
