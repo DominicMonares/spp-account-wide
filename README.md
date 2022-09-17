@@ -3,7 +3,7 @@ This program transfers achievement credit, rewards, and progress between all cha
 
 Made to use with Celguar's SPP Classics Repack, but is CMaNGOS based so it may work with other CMaNGOS repacks/forks.
 
-Features: 
+## Features 
 - Transfers achievement credit between all player characters
   - Achievements that have been earned on any player character are shared between all other characters
   - Faction specific achievements are converted depending on each character's faction
@@ -13,7 +13,7 @@ Features:
 - Transfers achievement rewards between all player characters
   - Every new achievement transferred also grants its corresponding title and/or item rewards
   - Faction specific rewards are converted depending on each character's faction
-  - Feat of strength titles that don't explicity reward titles but are title related (Vanilla PVP titles, world first titles, Scarab Lord, etc.) are rewarded when shared.
+  - Feats of strength that don't explicitly reward titles but are title related (Vanilla PVP titles, world first titles, Scarab Lord, etc.) are rewarded when shared.
   - All item rewards will appear in each character's mailbox on login 
 
 - Transfers achievement progress for select achievements between all player characters
@@ -25,16 +25,7 @@ Features:
 - All player accounts and characters are affected, so the player can share between multiple accounts if they want to play more than 10 characters
   - Bot accounts are ignored
   
-
-Usage:
-  - For users
-  - For devs
-
-Installation:
-  - For users
-  - For devs
-  
-Warnings/Limitations:
+## Warnings/Limitations:
   - Always make a backup save before transferring
   - Must be logged out before transferring
   - It is HIGHLY recommended to retrieve item rewards from mail immediately after transfer, in order to reduce risk of mail being lost
@@ -43,10 +34,34 @@ Warnings/Limitations:
     - Unless playing a Blood Elf or Draenei, the in-game progress counters for these achievements may not update after completing eligible quests, but progress will still be counted and the in-game counter will be updated next time the user runs the transfer
   - HONORABLE KILL WARNING?
 
+## Installation:
+### For Users
+Download latest release, save anywhere 
+  
+### For Devs
+```
+npm install
+```
 
-
+## Usage:
+### For Users
+If using outside of the spp-classics repack menu:
+- Ensure that database is running
+- Run .exe file
+    
+### For Devs
+Run program:
+```
+npm start
+```
+  
+Build .exe file:
+```
+npm run build
+```
+  
+  
 TODO: 
-- Add Bread Winner achievement
 - Add rewards for World First Titles
 - Account-wide pets/mounts
 - Double check that rewards are being added if achievement earned after progress transfer
