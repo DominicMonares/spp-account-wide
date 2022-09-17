@@ -1,6 +1,7 @@
 // Data
 const progress = require('../data/progress');
 const { zones } = require('../data/zones');
+const { factionAchievements } = require('../data/factionAchievements');
 
 // Database
 const {
@@ -16,6 +17,8 @@ const {
 } = require('../db/wotlkcharacters');
 const { getQuestZones } = require('../db/wotlkmangos');
 
+// Transfers
+
 // Utils
 const {
   latestDate,
@@ -24,21 +27,23 @@ const {
   correctFaction
 } = require('./utils.js');
 const { getFaction } = require('../utils');
+const { transferRewards } = require('./rewardsTransfer');
 
 
 let chars;
 const previousProgress = {}; // Uses achievement index
 const currentProgress = {}; // Uses criteria index
-const loremasterProgress = {A: {0: [], 1: []}, H: {0: [], 1: []}}; // Faction: EK, Kalimdor
+const loremasterProgress = { A: { 0: [], 1: [] }, H: { 0: [], 1: [] } }; // Faction: EK, Kalimdor
 const bcChars = {}; // Blood Elf and Draenei store for Loremaster
 let completedQuests;
 
 const queryCriteria = [];
 const queryQuestZones = {};
 const queryNewShared = [];
+const queryNewHK = [];
 const queryNewProgress = [];
 const queryNewAchieves = [];
-const queryNewHK = [];
+const queryRewards = [];
 
 const transferProgress = async (characters) => {
   console.log('Achievement progress transfer started!');
@@ -84,7 +89,7 @@ const transferProgress = async (characters) => {
   }
 
   // Get completed quests from all characters
-  await getQuests(chars.map(c => [c.guid, 1]), )
+  await getQuests(chars.map(c => [c.guid, 1]),)
     .then(quests => {
       completedQuests = quests;
 
@@ -129,6 +134,15 @@ const transferProgress = async (characters) => {
   transferDailies();
   transferQuests();
   transferLoremaster();
+
+  // Ensure rewards are faction appropriate before running reward sub-transfer
+  await transferRewards(queryRewards.map(r => {
+    if (!factionAchievements[r[1]]) return r;
+    const incorrectFaction = getFaction(r[0]['race']) !== factionAchievements[r[1]]['faction'];
+    if (incorrectFaction) return [r[0], factionAchievements[a]['alt']];
+    return r;
+  }))
+    .catch(err => { throw err });
 
   // Run all database queries
   if (queryNewHK.length) await addHonorKills(queryNewHK).catch(err => { throw err });
@@ -275,17 +289,26 @@ const createQueries = (finalChars, chain, previous, newProgress, newDate, sub) =
         c.guid, // guid
         progChain[a]['criteria'], // criteria
         validProgress, // counter
-        newDate // date
+        newDate // date 
       ]);
 
       // Add new achievements if any were earned after sharing
-      if (previous < complete && newProgress > complete) {
+
+      /* 
+        ACHIEVEMENTS WITH REWARDS
+        Brutally Dedicated - Item
+        100000 Honorable Kills - Title
+        3000 Quests Completed - Title
+      */
+
+      if (previous < complete && newProgress >= complete) {
         // Ensure faction is correct if Loremaster is earned
         if (chain === 'lmA' || chain === 'lmH') {
           a = correctFaction(getFaction(c.race), a);
         }
 
         queryNewAchieves.push([c.guid, a, newDate]);
+        queryRewards.push([c, a]);
       }
     });
   }

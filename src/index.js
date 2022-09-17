@@ -54,9 +54,9 @@ const accountwideAchievements = async () => {
 }
 
 // UNCOMMENT FOR PRODUCTION
-accountwideAchievements();
+// accountwideAchievements();
 
 // REMOVE EXPORTS FOR PRODUCTION
-// module.exports = {
-//   accountwideAchievements: accountwideAchievements
-// };
+module.exports = {
+  accountwideAchievements: accountwideAchievements
+};

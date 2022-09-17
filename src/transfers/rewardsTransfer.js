@@ -56,7 +56,7 @@ const transferRewards = async (achievements) => {
   if (queryItemInstances.length) await addItemInstances(queryItemInstances).catch(err => { throw err });
   if (queryRewardMail.length) await addRewardMail(queryRewardMail).catch(err => { throw err });
   if (queryMailItems.length) await addRewardItems(queryMailItems).catch(err => { throw err });
-  await addRewardTitles(queryCharTitles).catch(err => { throw err });
+  if (queryCharTitles.length) await addRewardTitles(queryCharTitles).catch(err => { throw err });
 }
 
 const transferReward = (char, achievement) => {
