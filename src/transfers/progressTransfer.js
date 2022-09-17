@@ -125,6 +125,7 @@ const transferProgress = async (characters) => {
   transferArena();
   transferBG();
   transferHK();
+  transferBread();
   transferDailies();
   transferQuests();
   transferLoremaster();
@@ -192,6 +193,17 @@ const transferHK = () => {
   const newDate = latestDate(currentProgress[progress['hk'][870]['criteria']] || []);
   chars.forEach(c => queryNewHK.push([c.guid, newProgress])); // Create HK queries
   createQueries(chars, 'hk', previous, newProgress, newDate);
+}
+
+const transferBread = () => {
+  // Works using achievement count
+  // Get total amount of gold from quests, use 1182 (The Bread Winner) for counter
+  const previous = previousProgress[1182] || 0;
+  const goldProgress = currentProgress[progress['bread'][1182]['criteria']] || [];
+  const currentGold = goldProgress.map(e => e.counter);
+  const newProgress = combineProgress(currentGold, previous);
+  const newDate = latestDate(goldProgress);
+  createQueries(chars, 'bread', previous, newProgress, newDate);
 }
 
 const transferDailies = () => {

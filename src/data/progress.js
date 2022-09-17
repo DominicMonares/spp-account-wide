@@ -186,6 +186,13 @@ const hk = {
 /////////////// Quests ///////////////
 //////////////////////////////////////
 
+const bread = {
+  1182: { // The Bread Winner
+    criteria: 3513,
+    complete: 100000000
+  }
+};
+
 const daily = {
   973: { // 5 Daily Quests Complete
     criteria: 2232,
@@ -281,6 +288,7 @@ module.exports = {
   arena: arena,
   bg: bg,
   hk: hk,
+  bread: bread,
   daily: daily,
   lmA: lmA,
   lmH: lmH,
