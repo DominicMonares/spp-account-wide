@@ -40,7 +40,7 @@ const transferCredit = async (characters) => {
 
   // Run sub-transfers
   transferAchievements();
-  await transferRewards(earnedAchievements);
+  await transferRewards(earnedAchievements).catch(err => { throw err });
 
   // Run database query
   if (queryAchieves.length) await addAchievements(queryAchieves).catch(err => { throw err });
