@@ -117,10 +117,10 @@ const transferTitle = (char, gender, faction, achievement) => {
   if (knownTitles.length === 7) knownTitles.pop();
 
   // Handle unique titles
-  if (achievement === '870') { // of the Alliance | of the Horde
+  if (achievement === 870) { // of the Alliance | of the Horde
     id = faction === 'A' ? id[0] : id[1];
     order = faction === 'A' ? order[0] : order[1];
-  } else if (achievement === '1793') { // Patron | Matron
+  } else if (achievement === 1793) { // Patron | Matron
     id = gender === 0 ? id[0] : id[1];
     order = gender === 0 ? order[0] : order[1];
   }
