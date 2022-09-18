@@ -55,6 +55,18 @@ const factionAchievements = {
   433: { faction: 'A', alt: 443 }, // Grand Marshal
   443: { faction: 'H', alt: 433 }, // High Warlord
 
+  /* Feats of Strength - Realm Firsts */
+  1406: { faction: 'A', alt: 1405 }, // Realm First! Level 80 Draenei
+  1405: { faction: 'H', alt: 1406 }, // Realm First! Level 80 Blood Elf
+  1407: { faction: 'A', alt: 1413 }, // Realm First! Level 80 Dwarf
+  1413: { faction: 'H', alt: 1407 }, // Realm First! Level 80 Forsaken
+  1404: { faction: 'A', alt: 1412 }, // Realm First! Level 80 Gnome
+  1412: { faction: 'H', alt: 1404 }, // Realm First! Level 80 Troll
+  1408: { faction: 'A', alt: 1410 }, // Realm First! Level 80 Human
+  1410: { faction: 'H', alt: 1408 }, // Realm First! Level 80 Orc
+  1409: { faction: 'A', alt: 1411 }, // Realm First! Level 80 Night Elf
+  1411: { faction: 'H', alt: 1409 }, // Realm First! Level 80 Tauren
+
   /* Feats of Strength - World Events */
   4786: { faction: 'A', alt: 4790 }, // Operation: Gnomeregan
   4790: { faction: 'H', alt: 4786 }, // Zalazane's Fall
