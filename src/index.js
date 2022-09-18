@@ -9,7 +9,12 @@ const {
   getCharacters,
   wotlkcharactersClose
 } = require('./db/wotlkcharacters');
-const { wotlkmangosConnect, wotlkmangosClose } = require('./db/wotlkmangos');
+const { 
+  wotlkmangosConnect, 
+  cutTitlesExist,
+  addCutTitles,
+  wotlkmangosClose 
+} = require('./db/wotlkmangos');
 
 // Transfers
 const { transferCredit } = require('./transfers/creditTransfer');
@@ -20,10 +25,16 @@ const { closeWindow, error } = require('./utils');
 
 
 const accountwideAchievements = async () => {
+  // Connect to databases
   await wotlkcharactersConnect().catch(async err => await error(err));
   await wotlkmangosConnect().catch(async err => await error(err));
   await wotlkrealmdConnect().catch(async err => await error(err));
 
+  // Restore cut content if it doesn't already exist
+  await cutTitlesExist().catch(async err => await error(err));
+  await addCutTitles().catch(async err => await error(err));
+
+  // Get accounts and characters
   const accounts = await getAccounts()
     .then(async accts => accts.length ? accts : await error('No player accounts found...'))
     .catch(async err => await error(err));
@@ -39,12 +50,15 @@ const accountwideAchievements = async () => {
     })
     .catch(async err => await error(err));
 
+
+  // Run transfers
   await transferCredit(characters).catch(async err => await error(err));
   console.log('Achievement credit transfer complete!');
 
   await transferProgress(characters).catch(async err => await error(err));
   console.log('Achievement progress transfer complete!');
 
+  // Disconnect from databases and close
   await wotlkcharactersClose().catch(async err => await error(err));
   await wotlkmangosClose().catch(async err => await error(err));
   await wotlkrealmClose().catch(async err => await error(err));
