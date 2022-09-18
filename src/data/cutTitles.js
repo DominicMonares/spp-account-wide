@@ -35,6 +35,7 @@ const cutTitles = {
   1413: { title_A: 0, title_H: 119 }, // the Forsaken
   1463: { title_A: 123, title_H: 123 }, // Hero of Northrend
   408: { title_A: 128, title_H: 128 }, // the Flawless Victor
+  465: { title_A: 170, title_H: 170 } // Grand Crusader
 }
 
 module.exports = {
