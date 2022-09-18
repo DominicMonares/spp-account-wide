@@ -68,8 +68,12 @@ const transferAchievements = () => {
         delete charAchieves[a];
   
         if (!charAchievements[c.guid][factionAchieve.alt]) {
-          queryAchieves.push([c.guid, factionAchieve.alt, charAchieves[factionAchieve.alt]]);
-          queryRewards['' + c.guid + factionAchieve.alt] = [c, factionAchieve.alt];
+          if (!factionAchieve.alt) {
+            queryAchieves.push([c.guid, a, achievements[a]]);
+          } else {
+            queryAchieves.push([c.guid, factionAchieve.alt, charAchieves[factionAchieve.alt]]);
+            queryRewards['' + c.guid + factionAchieve.alt] = [c, factionAchieve.alt];
+          }
         }
       } else {
         if (!charAchievements[c.guid][a]) {
