@@ -293,14 +293,6 @@ const createQueries = (finalChars, chain, previous, newProgress, newDate, sub) =
       ]);
 
       // Add new achievements if any were earned after sharing
-
-      /* 
-        ACHIEVEMENTS WITH REWARDS
-        Brutally Dedicated - Item
-        100000 Honorable Kills - Title
-        3000 Quests Completed - Title
-      */
-
       if (previous < complete && newProgress >= complete) {
         // Ensure faction is correct if Loremaster is earned
         if (chain === 'lmA' || chain === 'lmH') {
