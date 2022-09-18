@@ -24,7 +24,7 @@ const getCharacters = (accounts) => {
     WHERE account IN (${quoteJoin(accounts)})
   `;
 
-  return wotlkcharacters.execute(sql)
+  return wotlkcharacters.query(sql)
     .then(chars => {
       console.log('Character data fetched...');
       return chars[0];

@@ -16,7 +16,7 @@ const wotlkrealmdConnect = () => {
 
 const getAccounts = () => {
   const sql = 'SELECT id FROM account WHERE username NOT LIKE "%RNDBOT%;"';
-  return wotlkrealmd.execute(sql)
+  return wotlkrealmd.query(sql)
     .then(accounts => {
       console.log('Account data fetched...');
       return accounts[0].map(a => a.id);
