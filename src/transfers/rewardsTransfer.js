@@ -43,9 +43,8 @@ const transferRewards = async (achievements) => {
   await getItemGuid()
     .then(guid => itemGuid = guid[0]['guid'] + 10000) // +10000 to buffer overwrites
     .catch(err => { throw err });
-
     
-    await getMailIDs()
+  await getMailIDs()
     .then(mail => mailID = mail[0]['id'] + 10000) // +10000 to buffer overwrites
     .catch(err => { throw err });
 

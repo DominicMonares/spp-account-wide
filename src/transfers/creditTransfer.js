@@ -17,9 +17,9 @@ const { getFaction } = require('./utils');
 let chars;
 const achievements = {}; // Primary achievement store
 const charAchievements = {}; // Individual earned achievements
-const earnedAchievements = [];
 
 const queryAchieves = [];
+const queryRewards = {};
 
 const transferCredit = async (characters) => {
   console.log('Achievement credit transfer started!');
@@ -37,10 +37,9 @@ const transferCredit = async (characters) => {
     }))
     .catch(err => { throw err });
 
-
   // Run sub-transfers
   transferAchievements();
-  await transferRewards(earnedAchievements).catch(err => { throw err });
+  await transferRewards(Object.values(queryRewards)).catch(err => { throw err });
 
   // Run database query
   if (queryAchieves.length) await addAchievements(queryAchieves).catch(err => { throw err });
@@ -50,35 +49,35 @@ const transferAchievements = () => {
   // Add achievement credit and rewards for each character
   chars.forEach(c => {
     const charAchieves = { ...achievements };
-    Object.keys(charAchieves).forEach(a => {
+    for (let a in charAchieves) {
       a = Number(a);
-      const factAchieves = factionAchievements[a];
-      const correctFaction = factAchieves && factAchieves.faction === getFaction(c.race);
-      const incorrectFaction = factAchieves && factAchieves.faction !== getFaction(c.race);
+      const factionAchieve = factionAchievements[a];
+      const correctFaction = factionAchieve && factionAchieve.faction === getFaction(c.race);
+      const incorrectFaction = factionAchieve && factionAchieve.faction !== getFaction(c.race);
       if (correctFaction) {
         // Delete opposing faction version of achievement, add current version 
-        if (charAchieves[factAchieves.alt]) delete charAchieves[factAchieves.alt];
+        if (charAchieves[factionAchieve.alt]) delete charAchieves[factionAchieve.alt];
   
         if (!charAchievements[c.guid][a]) {
           queryAchieves.push([c.guid, a, charAchieves[a]]);
-          earnedAchievements.push([c, a]);
+          queryRewards['' + c.guid + a] = [c, a];
         }
       } else if (incorrectFaction) {
         // Delete opposing faction version of achievement, add correct version
-        if (!charAchieves[factAchieves.alt]) charAchieves[factAchieves.alt] = charAchieves[a];
+        if (!charAchieves[factionAchieve.alt]) charAchieves[factionAchieve.alt] = charAchieves[a];
         delete charAchieves[a];
   
-        if (!charAchievements[c.guid][a]) {
-          queryAchieves.push([c.guid,factAchieves.alt, charAchieves[factAchieves.alt]]);
-          earnedAchievements.push([c, factAchieves.alt]);
+        if (!charAchievements[c.guid][factionAchieve.alt]) {
+          queryAchieves.push([c.guid, factionAchieve.alt, charAchieves[factionAchieve.alt]]);
+          queryRewards['' + c.guid + factionAchieve.alt] = [c, factionAchieve.alt];
         }
       } else {
         if (!charAchievements[c.guid][a]) {
           queryAchieves.push([c.guid, a, charAchieves[a]]);
-          earnedAchievements.push([c, a]);
+          queryRewards['' + c.guid + a] = [c, a];
         }
       }
-    });
+    }
   });
 }
 
