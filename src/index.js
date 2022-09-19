@@ -7,7 +7,6 @@ const {
 const {
   wotlkcharactersConnect,
   getCharacters,
-  getCharSpells,
   wotlkcharactersClose
 } = require('./db/wotlkcharacters');
 const { 
@@ -56,10 +55,6 @@ const accountwideAchievements = async () => {
     })
     .catch(async err => await error(err));
 
-  // Get all known spells
-  const charSpells = await getCharSpells(characters.map(c => c.guid))
-    .catch(async err => await error(err));
-
   // Run transfers
   await transferCredit(characters).catch(async err => await error(err));
   console.log('Achievement credit transfer complete!');
@@ -67,7 +62,7 @@ const accountwideAchievements = async () => {
   await transferProgress(characters).catch(async err => await error(err));
   console.log('Achievement progress transfer complete!');
 
-  await transferPetsMounts(charFactions, charSpells).catch(async err => await error(err));
+  await transferPetsMounts(charFactions).catch(async err => await error(err));
   console.log('Pet & Mount transfer complete!');
 
   // Disconnect from databases and close

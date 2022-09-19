@@ -10,7 +10,7 @@ const {
   getItemGuid,
   addItemInstances
 } = require('../db/wotlkcharacters');
-const { getRewards } = require('../db/wotlkmangos');
+const { getRewards, getItemTypes } = require('../db/wotlkmangos');
 
 // Utils
 const { getFaction } = require('./utils');
@@ -20,10 +20,11 @@ const rewards = {};
 let itemGuid = 1;
 let mailID = 1;
 
-const queryItemInstances = [];
+const queryCharTitles = {};
+const queryItemTypes = [];
 const queryRewardMail = [];
 const queryMailItems = [];
-const queryCharTitles = {};
+const queryItemInstances = [];
 
 const transferRewards = async (achievements) => {
   console.log('Achievement reward transfer started!');
@@ -36,7 +37,15 @@ const transferRewards = async (achievements) => {
   });
 
   await getRewards()
-    .then(rews => rews.forEach(r => rewards[r.entry] = r))
+    .then(rews => rews.forEach(r => {
+      rewards[r.entry] = r;
+      if (r.item) queryItemTypes.push(r.item);
+    }))
+    .catch(err => { throw err });
+
+  // CREATE ITEM TYPE OBJ, COMPLETE SQL JOIN QUERY
+  await getItemTypes(queryItemTypes)
+    .then()
     .catch(err => { throw err });
 
   // Get topmost item guid & mail ID

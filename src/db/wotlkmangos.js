@@ -53,7 +53,24 @@ const addCutTitles = () => {
 }
 
 
-/* Credit Transfer */
+/* Progress Transfer */
+
+const getQuestZones = (chars) => {
+  const charValues = '"' + chars.join('", "') + '"';
+  const sql = `
+    SELECT entry, ZoneOrSort FROM quest_template
+    WHERE entry IN (${charValues})
+  `;
+
+  return wotlkmangos.query(sql, [chars])
+  .then(achieves => {
+    console.log('Quest zone data fetched...');
+    return achieves[0];
+  })
+  .catch(err => { throw err });
+}
+
+/* Reward Transfer */
 
 const getRewards = () => {
   const sql = 'SELECT * FROM achievement_reward';
@@ -65,20 +82,25 @@ const getRewards = () => {
     .catch(err => { throw err });
 }
 
-
-/* Progress Transfer */
-
-const getQuestZones = (chars) => {
-  const charValues = '"' + chars.join('", "') + '"';
+const getItemTypes = (items) => {
   const sql = `
-    SELECT entry, ZoneOrSort FROM quest_template
-    WHERE entry IN (${charValues})
+    SELECT 
+      spell_template.Id, 
+      spell_template.Mechanic, 
+      spell_template.Attributes,
+      item_template.entry,
+      item_template.AllowableClass,
+      item_template.AllowableRace,
+      item_template.RequiredSkillRank
+    FROM spell_template 
+    INNER JOIN item_template ON spell_template.Id=item_template.spellid_2 
+    WHERE spell_template.Id IN (${quoteJoin(items)})
   `;
 
-  return wotlkmangos.query(sql, [chars])
-    .then(achieves => {
-      console.log('Quest zone data fetched...');
-      return achieves[0];
+  return wotlkmangos.query(sql, [items])
+    .then(items => {
+      console.log('Item type data fetched...');
+      return items[0];
     })
     .catch(err => { throw err });
 }
@@ -88,32 +110,22 @@ const getQuestZones = (chars) => {
 
 const getSpells = (spells) => {
   const sql = `
-    SELECT Id, Mechanic, Attributes FROM spell_template 
-    WHERE Id IN (${quoteJoin(spells)})
+    SELECT 
+      spell_template.Id, 
+      spell_template.Mechanic, 
+      spell_template.Attributes,
+      item_template.entry,
+      item_template.AllowableClass,
+      item_template.AllowableRace,
+      item_template.RequiredSkillRank
+    FROM spell_template 
+    INNER JOIN item_template ON spell_template.Id=item_template.spellid_2 
+    WHERE spell_template.Id IN (${quoteJoin(spells)})
   `;
 
   return wotlkmangos.query(sql, [spells])
     .then(spells => {
       console.log('Spell template data fetched...');
-      return spells[0];
-    })
-    .catch(err => { throw err });
-}
-
-const getSpellItems = (spells) => {
-  const sql = `
-    SELECT 
-      AllowableClass, 
-      AllowableRace, 
-      RequiredSkillRank, 
-      spellid_2 
-    FROM item_template 
-    WHERE spellid_2 IN (${quoteJoin(spells)})
-  `;
-
-  return wotlkmangos.query(sql, [spells])
-    .then(spells => {
-      console.log('Item template data fetched...');
       return spells[0];
     })
     .catch(err => { throw err });
@@ -129,12 +141,12 @@ const wotlkmangosClose = () => {
 }
 
 module.exports = {
+  wotlkmangosConnect: wotlkmangosConnect,
   cutTitlesExist: cutTitlesExist,
   addCutTitles: addCutTitles,
-  wotlkmangosConnect: wotlkmangosConnect,
-  getRewards: getRewards,
   getQuestZones: getQuestZones,
+  getRewards: getRewards,
+  getItemTypes: getItemTypes,
   getSpells: getSpells,
-  getSpellItems: getSpellItems,
   wotlkmangosClose: wotlkmangosClose
 };

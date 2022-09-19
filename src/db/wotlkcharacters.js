@@ -209,7 +209,7 @@ const addHonorKills = (chars) => {
 
 const getCharSpells = (chars) => {
   const sql = `
-    SELECT * FROM character_spell 
+    SELECT guid, spell FROM character_spell 
     WHERE guid IN (${quoteJoin(chars)})
   `;
 
@@ -239,6 +239,20 @@ const addSpells = (spells) => {
   const sql = 'INSERT IGNORE INTO character_spell VALUES ?';
   return wotlkcharacters.query(sql, [spells])
     .then(console.log('Spells successfully transferred!'))
+    .catch(err => { throw err });
+}
+
+const getMailItems = (chars) => {
+  const sql = `
+    SELECT item_template, receiver FROM mail_items 
+    WHERE receiver IN (${quoteJoin(chars)})
+  `;
+
+  return wotlkcharacters.query(sql, [chars])
+    .then(items => {
+      console.log('Mail item data fetched...');
+      return items[0];
+    })
     .catch(err => { throw err });
 }
 
@@ -273,5 +287,6 @@ module.exports = {
   getCharSpells: getCharSpells,
   getCharSkills: getCharSkills,
   addSpells: addSpells,
+  getMailItems: getMailItems,
   wotlkcharactersClose: wotlkcharactersClose
 };
