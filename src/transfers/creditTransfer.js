@@ -2,10 +2,7 @@
 const { factionAchievements } = require('../data/factionAchievements');
 
 // Database
-const {
-  getAchievements,
-  addAchievements
-} = require('../db/wotlkcharacters');
+const { getAchievements, addAchievements } = require('../db/wotlkcharacters');
 
 // Transfers
 const { transferRewards } = require('./rewardsTransfer');
