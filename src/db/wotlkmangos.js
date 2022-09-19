@@ -2,6 +2,7 @@ const mysql = require('mysql2/promise');
 
 const { dbCredentials } = require('../config');
 const { cutTitles } = require('../data/cutTitles');
+const { quoteJoin } = require('../utils');
 
 let wotlkmangos;
 
@@ -80,6 +81,43 @@ const getQuestZones = (chars) => {
     .catch(err => { throw err });
 }
 
+
+/* Pet & Mount Transfer */
+
+const getSpells = (spells) => {
+  const sql = `
+    SELECT Id, Mechanic, Attributes FROM spell_template 
+    WHERE Id IN (${quoteJoin(spells)})
+  `;
+
+  return wotlkmangos.query(sql, [spells])
+    .then(spells => {
+      console.log('Spell template data fetched...');
+      return spells[0];
+    })
+    .catch(err => { throw err });
+}
+
+const getSpellItems = (spells) => {
+  const sql = `
+    SELECT 
+      AllowableClass, 
+      AllowableRace, 
+      RequiredSkillRank, 
+      spellid_2 
+    FROM item_template 
+    WHERE spellid_2 IN (${quoteJoin(spells)})
+  `;
+
+  return wotlkmangos.query(sql, [spells])
+    .then(spells => {
+      console.log('Item template data fetched...');
+      return spells[0];
+    })
+    .catch(err => { throw err });
+}
+
+
 const wotlkmangosClose = () => {
   return wotlkmangos.end()
     .then(console.log('Disconnected from wotlkmangos...'))
@@ -92,5 +130,7 @@ module.exports = {
   wotlkmangosConnect: wotlkmangosConnect,
   getRewards: getRewards,
   getQuestZones: getQuestZones,
+  getSpells: getSpells,
+  getSpellItems: getSpellItems,
   wotlkmangosClose: wotlkmangosClose
 };

@@ -202,6 +202,45 @@ const addHonorKills = (chars) => {
     .catch(err => { throw err });
 }
 
+
+/* Pet & Mount Transfer */
+
+const getCharSpells = (chars) => {
+  const sql = `
+    SELECT * FROM character_spell 
+    WHERE guid IN (${quoteJoin(chars)})
+  `;
+
+  return wotlkcharacters.query(sql, [chars])
+    .then(spells => {
+      console.log('Character spell data fetched...');
+      return spells[0];
+    })
+    .catch(err => { throw err });
+}
+
+const getCharSkills = (chars) => {
+  const sql = `
+    SELECT guid, value FROM character_skills
+    WHERE (guid, skill) IN (${parenJoin(chars)})
+  `;
+
+  return wotlkcharacters.query(sql, [chars])
+    .then(skills => {
+      console.log('Character skill data fetched...');
+      return skills[0];
+    })
+    .catch(err => { throw err });
+}
+
+const addSpells = (spells) => {
+  const sql = 'INSERT IGNORE INTO character_spell VALUES ?';
+  return wotlkcharacters.query(sql, [spells])
+    .then(console.log('Spells successfully transferred!'))
+    .catch(err => { throw err });
+}
+
+
 const wotlkcharactersClose = () => {
   return wotlkcharacters.end()
     .then(console.log('Disconnected from wotlkmangos...'))
@@ -227,5 +266,8 @@ module.exports = {
   addSharedProgress: addSharedProgress,
   addNewProgress: addNewProgress,
   addHonorKills: addHonorKills,
+  getCharSpells: getCharSpells,
+  getCharSkills: getCharSkills,
+  addSpells: addSpells,
   wotlkcharactersClose: wotlkcharactersClose
 };

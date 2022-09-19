@@ -7,6 +7,7 @@ const {
 const {
   wotlkcharactersConnect,
   getCharacters,
+  getCharSpells,
   wotlkcharactersClose
 } = require('./db/wotlkcharacters');
 const { 
@@ -19,10 +20,13 @@ const {
 // Transfers
 const { transferCredit } = require('./transfers/creditTransfer');
 const { transferProgress } = require('./transfers/progressTransfer');
+const { transferPetsMounts } = require('./transfers/petsMountsTransfer');
 
 // Utils
-const { closeWindow, error } = require('./utils');
+const { closeWindow, error, getFaction } = require('./utils');
 
+
+const charFactions = {};
 
 const accountwideAchievements = async () => {
   // Connect to databases
@@ -43,13 +47,18 @@ const accountwideAchievements = async () => {
     .then(async chars => {
       if (chars.length) {
         // Exclude newly created characters that haven't logged in for the first time yet
-        return chars.filter(c => c.totaltime === 0 ? false : true);
+        const validChars = chars.filter(c => c.totaltime === 0 ? false : true);
+        validChars.forEach(c => charFactions[c.guid] = { faction: getFaction(c.race) });
+        return validChars;
       } else {
         await error('No player characters found...');
       }
     })
     .catch(async err => await error(err));
 
+  // Get all known spells
+  const charSpells = await getCharSpells(characters.map(c => c.guid))
+    .catch(async err => await error(err));
 
   // Run transfers
   await transferCredit(characters).catch(async err => await error(err));
@@ -57,6 +66,9 @@ const accountwideAchievements = async () => {
 
   await transferProgress(characters).catch(async err => await error(err));
   console.log('Achievement progress transfer complete!');
+
+  await transferPetsMounts(charFactions, charSpells).catch(async err => await error(err));
+  console.log('Pet & Mount transfer complete!');
 
   // Disconnect from databases and close
   await wotlkcharactersClose().catch(async err => await error(err));
