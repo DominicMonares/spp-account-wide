@@ -6,6 +6,8 @@ const { quoteJoin } = require('../utils');
 
 let wotlkmangos;
 
+/* Open Connection */
+
 const wotlkmangosConnect = () => {
   dbCredentials.database = 'wotlkmangos';
   return mysql.createConnection(dbCredentials)
@@ -117,6 +119,8 @@ const getSpellItems = (spells) => {
     .catch(err => { throw err });
 }
 
+
+/* Close Connection */
 
 const wotlkmangosClose = () => {
   return wotlkmangos.end()

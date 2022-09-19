@@ -4,6 +4,8 @@ const { dbCredentials } = require('../config');
 
 let wotlkrealmd;
 
+/* Open Connection */
+
 const wotlkrealmdConnect = () => {
   dbCredentials.database = 'wotlkrealmd';
   return mysql.createConnection(dbCredentials)
@@ -14,6 +16,9 @@ const wotlkrealmdConnect = () => {
     .catch(async err => { throw err});
 }
 
+
+// Achievements
+
 const getAccounts = () => {
   const sql = 'SELECT id FROM account WHERE username NOT LIKE "%RNDBOT%;"';
   return wotlkrealmd.query(sql)
@@ -23,6 +28,9 @@ const getAccounts = () => {
     })
     .catch(err => { throw err });
 }
+
+
+/* Close Connection */
 
 const wotlkrealmClose = () => {
   return wotlkrealmd.end()

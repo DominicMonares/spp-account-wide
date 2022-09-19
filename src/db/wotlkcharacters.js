@@ -5,6 +5,8 @@ const { quoteJoin, parenJoin } = require('../utils');
 
 let wotlkcharacters;
 
+/* Open Connection */
+
 const wotlkcharactersConnect = () => {
   dbCredentials.database = 'wotlkcharacters';
   return mysql.createConnection(dbCredentials)
@@ -240,6 +242,8 @@ const addSpells = (spells) => {
     .catch(err => { throw err });
 }
 
+
+/* Close Connection */
 
 const wotlkcharactersClose = () => {
   return wotlkcharacters.end()
