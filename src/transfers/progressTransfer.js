@@ -232,8 +232,8 @@ const transferDailies = () => {
 
 const transferLoremaster = () => {
   // Only works by checking earned quests, in-game counter doesn't work properly
-  // BUT it does work properly for Blood Elves/Draenei, something to do with client or db script?
-  // BE/Draenei seem to track the quests they've completed, then add it to the new progress
+  // Unable to add without cluttering character_queststatus table up or locking alts out of quests
+  // BUT it does work properly for Blood Elves/Draenei without adding quest statuses, unsure why
   // Get total amount of quests by faction and continent
   for (const faction in loremasterProgress) {
     for (const continent in loremasterProgress[faction]) {
@@ -251,7 +251,7 @@ const transferLoremaster = () => {
 
 const transferQuests = () => {
   // Only works by checking earned quests, in-game counter doesn't work properly
-  // Unable to add to char achieves without cluttering/messing character_queststatus table up
+  // Unable to add without cluttering character_queststatus table up or locking alts out of quests
   // Get total number of kills, use 978 (3000 Quests) for counter
   const previous = previousProgress[978] || 0;
   const newProgress = completedQuests.length;
