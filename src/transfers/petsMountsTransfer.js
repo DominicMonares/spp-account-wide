@@ -57,7 +57,6 @@ const transferPetsMounts = async (chars) => {
     const pet = spellTemplate[id]['Attributes'] === 262416 ? true : false;
     const mount = spellTemplate[id]['Mechanic'] === 21 ? true : false;
     const charClass = spellTemplate[id]['AllowableClass'] === -1 ? true : false;
-    console.log('DSAFDFS ', id, spellTemplate[id])
     let faction;
     // Specify Mountain o' Mounts dragonhawks, not faction specific in db
     if (spellTemplate[id]['AllowableRace'] === 1101 || id === '61996') {
