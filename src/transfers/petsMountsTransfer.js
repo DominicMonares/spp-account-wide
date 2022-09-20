@@ -21,6 +21,8 @@ const querySpells = [];
 const queryNewsSpells = [];
 
 const transferPetsMounts = async (chars) => {
+  console.log('Pet & Mount transfer started!');
+
   // Get all known spells
   await getCharSpells(Object.keys(chars))
     .then(spells => spells.forEach(s => spellIds.push(s.spell)))
