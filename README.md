@@ -71,6 +71,8 @@ npm install
 
 ## Usage:
 ### For Users
+*Account-wide not yet merged into SPP Classics main branch, please use outside of menu for now*
+
 If using outside of the spp-classics repack menu:
 - Ensure that database is running
 - Run .exe file
