@@ -56,18 +56,17 @@ const addCutTitles = () => {
 /* Progress Transfer */
 
 const getQuestZones = (chars) => {
-  const charValues = '"' + chars.join('", "') + '"';
   const sql = `
     SELECT entry, ZoneOrSort FROM quest_template
-    WHERE entry IN (${charValues})
+    WHERE entry IN (${quoteJoin(chars)})
   `;
 
-  return wotlkmangos.query(sql, [chars])
-  .then(achieves => {
-    console.log('Quest zone data fetched...');
-    return achieves[0];
-  })
-  .catch(err => { throw err });
+  return wotlkmangos.query(sql)
+    .then(achieves => {
+      console.log('Quest zone data fetched...');
+      return achieves[0];
+    })
+    .catch(err => { throw err });
 }
 
 /* Reward Transfer */
@@ -82,24 +81,15 @@ const getRewards = () => {
     .catch(err => { throw err });
 }
 
-const getItemTypes = (items) => {
+const getItemCharges = (items) => {
   const sql = `
-    SELECT 
-      spell_template.Id, 
-      spell_template.Mechanic, 
-      spell_template.Attributes,
-      item_template.entry,
-      item_template.AllowableClass,
-      item_template.AllowableRace,
-      item_template.RequiredSkillRank
-    FROM spell_template 
-    INNER JOIN item_template ON spell_template.Id=item_template.spellid_2 
-    WHERE spell_template.Id IN (${quoteJoin(items)})
-  `;
+    SELECT entry, spellcharges_1 FROM item_template
+    WHERE entry IN (${quoteJoin(items)})
+  `
 
-  return wotlkmangos.query(sql, [items])
+  return wotlkmangos.query(sql)
     .then(items => {
-      console.log('Item type data fetched...');
+      console.log('Item charge data fetched...');
       return items[0];
     })
     .catch(err => { throw err });
@@ -111,15 +101,15 @@ const getItemTypes = (items) => {
 const getSpells = (spells) => {
   const sql = `
     SELECT 
-      spell_template.Id, 
-      spell_template.Mechanic, 
+      spell_template.Id,
+      spell_template.Mechanic,
       spell_template.Attributes,
       item_template.entry,
       item_template.AllowableClass,
       item_template.AllowableRace,
       item_template.RequiredSkillRank
-    FROM spell_template 
-    INNER JOIN item_template ON spell_template.Id=item_template.spellid_2 
+    FROM spell_template
+    INNER JOIN item_template ON spell_template.Id=item_template.spellid_2
     WHERE spell_template.Id IN (${quoteJoin(spells)})
   `;
 
@@ -146,7 +136,7 @@ module.exports = {
   addCutTitles: addCutTitles,
   getQuestZones: getQuestZones,
   getRewards: getRewards,
-  getItemTypes: getItemTypes,
+  getItemCharges: getItemCharges,
   getSpells: getSpells,
   wotlkmangosClose: wotlkmangosClose
 };

@@ -10,18 +10,19 @@ const {
   getItemGuid,
   addItemInstances
 } = require('../db/wotlkcharacters');
-const { getRewards, getItemTypes } = require('../db/wotlkmangos');
+const { getRewards, getItemCharges } = require('../db/wotlkmangos');
 
 // Utils
 const { getFaction } = require('./utils');
 
 
 const rewards = {};
+const itemCharges = {};
 let itemGuid = 1;
 let mailID = 1;
 
 const queryCharTitles = {};
-const queryItemTypes = [];
+const queryItemTypes = {};
 const queryRewardMail = [];
 const queryMailItems = [];
 const queryItemInstances = [];
@@ -38,14 +39,15 @@ const transferRewards = async (achievements) => {
 
   await getRewards()
     .then(rews => rews.forEach(r => {
-      rewards[r.entry] = r;
-      if (r.item) queryItemTypes.push(r.item);
+      const { entry, ...rew } = r;
+      rewards[entry] = rew;
+      if (r.item && !queryItemTypes[r.item]) queryItemTypes[r.item] = 1;
     }))
     .catch(err => { throw err });
 
-  // CREATE ITEM TYPE OBJ, COMPLETE SQL JOIN QUERY
-  await getItemTypes(queryItemTypes)
-    .then()
+  // Get item charges to ensure mounts and pets work correctly
+  await getItemCharges(Object.keys(queryItemTypes))
+    .then(items => items.forEach(i => itemCharges[i.entry] = i.spellcharges_1))
     .catch(err => { throw err });
 
   // Get topmost item guid & mail ID
@@ -61,10 +63,14 @@ const transferRewards = async (achievements) => {
   achievements.forEach(a => transferReward(a[0], a[1]));
 
   // Run database queries
-  if (queryItemInstances.length) await addItemInstances(queryItemInstances).catch(err => { throw err });
-  if (queryRewardMail.length) await addRewardMail(queryRewardMail).catch(err => { throw err });
-  if (queryMailItems.length) await addRewardItems(queryMailItems).catch(err => { throw err });
-  if (Object.keys(queryCharTitles).length) await addRewardTitles(queryCharTitles).catch(err => { throw err });
+  if (queryItemInstances.length) await addItemInstances(queryItemInstances)
+    .catch(err => { throw err });
+  if (queryRewardMail.length) await addRewardMail(queryRewardMail)
+    .catch(err => { throw err });
+  if (queryMailItems.length) await addRewardItems(queryMailItems)
+    .catch(err => { throw err });
+  if (Object.keys(queryCharTitles).length) await addRewardTitles(queryCharTitles)
+    .catch(err => { throw err });
 }
 
 const transferReward = (char, achievement) => {
@@ -75,17 +81,17 @@ const transferReward = (char, achievement) => {
   if (titles[achievement]) transferTitle(char.guid, char.gender, faction, achievement);
 }
 
-const transferMail = (char, reward) => {
+const transferMail = (char, rew) => {
   const date = new Date();
   queryRewardMail.push([
     mailID, // id
     3, // messageType
     41, // stationery
     0, // mailTemplateId
-    reward.sender, // sender
+    rew.sender, // sender
     char, // receiver
-    reward.subject, // subject
-    reward.text, // body
+    rew.subject, // subject
+    rew.text, // body
     1, // has_items
     date.getTime() / 1000 + 7776000, // expire_time | 7776000 = 90 days
     date.getTime() / 1000, // deliver_time
@@ -94,26 +100,28 @@ const transferMail = (char, reward) => {
     0, // checked
   ]);
   
-  if (reward.item) queryMailItems.push([mailID, itemGuid, reward.item, char]);
+  if (rew.item) {
+    queryMailItems.push([mailID, itemGuid, rew.item, char]);
+    queryItemInstances.push([
+      itemGuid, // guid
+      char, // owner_guid
+      rew.item, // itemEntry
+      0, // creatorGuid
+      0, // giftCreatorGuid
+      1, // count
+      0, // duration
+      `${itemCharges[rew.item]} 0 0 0 0`, // charges
+      0, // flags
+      '0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ', // enchantments
+      0, // randomPropertyId
+      0, // durability
+      0, // playedTime
+      '' // text
+    ]);
 
-  queryItemInstances.push([
-    itemGuid, // guid
-    char, // owner_guid
-    reward.item, // itemEntry
-    0, // creatorGuid
-    0, // giftCreatorGuid
-    1, // count
-    0, // duration
-    '0 0 0 0 0', // charges
-    0, // flags
-    '0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ', // enchantments
-    0, // randomPropertyId
-    0, // durability
-    0, // playedTime
-    '' // text
-  ]);
+    itemGuid++;
+  }
 
-  itemGuid++;
   mailID++;
 }
 
