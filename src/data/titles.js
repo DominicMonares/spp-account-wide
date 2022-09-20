@@ -1,6 +1,5 @@
-// { TitleID: InGameOrder }
+// Achievement: { Title, InGameOrder }
 const titles = {
-
   /* Dungeons & Raids */
   2054: { TitleID: 121, IGO: 89 }, // Twilight Vanquisher
   1658: { TitleID: 129, IGO: 97 }, // Champion of the Frozen Wastes
@@ -174,9 +173,6 @@ const titles = {
   2817: { TitleID: 156, IGO: 123 }, // Crusader
   3478: { TitleID: 168, IGO: 133 }, // the Pilgrim
   3656: { TitleID: 168, IGO: 133 }, // the Pilgrim
-
 };
 
-module.exports = {
-  titles: titles
-}
+module.exports = { titles: titles };

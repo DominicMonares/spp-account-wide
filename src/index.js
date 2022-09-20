@@ -27,7 +27,7 @@ const { closeWindow, error, getFaction } = require('./utils');
 
 const charFactions = {};
 
-const accountwideAchievements = async () => {
+const accountwideTransfer = async () => {
   // Connect to databases
   await wotlkcharactersConnect().catch(async err => await error(err));
   await wotlkmangosConnect().catch(async err => await error(err));
@@ -74,10 +74,8 @@ const accountwideAchievements = async () => {
   await closeWindow();
 }
 
-// UNCOMMENT FOR PRODUCTION
-// accountwideAchievements();
+// ONLY USED FOR PRODUCTION
+accountwideTransfer();
 
-// REMOVE EXPORTS FOR PRODUCTION
-module.exports = {
-  accountwideAchievements: accountwideAchievements
-};
+// ONLY USED FOR DEVELOPMENT
+// module.exports = { accountwideTransfer: accountwideTransfer };

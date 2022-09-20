@@ -1,6 +1,6 @@
-//////////////////////////////////////////
-/////////////// Currencies ///////////////
-//////////////////////////////////////////
+// Achievement: { Progress Criteria, Completion Threshold }
+
+/* Currencies */
 
 const gold = {
   1176: { // Got My Mind On My Money - 100g
@@ -15,7 +15,7 @@ const gold = {
     criteria: 3512,
     complete: 50000000
   },
-  1180: { // Got My Mind On My Money - 10,000g
+  1180: { // Got My Mind On My Money - 10,000gd
     criteria: 3510,
     complete: 100000000
   },
@@ -61,9 +61,7 @@ const emblems = {
 };
 
 
-///////////////////////////////////
-/////////////// LFG ///////////////
-///////////////////////////////////
+/* LFG */
 
 // const lfg = {
 //   // UNABLE TO GET CRITERIA - RANDOM BOTS LFG NYI
@@ -82,9 +80,7 @@ const emblems = {
 // };
 
 
-///////////////////////////////////
-/////////////// PVP ///////////////
-///////////////////////////////////
+/* PVP */
 
 const arena = {
   398: { // Mercilessly Dedicated
@@ -182,9 +178,7 @@ const hk = {
 };
 
 
-//////////////////////////////////////
-/////////////// Quests ///////////////
-//////////////////////////////////////
+/* Quests */
 
 const bread = {
   1182: { // The Bread Winner
@@ -293,4 +287,4 @@ module.exports = {
   lmA: lmA,
   lmH: lmH,
   quest: quest
-}
+};

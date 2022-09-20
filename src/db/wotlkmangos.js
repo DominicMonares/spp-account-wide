@@ -22,7 +22,7 @@ const wotlkmangosConnect = () => {
 /* Cut Content */
 
 const cutTitlesExist = () => {
-  const sql = 'SELECT * FROM achievement_reward WHERE entry=457';
+  const sql = 'SELECT * FROM achievement_reward WHERE entry=457'; // 'the Supreme'
   return wotlkmangos.query(sql)
     .then(res => {
       if (!res[0].length) console.log('Cut title content does not exist!');
@@ -98,7 +98,7 @@ const getItemCharges = (items) => {
 
 /* Pet & Mount Transfer */
 
-const getSpells = (spells) => {
+const getSpells = (knownSpells) => {
   const sql = `
     SELECT 
       spell_template.Id,
@@ -110,10 +110,10 @@ const getSpells = (spells) => {
       item_template.RequiredSkillRank
     FROM spell_template
     INNER JOIN item_template ON spell_template.Id=item_template.spellid_2
-    WHERE spell_template.Id IN (${quoteJoin(spells)})
+    WHERE spell_template.Id IN (${quoteJoin(knownSpells)})
   `;
 
-  return wotlkmangos.query(sql, [spells])
+  return wotlkmangos.query(sql)
     .then(spells => {
       console.log('Spell template data fetched...');
       return spells[0];

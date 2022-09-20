@@ -1,3 +1,4 @@
+// Achievement: { Alliance Title ID, Horde Title ID }
 const cutTitles = {
   457: { title_A: 85, title_H: 85 }, // the Supreme
   467: { title_A: 86, title_H: 86 }, // of the Ten Storms
@@ -38,6 +39,4 @@ const cutTitles = {
   465: { title_A: 170, title_H: 170 } // Grand Crusader
 }
 
-module.exports = {
-  cutTitles: cutTitles
-};
+module.exports = { cutTitles: cutTitles };

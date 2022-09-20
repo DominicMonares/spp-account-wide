@@ -1,31 +1,27 @@
+// Achievement: { Associated Faction, Opposing Faction Version of Achievement }
 const factionAchievements = {
+  /* Dungeons & Raids */
 
-  ////////////////////////////////////////////////
-  /////////////// Dungeons & Raids ///////////////
-  ////////////////////////////////////////////////
-
-  /* Dungeons & Raids - WotLK */
+  /* Wrath of the Lich King */
   4296: { faction: 'A', alt: 3778 }, // Trial of the Champion
   3778: { faction: 'H', alt: 4296 }, // Trial of the Champion
   4298: { faction: 'A', alt: 4297 }, // Heroic: Trial of the Champion
   4297: { faction: 'H', alt: 4298 }, // Heroic: Trial of the Champion
 
 
-  /////////////////////////////////////////////////
-  /////////////// Feats of Strength ///////////////
-  /////////////////////////////////////////////////
+  /* Feats of Strength */
 
-  /* Feats of Strength - Dungeons & Raids */
+  /* Dungeons & Raids */
   4156: { faction: 'A', alt: 4079 }, // A Tribute to Immortality
   4079: { faction: 'H', alt: 4156 }, // A Tribute to Immortality
   4784: { faction: 'A', alt: 4785 }, // Emblematic
   4785: { faction: 'H', alt: 4784 }, // Emblematic
 
-  /* Feats of Strength - Mounts */
+  /* Mounts */
   3356: { faction: 'A', alt: 3357 }, // Winterspring Frostsaber
   3357: { faction: 'H', alt: 3356 }, // Venomhide Ravasaur
 
-  /* Feats of Strength - PVP */
+  /* PVP */
   442: { faction: 'A', alt: 454 }, // Private
   454: { faction: 'H', alt: 442 }, // Scout
   470: { faction: 'A', alt: 468 }, // Corporal
@@ -55,7 +51,7 @@ const factionAchievements = {
   433: { faction: 'A', alt: 443 }, // Grand Marshal
   443: { faction: 'H', alt: 433 }, // High Warlord
 
-  /* Feats of Strength - Realm Firsts */
+  /* Realm Firsts */
   1406: { faction: 'A', alt: null }, // Realm First! Level 80 Draenei
   1405: { faction: 'H', alt: null }, // Realm First! Level 80 Blood Elf
   1407: { faction: 'A', alt: null }, // Realm First! Level 80 Dwarf
@@ -67,64 +63,30 @@ const factionAchievements = {
   1409: { faction: 'A', alt: null }, // Realm First! Level 80 Night Elf
   1411: { faction: 'H', alt: null }, // Realm First! Level 80 Tauren
 
-  /* Feats of Strength - World Events */
+  /* World Events */
   4786: { faction: 'A', alt: 4790 }, // Operation: Gnomeregan
   4790: { faction: 'H', alt: 4786 }, // Zalazane's Fall
 
 
-  ///////////////////////////////////////
-  /////////////// General ///////////////
-  ///////////////////////////////////////
+  /* General */
 
-  /* General - Mounts */
+  /* Mounts */
   2536: { faction: 'A', alt: 2537 }, // Mountain o' Mounts
   2537: { faction: 'H', alt: 2536 }, // Mountain o' Mounts
 
 
-  ///////////////////////////////////////////
-  /////////////// Professions ///////////////
-  ///////////////////////////////////////////
+  /* Professions  */
 
-  /* Professions - Cooking */
+  /* Cooking */
   1563: { faction: 'A', alt: 1784 }, // Hail to the Chef
   1784: { faction: 'H', alt: 1563 }, // Hail to the Chef
   1782: { faction: 'A', alt: 1783 }, // Our Daily Bread
   1783: { faction: 'H', alt: 1782 }, // Our Daily Bread
 
 
-  ///////////////////////////////////
-  /////////////// PVP ///////////////
-  ///////////////////////////////////
+  /* PVP */
 
-  /* PVP - Alterac Valley */
-  225: { faction: 'A', alt: 1164 }, // Everything Counts
-  1164: { faction: 'H', alt: 225 }, // Everything Counts
-  1151: { faction: 'A', alt: 224 }, // Loyal Defender
-  224: { faction: 'H', alt: 1151 }, // Loyal Defender
-  220: { faction: 'A', alt: 873 }, // Stormpike Perfection
-  873: { faction: 'H', alt: 220 }, // Frostwolf Perfection
-  707: { faction: 'A', alt: 706 }, // Stormpike Battle Charger
-  706: { faction: 'H', alt: 707 }, // Frostwolf Howler
-  709: { faction: 'A', alt: 708 }, // Hero of the Stormpike Guard
-  708: { faction: 'H', alt: 709 }, // Hero of the Frostwolf Clan
-  1167: { faction: 'A', alt: 1168 }, // Master of Alterac Valley
-  1168: { faction: 'H', alt: 1167 }, // Master of Alterac Valley
-
-  /* PVP - Arathi Basin */
-  711: { faction: 'A', alt: 710 }, // Knight of Arathor
-  710: { faction: 'H', alt: 711 }, // The Defiler
-  1169: { faction: 'A', alt: 1170 }, // Master of Arathi Basin
-  1170: { faction: 'H', alt: 1169 }, // Master of Arathi Basin
-
-  /* PVP - Isle of Conquest */
-  3856: { faction: 'A', alt: 4256 }, // Demolition Derby
-  4256: { faction: 'H', alt: 3856 }, // Demolition Derby
-  3851: { faction: 'A', alt: 4177 }, // Mine
-  4177: { faction: 'H', alt: 3851 }, // Mine
-  3857: { faction: 'A', alt: 3957 }, // Master of Isle of Conquest
-  3957: { faction: 'H', alt: 3857 }, // Master of Isle of Conquest
-
-  /* PVP - General */
+  /* General */
   230: { faction: 'A', alt: 1175 }, // Battlemaster
   1175: { faction: 'H', alt: 230 }, // Battlemaster
   610: { faction: 'A', alt: 615 }, // Death to the Warchief!
@@ -152,7 +114,35 @@ const factionAchievements = {
   604: { faction: 'A', alt: 603 }, // Wrath of the Alliance
   603: { faction: 'H', alt: 604 }, // Wrath of the Horde
 
-  /* PVP - Strand of the Ancients */
+  /* Alterac Valley */
+  225: { faction: 'A', alt: 1164 }, // Everything Counts
+  1164: { faction: 'H', alt: 225 }, // Everything Counts
+  1151: { faction: 'A', alt: 224 }, // Loyal Defender
+  224: { faction: 'H', alt: 1151 }, // Loyal Defender
+  220: { faction: 'A', alt: 873 }, // Stormpike Perfection
+  873: { faction: 'H', alt: 220 }, // Frostwolf Perfection
+  707: { faction: 'A', alt: 706 }, // Stormpike Battle Charger
+  706: { faction: 'H', alt: 707 }, // Frostwolf Howler
+  709: { faction: 'A', alt: 708 }, // Hero of the Stormpike Guard
+  708: { faction: 'H', alt: 709 }, // Hero of the Frostwolf Clan
+  1167: { faction: 'A', alt: 1168 }, // Master of Alterac Valley
+  1168: { faction: 'H', alt: 1167 }, // Master of Alterac Valley
+
+  /* Arathi Basin */
+  711: { faction: 'A', alt: 710 }, // Knight of Arathor
+  710: { faction: 'H', alt: 711 }, // The Defiler
+  1169: { faction: 'A', alt: 1170 }, // Master of Arathi Basin
+  1170: { faction: 'H', alt: 1169 }, // Master of Arathi Basin
+
+  /* Isle of Conquest */
+  3856: { faction: 'A', alt: 4256 }, // Demolition Derby
+  4256: { faction: 'H', alt: 3856 }, // Demolition Derby
+  3851: { faction: 'A', alt: 4177 }, // Mine
+  4177: { faction: 'H', alt: 3851 }, // Mine
+  3857: { faction: 'A', alt: 3957 }, // Master of Isle of Conquest
+  3957: { faction: 'H', alt: 3857 }, // Master of Isle of Conquest
+
+  /* Strand of the Ancients */
   1757: { faction: 'A', alt: 2200 }, // Defense of the Ancients
   2200: { faction: 'H', alt: 1757 }, // Defense of the Ancients
   1762: { faction: 'A', alt: 2192 }, // Not Even a Scratch
@@ -160,7 +150,7 @@ const factionAchievements = {
   2194: { faction: 'A', alt: 2195 }, // Master of Strand of the Ancients 
   2195: { faction: 'H', alt: 2194 }, // Master of Strand of the Ancients 
 
-  /* PVP - Warsong Gulch */
+  /* Warsong Gulch */
   203: { faction: 'A', alt: 1251 }, // Not in My House
   1251: { faction: 'H', alt: 203 }, // Not in My House
   202: { faction: 'A', alt: 1502 }, // Quick Cap
@@ -172,28 +162,26 @@ const factionAchievements = {
   1172: { faction: 'A', alt: 1173 }, // Master of Warsong Gulch
   1173: { faction: 'H', alt: 1172 }, // Master of Warsong Gulch
 
-  /* PVP - Wintergrasp */
+  /* Wintergrasp */
   1737: { faction: 'A', alt: 2476 }, // Destruction Derby
   2476: { faction: 'H', alt: 1737 }, // Destruction Derby
   1752: { faction: 'A', alt: 2776 }, // Master of Wintergrasp
   2776: { faction: 'H', alt: 1752 }, // Master of Wintergrasp
 
 
-  //////////////////////////////////////
-  /////////////// Quests ///////////////
-  //////////////////////////////////////
+  /* Quests */
 
-  /* Quests - General */
+  /* General */
   1681: { faction: 'A', alt: 1682 }, // The Loremaster
   1682: { faction: 'H', alt: 1681 }, // The Loremaster
 
-  /* Quests - Classic */
+  /* Classic */
   1676: { faction: 'A', alt: 1677 }, // Loremaster of Eastern Kingdoms
   1677: { faction: 'H', alt: 1676 }, // Loremaster of Eastern Kingdoms
   1678: { faction: 'A', alt: 1680 }, // Loremaster of Kalimdor
   1680: { faction: 'H', alt: 1678 }, // Loremaster of Kalimdor
 
-  /* Quests - The Burning Crusade */
+  /* The Burning Crusade */
   1192: { faction: 'A', alt: 1273 }, // Nagrand Slam
   1273: { faction: 'H', alt: 1192 }, // Nagrand Slam
   899: { faction: 'A', alt: 901 }, // Oh My, Kurenai
@@ -207,7 +195,7 @@ const factionAchievements = {
   1262: { faction: 'A', alt: 1274 }, // Loremaster of Outland
   1274: { faction: 'H', alt: 1262 }, // Loremaster of Outland
 
-  /* Quests - Wrath of the Lich King */
+  /* Wrath of the Lich King */
   37: { faction: 'A', alt: 1357 }, // Fo' Grizzle My Shizzle
   1357: { faction: 'H', alt: 37 }, // Fo' Grizzle My Shizzle
   34: { faction: 'A', alt: 1356 }, // I've Toured the Fjord
@@ -222,26 +210,22 @@ const factionAchievements = {
   1360: { faction: 'H', alt: 41 }, // Loremaster of Northrend
 
 
-  ///////////////////////////////////////////
-  /////////////// Reputations ///////////////
-  ///////////////////////////////////////////
-
   /* Reputation */
+
+  /* General */
   948: { faction: 'A', alt: 762 }, // Ambassador of the Alliance
   762: { faction: 'H', alt: 948 }, // Ambassador of the Horde
   942: { faction: 'A', alt: 943 }, // The Diplomat
   943: { faction: 'H', alt: 942 }, // The Diplomat
 
-  
-  ////////////////////////////////////////////
-  /////////////// World Events ///////////////
-  ////////////////////////////////////////////
 
-  /* World Events - General */
+  /* World Events */
+
+  /* General */
   2144: { faction: 'A', alt: 2145 }, // What A Long, Strange Trip It's Been
   2145: { faction: 'H', alt: 2144 }, // What A Long, Strange Trip It's Been
 
-  /* World Events - Argent Tournament */
+  /* Argent Tournament */
   3676: { faction: 'A', alt: 3677 }, // A Silver Confidant
   3677: { faction: 'H', alt: 3676 }, // The Sunreavers
   2777: { faction: 'A', alt: 2786 }, // Champion of Darnassus
@@ -269,13 +253,13 @@ const factionAchievements = {
   2817: { faction: 'A', alt: 2816 }, // Exalted Argent Champion of the Alliance
   2816: { faction: 'H', alt: 2817 }, // Exalted Argent Champion of the Horde
 
-  /* World Events - Brewfest */
+  /* Brewfest */
   1184: { faction: 'A', alt: 1203 }, // Strange Brew
   1203: { faction: 'H', alt: 1184 }, // Strange Brew
   1684: { faction: 'A', alt: 1683 }, // Brewmaster
   1683: { faction: 'H', alt: 1684 }, // Brewmaster
 
-  /* World Events - Hallow's End */
+  /* Hallow's End */
   1040: { faction: 'A', alt: 1041 }, // Rotten Hallow
   1041: { faction: 'H', alt: 1040 }, // Rotten Hallow
   970: { faction: 'A', alt: 971 }, // Tricks and Treats of Azeroth
@@ -291,7 +275,7 @@ const factionAchievements = {
   1656: { faction: 'A', alt: 1657 }, // Hallowed Be Thy Name
   1657: { faction: 'H', alt: 1656 }, // Hallowed Be Thy Name
 
-  /* World Events - Love is in the Air */
+  /* Love is in the Air */
   1279: { faction: 'A', alt: 1280 }, // Flirt With Disaster
   1280: { faction: 'H', alt: 1279 }, // Flirt With Disaster
   1697: { faction: 'A', alt: 1698 }, // Nation of Adoration
@@ -299,7 +283,7 @@ const factionAchievements = {
   1707: { faction: 'A', alt: 1693 }, // Fool For Love
   1693: { faction: 'H', alt: 1707 }, // Fool For Love
 
-  /* World Events - Midsummer */
+  /* Midsummer */
   1035: { faction: 'A', alt: 1037 }, // Desecration of the Horde
   1037: { faction: 'H', alt: 1035 }, // Desecration of the Alliance
   1028: { faction: 'A', alt: 1031 }, // Extinguishing Eastern Kingdoms
@@ -319,7 +303,7 @@ const factionAchievements = {
   1038: { faction: 'A', alt: 1039 }, // The Flame Warden
   1039: { faction: 'H', alt: 1038 }, // The Flame Keeper
 
-  /* World Events - Noble Garden */
+  /* Noble Garden */
   2421: { faction: 'A', alt: 2420 }, // Noble Garden
   2420: { faction: 'H', alt: 2421 }, // Noble Garden
   2797: { faction: 'A', alt: 2798 }, // Noble Gardener
@@ -327,7 +311,7 @@ const factionAchievements = {
   2419: { faction: 'A', alt: 2497 }, // Spring Fling
   2497: { faction: 'H', alt: 2419 }, // Spring Fling
 
-  /* World Events - Pilgrim's Bounty */
+  /* Pilgrim's Bounty */
   3576: { faction: 'A', alt: 3577 }, // Now We're Cookin'
   3577: { faction: 'H', alt: 3576 }, // Now We're Cookin'
   3556: { faction: 'A', alt: 3557 }, // Pilgrim's Paunch
@@ -339,7 +323,7 @@ const factionAchievements = {
   3478: { faction: 'A', alt: 3656 }, // Pilgrim
   3656: { faction: 'H', alt: 3478 }, // Pilgrim
 
-  /* World Events - Winter Veil */
+  /* Winter Veil */
   4436: { faction: 'A', alt: 4437 }, // BB King
   4437: { faction: 'H', alt: 4436 }, // BB King
   1686: { faction: 'A', alt: 1685 }, // Bros. Before Ho Ho Ho's
@@ -348,7 +332,6 @@ const factionAchievements = {
   259: { faction: 'H', alt: 1255 }, // Scrooge
   1692: { faction: 'A', alt: 1691 }, // Merrymaker
   1691: { faction: 'H', alt: 1692 }, // Merrymaker
-
 };
 
 module.exports = { factionAchievements: factionAchievements };

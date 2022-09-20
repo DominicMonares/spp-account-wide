@@ -40,7 +40,7 @@ const getAchievements = (chars) => {
     WHERE guid IN (${quoteJoin(chars)})
   `;
 
-  return wotlkcharacters.query(sql, [chars])
+  return wotlkcharacters.query(sql)
     .then(achieves => {
       console.log('Achievement data fetched...');
       return achieves[0];
@@ -114,7 +114,7 @@ const progressTableExists = () => {
   const sql = 'SHOW TABLES LIKE "character_achievement_shared_progress"';
   return wotlkcharacters.query(sql)
     .then(res => {
-      if (!res[0].length) console.log('Progress table does not exist!');
+      if (!res[0].length) console.log('Progress table does not exist...');
       return res[0].length ? true : false;
     })
     .catch(err => { throw err });
@@ -209,11 +209,11 @@ const addHonorKills = (chars) => {
 
 const getCharSpells = (chars) => {
   const sql = `
-    SELECT guid, spell FROM character_spell 
+    SELECT spell FROM character_spell
     WHERE guid IN (${quoteJoin(chars)})
   `;
 
-  return wotlkcharacters.query(sql, [chars])
+  return wotlkcharacters.query(sql)
     .then(spells => {
       console.log('Character spell data fetched...');
       return spells[0];
@@ -227,7 +227,7 @@ const getCharSkills = (chars) => {
     WHERE (guid, skill) IN (${parenJoin(chars)})
   `;
 
-  return wotlkcharacters.query(sql, [chars])
+  return wotlkcharacters.query(sql)
     .then(skills => {
       console.log('Character skill data fetched...');
       return skills[0];
@@ -248,7 +248,7 @@ const getMailItems = (chars) => {
     WHERE receiver IN (${quoteJoin(chars)})
   `;
 
-  return wotlkcharacters.query(sql, [chars])
+  return wotlkcharacters.query(sql)
     .then(items => {
       console.log('Mail item data fetched...');
       return items[0];

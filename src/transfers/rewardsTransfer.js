@@ -16,10 +16,9 @@ const { getRewards, getItemCharges } = require('../db/wotlkmangos');
 const { getFaction } = require('./utils');
 
 
+let itemGuid = 1, mailID = 1;
 const rewards = {};
 const itemCharges = {};
-let itemGuid = 1;
-let mailID = 1;
 
 const queryCharTitles = {};
 const queryItemTypes = {};
@@ -37,6 +36,7 @@ const transferRewards = async (achievements) => {
     }
   });
 
+  // Get all rewards from world database
   await getRewards()
     .then(rews => rews.forEach(r => {
       const { entry, ...rew } = r;
@@ -59,18 +59,15 @@ const transferRewards = async (achievements) => {
     .then(mail => mailID = mail[0]['id'] + 10000) // +10000 to buffer overwrites
     .catch(err => { throw err });
 
-  // Run sub-transfers
+  // Run sub-transfer
   achievements.forEach(a => transferReward(a[0], a[1]));
 
   // Run database queries
-  if (queryItemInstances.length) await addItemInstances(queryItemInstances)
-    .catch(err => { throw err });
-  if (queryRewardMail.length) await addRewardMail(queryRewardMail)
-    .catch(err => { throw err });
-  if (queryMailItems.length) await addRewardItems(queryMailItems)
-    .catch(err => { throw err });
-  if (Object.keys(queryCharTitles).length) await addRewardTitles(queryCharTitles)
-    .catch(err => { throw err });
+  const newCharTitles = Object.keys(queryCharTitles).length;
+  if (newCharTitles) await addRewardTitles(queryCharTitles).catch(err => { throw err });
+  if (queryItemInstances.length) await addItemInstances(queryItemInstances).catch(err => { throw err });
+  if (queryMailItems.length) await addRewardItems(queryMailItems).catch(err => { throw err });
+  if (queryRewardMail.length) await addRewardMail(queryRewardMail).catch(err => { throw err });
 }
 
 const transferReward = (char, achievement) => {
@@ -118,10 +115,9 @@ const transferMail = (char, rew) => {
       0, // playedTime
       '' // text
     ]);
-
-    itemGuid++;
   }
-
+  
+  itemGuid++;
   mailID++;
 }
 
@@ -148,8 +144,4 @@ const transferTitle = (char, gender, faction, achievement) => {
   queryCharTitles[char] = knownTitles.join(' ');
 }
 
-
-
-module.exports = {
-  transferRewards: transferRewards
-}
+module.exports = { transferRewards: transferRewards };

@@ -1,6 +1,5 @@
-// Alliance Spell: alt: Horde Spell
-// Horde Spell: alt: Alliance Spell
-
+// Alliance Spell: [Opposing Faction, Opposing Faction Spell]
+// Horde Spell: [Opposing Faction, Opposing Faction Spell]
 const factionSpells = {
   472: ['H', 580],
   580: ['A', 472],
@@ -330,6 +329,4 @@ const factionSpells = {
   68188: ['A', 68187]
 }
 
-module.exports = {
-  factionSpells: factionSpells
-};
+module.exports = { factionSpells: factionSpells };

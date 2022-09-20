@@ -6,6 +6,4 @@ const dbCredentials = { // default SPP credentials
   multipleStatements: true
 };
 
-module.exports = {
-  dbCredentials: dbCredentials
-}
+module.exports = { dbCredentials: dbCredentials };

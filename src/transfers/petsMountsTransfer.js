@@ -15,17 +15,19 @@ const pets = { A: {}, H: {}, B: {} };
 const mounts = { A: {}, H: {}, B: {} };
 const spellTemplate = {};
 const mailItems = {};
-const spellIds = [];
 
 const querySpells = [];
 const queryNewsSpells = [];
 
 const transferPetsMounts = async (chars) => {
-  console.log('Pet & Mount transfer started!');
+  console.log('Pet & Mount transfer started...');
 
   // Get all known spells
   await getCharSpells(Object.keys(chars))
-    .then(spells => spells.forEach(s => spellIds.push(s.spell)))
+    .then(spells => spells.forEach(s => {
+      querySpells.push(s.spell);
+      if (factionSpells[s.spell]) querySpells.push(factionSpells[s.spell][1]);
+    }))
     .catch(err => { throw err });
 
   // Get character skills
@@ -34,11 +36,6 @@ const transferPetsMounts = async (chars) => {
     .catch(err => { throw err });
 
   // Get spell templates for owned pets/mounts and their faction opposites
-  spellIds.forEach(s => {
-    querySpells.push(s);
-    if (factionSpells[s]) querySpells.push(factionSpells[s][1]);
-  });
-  
   await getSpells(querySpells)
     .then(spells => spells.forEach(s => {
       const { Id, ...spell } = s;
@@ -66,7 +63,7 @@ const transferPetsMounts = async (chars) => {
     } else if (spellTemplate[id]['AllowableRace'] === 690 || id === '61997') {
       faction = 'H';
     } else if (spellTemplate[id]['AllowableRace'] === -1) {
-      if (!spellTemplate[id]['RequiredSkillRank'] && factionSpells[id]) {
+      if (pet && factionSpells[id]) {
         faction = factionSpells[id][0] === 'H' ? 'A' : 'H';
       } else {
         faction = 'B' // Both
@@ -88,6 +85,7 @@ const transferPetsMounts = async (chars) => {
 }
 
 const transferSpells = (chars) => {
+  // Add new spells to all characters where eligible
   for (const c in chars) {
     const faction = chars[c]['faction'];
     const spells = { ...pets[faction], ...pets.B, ...mounts[faction], ...mounts.B };
@@ -103,6 +101,4 @@ const transferSpells = (chars) => {
   }
 }
 
-module.exports = {
-  transferPetsMounts: transferPetsMounts
-};
+module.exports = { transferPetsMounts: transferPetsMounts };

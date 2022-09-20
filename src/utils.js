@@ -1,7 +1,5 @@
 const readline = require('readline');
 
-// General
-
 const endProcess = (err) => {
   const rl = readline.createInterface({
     input: process.stdin,
@@ -17,9 +15,9 @@ const endProcess = (err) => {
 }
 
 const closeWindow = async () => {
-  let count = 100;
+  let count = 10;
   setInterval(() => {
-    if (count === 100) {
+    if (count === 10) {
       process.stdout.write('Press ENTER to close window.\n');
       process.stdout.write(`This window will close in ${count - 1} seconds...`);
     } else {
@@ -41,14 +39,9 @@ const error = async (err) => {
   await endProcess(err);
 }
 
-
-// Queries
-
 const quoteJoin = (queryVals) => '"' + queryVals.join('", "') + '"';
+
 const parenJoin = (queryVals) => '(' + queryVals.map(qv => qv.join(', ')).join('), (') + ')';
-
-
-// Transfers
 
 const getFaction = (race) => {
   return (race === 1 || race === 3 || race === 4 || race === 7 || race === 11) ? 'A' : 'H'

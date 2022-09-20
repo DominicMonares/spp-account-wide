@@ -19,7 +19,7 @@ const queryAchieves = [];
 const queryRewards = {};
 
 const transferCredit = async (characters) => {
-  console.log('Achievement credit transfer started!');
+  console.log('Achievement credit transfer started...');
   
   chars = characters;
   chars.forEach(c => charAchievements[c.guid] = {});
@@ -82,6 +82,4 @@ const transferAchievements = () => {
   });
 }
 
-module.exports = {
-  transferCredit: transferCredit
-};
+module.exports = { transferCredit: transferCredit };

@@ -1,4 +1,4 @@
-// Zone | Continent
+// { Zone, Continent }
 const zones = {
   1: 0,
   2: 0,
@@ -1165,6 +1165,4 @@ const zones = {
   3916: 1
 }
 
-module.exports = {
-  zones: zones
-};
+module.exports = { zones: zones };

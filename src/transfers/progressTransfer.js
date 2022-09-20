@@ -18,6 +18,7 @@ const {
 const { getQuestZones } = require('../db/wotlkmangos');
 
 // Transfers
+const { transferRewards } = require('./rewardsTransfer');
 
 // Utils
 const {
@@ -27,15 +28,13 @@ const {
   correctFaction
 } = require('./utils.js');
 const { getFaction } = require('../utils');
-const { transferRewards } = require('./rewardsTransfer');
 
 
-let chars;
+let chars, completedQuests;
 const previousProgress = {}; // Uses achievement index
 const currentProgress = {}; // Uses criteria index
 const loremasterProgress = { A: { 0: [], 1: [] }, H: { 0: [], 1: [] } }; // Faction: EK, Kalimdor
 const bcChars = {}; // Blood Elf and Draenei store for Loremaster
-let completedQuests;
 
 const queryCriteria = [];
 const queryQuestZones = {};
