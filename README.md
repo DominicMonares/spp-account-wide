@@ -1,4 +1,4 @@
-# WoW Single Player Project - Account-wide
+# Account-wide (Single Player Project)
 This program transfers achievements, mounts, and pets between all characters!
 
 The program is made to use with [Celguar's SPP Classics Repack](https://github.com/celguar/spp-classics-cmangos), but is CMaNGOS based so it will likely work with other CMaNGOS repacks or forks.
