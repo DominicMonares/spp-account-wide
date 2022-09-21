@@ -1,0 +1,3 @@
+USE wotlkcharacters
+
+DROP character_achievement_shared_progress
