@@ -52,6 +52,7 @@ The program is made to use with [Celguar's SPP Classics Repack](https://github.c
   - Always make a backup save before transferring
   - Must be logged out before transferring
   - You will no longer be able to see individual honorable kills per character, as they need to be shared in order for the in-game achievement counter to work properly
+  - If your alts are logged in as bots, any progress they make will count toward shared progress
   - Mounts that are above a character's riding skill level are not given to that character on transfer, you will need to re-run the transfer once they have the appropriate riding skill to share those mounts with them
   - It is highly recommended to retrieve item rewards from mail immediately after transfer, in order to reduce risk of mail being lost
   - Only works on characters that have logged in at least once since being created
