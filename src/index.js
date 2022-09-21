@@ -74,8 +74,4 @@ const accountwideTransfer = async () => {
   await closeWindow();
 }
 
-// ONLY USED FOR PRODUCTION
-accountwideTransfer();
-
-// ONLY USED FOR DEVELOPMENT
-// module.exports = { accountwideTransfer: accountwideTransfer };
+module.exports = { accountwideTransfer: accountwideTransfer };
