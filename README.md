@@ -86,4 +86,4 @@ Build .exe file:
 npm run build
 ```
 
-If testing with a repack or fork other than [Celguar's SPP Classics Repack](https://github.com/celguar/spp-classics-cmangos), be sure to make a database backup and check src/config.js to ensure database credentials are correct.
+If testing with a repack or fork other than [Celguar's SPP Classics Repack](https://github.com/celguar/spp-classics-cmangos), be sure to make a database backup and check config.js to ensure database credentials are correct.
