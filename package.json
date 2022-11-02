@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/akaClay/spp-achievements.git"
+    "url": "git+https://github.com/DominicMonares/spp-achievements.git"
   },
-  "author": "",
+  "author": "Dominic Monares",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/akaClay/spp-achievements/issues"
+    "url": "https://github.com/DominicMonares/spp-achievements/issues"
   },
-  "homepage": "https://github.com/akaClay/spp-achievements#readme",
+  "homepage": "https://github.com/DominicMonares/spp-achievements#readme",
   "dependencies": {
     "mysql2": "^2.3.3"
   }
